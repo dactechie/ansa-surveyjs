@@ -1,0 +1,129 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "actions": {
+      "Condition": {
+        "actions": {
+          "Get_entities": {
+            "inputs": {
+              "host": {
+                "connection": {
+                  "name": "@parameters('$connections')['azuretables']['connectionId']"
+                }
+              },
+              "method": "get",
+              "path": "/Tables/@{encodeURIComponent(triggerBody()?['Entity'])}/entities",
+              "queries": {
+                "$filter": "@{triggerBody()?['idType']} eq '@{triggerBody()?['clientID']}'"
+              }
+            },
+            "runAfter": {},
+            "type": "ApiConnection"
+          },
+          "Response": {
+            "inputs": {
+              "body": "@body('Get_entities')",
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "statusCode": 200
+            },
+            "kind": "Http",
+            "runAfter": {
+              "Get_entities": ["Succeeded"]
+            },
+            "type": "Response"
+          }
+        },
+        "else": {
+          "actions": {
+            "GET-MCARE_OR_CCARE_DB-ID": {
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['azuretables']['connectionId']"
+                  }
+                },
+                "method": "get",
+                "path": "/Tables/@{encodeURIComponent('Episode')}/entities",
+                "queries": {
+                  "$filter": "ClientID eq '@{triggerBody()?['clientID']}'   and  IDType eq '@{triggerBody()?['idType']}'"
+                }
+              },
+              "runAfter": {},
+              "type": "ApiConnection"
+            },
+            "Response_2": {
+              "inputs": {
+                "body": "@body('GET-MCARE_OR_CCARE_DB-ID')",
+                "headers": {
+                  "Content-Type": "application/json"
+                },
+                "statusCode": 200
+              },
+              "kind": "Http",
+              "runAfter": {
+                "GET-MCARE_OR_CCARE_DB-ID": ["Succeeded"]
+              },
+              "type": "Response"
+            }
+          }
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": ["@triggerBody()?['idType']", "PartitionKey"]
+            }
+          ]
+        },
+        "runAfter": {},
+        "type": "If"
+      }
+    },
+    "contentVersion": "1.0.0.0",
+    "outputs": {},
+    "parameters": {
+      "$connections": {
+        "defaultValue": {},
+        "type": "Object"
+      }
+    },
+    "triggers": {
+      "manual": {
+        "inputs": {
+          "method": "POST",
+          "schema": {
+            "properties": {
+              "Entity": {
+                "type": "string"
+              },
+              "clientID": {
+                "type": "string"
+              },
+              "idType": {
+                "type": "string"
+              },
+              "requestType": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "kind": "Http",
+        "type": "Request"
+      }
+    }
+  },
+  "parameters": {
+    "$connections": {
+      "value": {
+        "azuretables": {
+          "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansajs/providers/Microsoft.Web/connections/azuretables",
+          "connectionName": "azuretables",
+          "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/azuretables"
+        }
+      }
+    }
+  }
+}

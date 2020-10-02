@@ -1,11 +1,9 @@
 <template>
-  <!-- <div class="sv-root-modern"> -->
-
   <div class="sv-page sv-body__page" id="sp_100">
     <span>How do you want to lookup the client ?</span>
     <div class="sv-table__cell" id="lookup_type">
       <input
-        class="sv-table__cell"
+        class="form-radio h-6 w-6"
         type="radio"
         id="by_id"
         name="lookup_type"
@@ -15,7 +13,7 @@
       <label class="sv-table__cell" for="by_id">By ID</label>
       <br />
       <input
-        class="sv-table__cell"
+        class="form-radio h-6 w-6"
         type="radio"
         id="by_name"
         name="lookup_type"
@@ -25,34 +23,38 @@
       <label class="sv-table__cell" for="by_name">By Name, DOB, Gender</label>
       <br />
     </div>
-    <!-- <span class="sv-table__cell">Picked: {{ picked_type }}</span> -->
-
     <p></p>
 
     <div class="sv-table__cell" id="by_id" v-show="picked_type === 'by_id'">
       <input
-        class="sv-table__cell"
+        class="form-radio h-6 w-6"
         type="radio"
         id="slk"
+        value="slk"
         name="lookup_id"
+        v-model="idType"
         placeholder="slk_id"
       />
       <label class="sv-table__cell" for="slk_id">SLK</label>
       <br />
       <input
-        class="sv-table__cell"
+        class="form-radio h-6 w-6"
         type="radio"
         id="CCARE"
         name="lookup_id"
+        value="CCARE"
+        v-model="idType"
         placeholder="ccare_id"
       />
       <label class="sv-table__cell" for="ccare_id">CCARE ID</label>
       <br />
       <input
-        class="sv-table__cell"
+        class="form-radio h-6 w-6"
         type="radio"
         id="MCARE"
         name="lookup_id"
+        value="MCARE"
+        v-model="idType"
         placeholder="mcare_id"
       />
       <label class="sv-table__cell" for="mcare_id">MCARE ID</label>
@@ -61,6 +63,7 @@
           class="sv-table__cell"
           type="text"
           id="id_val"
+          v-model="idVal"
           value="ALLFT210719811"
           placeholder="Enter an ID"
         />
@@ -73,9 +76,9 @@
         class="sv-table__cell"
         type="text"
         id="fname"
-        name="lookup_name"
         placeholder="first name"
         value="Aftab"
+        v-model="fname"
       />
 
       <label class="sv-table__cell" for="lname">Last Name</label>
@@ -83,102 +86,139 @@
         class="sv-table__cell"
         type="text"
         id="lname"
-        name="lookup_name"
         placeholder="last name"
         value="Jalal"
+        v-model="lname"
       />
-
+      <br />
       <label class="sv-table__cell" for="dob">DOB</label>
       <input
         class="sv-table__cell"
         type="date"
         id="dob"
-        name="sex"
+        name="DOB"
+        v-model="dob"
+        :min="minDate"
+        :max="maxDate"
         placeholder="Date of birth"
         value="21071981"
       />
       <div class="sv-table__cell" id="sex_type">
         <input
-          class="sv-table__cell"
+          class="form-radio h-6 w-6"
           type="radio"
           id="male"
+          v-model="sex_type"
           name="sex"
           value="male"
         />
         <label class="sv-table__cell" for="male">Male</label>
         <br />
         <input
-          class="sv-table__cell"
+          class="form-radio h-6 w-6"
           type="radio"
           id="female"
+          v-model="sex_type"
           name="sex"
           value="female"
         />
         <label class="sv-table__cell" for="female">Female</label>
         <br />
         <input
-          class="sv-table__cell"
+          class="form-radio h-6 w-6"
           type="radio"
           id="other"
+          v-model="sex_type"
           name="sex"
           value="other"
         />
         <label class="sv-table__cell" for="other">Other</label>
         <br />
       </div>
+      <br />
+      SLK : {{ slk }}
     </div>
 
-    <button
-      class="sv-table__cell"
-      @click.prevent="fetchClientDataByLookupValues"
-    >
-      Fetch Client Data
-    </button>
+    <div class="m-3">
+      <button
+        :disabled="!canFetch"
+        @click.prevent="fetchClientDataByLookupValues"
+        class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+      >
+        <span class="mx-auto">Fetch Client Data</span>
+      </button>
+    </div>
     <span class="sv-table__cell" v-if="mode == 0"> {{ no_client_found }}</span>
   </div>
 </template>
 
 <script>
-// import  LookupByID from '@/components/LookupByID.vue';
-// import  LookupByNameDOB from '@/components/LookupByNameDOB.vue';
-import { getLookupDetails } from "@/helper-functions/dom";
+import { getSLK } from "@/helper-functions/slk";
 //import { getBySLK, getByIDAndType } from "../api/TableStorageService";
 import { getBySLK, getByIDAndType } from "../api/SurveyService";
-
-// import fetchClientData from "../api/SurveyService";
 export default {
   name: "LookupFetchClientData",
   emits: ["survey-data-received", "mode-updated"],
   props: ["mode"],
   data() {
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth();
+    let day = now.getDate();
+
     return {
       picked_type: "",
-      no_client_found: ""
+      no_client_found: "",
+      idType: "",
+      idVal: "",
+      sex_type: "",
+      dob: "",
+      fname: "",
+      lname: "",
+      minDate: new Date(year - 90, month, day),
+      maxDate: new Date(year - 15, month, day)
     };
+  },
+  computed: {
+    canFetch: function() {
+      if (this.picked_type === "by_id") {
+        if (this.idType === "slk") return this.idVal.length === 14;
+        else return this.idVal.length > 1;
+      }
+      return this.slk.length === 14;
+    },
+    slk: function() {
+      if (this.picked_type === "by_id") {
+        return this.idVal;
+      }
+      if (!this.fname || !this.lname || !this.dob || !this.sex_type) return "";
+      return getSLK(this.fname, this.lname, this.dob, this.sex_type);
+    }
   },
   methods: {
     async fetchClientDataByLookupValues() {
-      const { ClientID, IDType, errors } = getLookupDetails(this.picked_type);
-      if (errors) {
-        console.log("Error getting lookup details ", errors);
-        return;
-      }
       let result = {};
-      if (IDType === "slk") {
-        result = await getBySLK(ClientID);
+      if (this.picked_type === "by_name" || this.idType === "slk") {
+        result = await getBySLK(this.slk);
       } else {
-        console.table({ ClientID, IDType });
-        result = await getByIDAndType(ClientID, IDType);
+        result = await getByIDAndType(this.idVal, this.idType);
       }
-      //if ((await result) && result.entries && result.entries.length > 0) {
       if (result && result.value && result.value.length > 0) {
         console.log(" vale ", result.value);
         this.$emit("survey-data-received", result.value);
       } else {
-        this.no_client_found = `Unable to find any results for client with ${IDType}: ${ClientID}`;
+        this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
         this.$emit("mode-updated", 0);
       }
     }
   }
 };
 </script>
+<style scoped>
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+</style>

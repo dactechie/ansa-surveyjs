@@ -1,11 +1,14 @@
 function checkAssign(objectToAssign, data, errors) {
+  // could use reduce , but we're accuumulating in two objects here.
   for (const x of Object.keys(data)) {
     let sourceObj = data[x];
     if (!sourceObj) {
       errors[x] = `Missing ${x}`;
-      return -1;
     }
     objectToAssign[x] = sourceObj;
+  }
+  if (Object.keys(errors).length > 0) {
+    return -1;
   }
   return 1;
 }
