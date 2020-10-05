@@ -1,6 +1,16 @@
-import { getDataAsync } from "./RESTClient";
+import { getDataAsync, doPostAction } from "./RESTClient";
 
-const URL = process.env.VUE_APP_DATASTORE_LOGAPP;
+const GET_URL = process.env.VUE_APP_GET_TABLESTORE_LOGAPP;
+const CREATE_URL = process.env.VUE_APP_CREATE_TABLESTORE_LOGAPP;
+
+function createClientEpisode(episodeData) {
+  let data = {
+    Entity: "Episode",
+    EntityJSON: episodeData
+  };
+
+  return doPostAction(CREATE_URL, data);
+}
 
 function getClientEpisodesByPartitionKey(partitionKey) {
   let data = {
@@ -9,7 +19,7 @@ function getClientEpisodesByPartitionKey(partitionKey) {
     clientID: partitionKey,
     requestType: "GET"
   };
-  return getDataAsync(URL, data);
+  return getDataAsync(GET_URL, data);
 }
 
 function getClientEpisodesByClientID(clientID, idType = "MCARE") {
@@ -19,10 +29,14 @@ function getClientEpisodesByClientID(clientID, idType = "MCARE") {
     clientID: clientID,
     requestType: "GET"
   };
-  return getDataAsync(URL, data);
+  return getDataAsync(GET_URL, data);
 }
 
-export { getClientEpisodesByPartitionKey, getClientEpisodesByClientID };
+export {
+  getClientEpisodesByPartitionKey,
+  getClientEpisodesByClientID,
+  createClientEpisode
+};
 
 // const partitionKey = "ALLFT210719811";
 

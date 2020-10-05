@@ -1,12 +1,19 @@
 import {
   getClientEpisodesByPartitionKey,
-  getClientEpisodesByClientID
+  getClientEpisodesByClientID,
+  createClientEpisode
 } from "./AZTableService";
 
-export async function getBySLK(slk) {
-  return await getClientEpisodesByPartitionKey(slk);
-}
+export default {
+  async getBySLK(slk) {
+    return await getClientEpisodesByPartitionKey(slk);
+  },
 
-export async function getByIDAndType(id, idType) {
-  return await getClientEpisodesByClientID(id, idType);
-}
+  async getByIDAndType(id, idType) {
+    return await getClientEpisodesByClientID(id, idType);
+  },
+
+  async createEpisode(episodeData) {
+    return await createClientEpisode(episodeData);
+  }
+};
