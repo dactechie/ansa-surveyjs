@@ -155,16 +155,14 @@
 <script>
 import { getSLK } from "@/helper-functions/slk";
 //import { getBySLK, getByIDAndType } from "../api/TableStorageService";
-import { getBySLK, getByIDAndType } from "../api/SurveyService";
+import SurveyService from "@/api/SurveyService";
+import { getCurrentYearMonthDay } from "@/common/utils";
 export default {
   name: "LookupFetchClientData",
   emits: ["survey-data-received", "mode-updated"],
   props: ["mode"],
   data() {
-    let now = new Date();
-    let year = now.getFullYear();
-    let month = now.getMonth();
-    let day = now.getDate();
+    const { year, month, day } = getCurrentYearMonthDay();
 
     return {
       picked_type: "",
@@ -198,11 +196,10 @@ export default {
   methods: {
     async fetchClientDataByLookupValues() {
       let result = {};
-      if (this.picked_type === "by_name" || this.idType === "slk") {
-        result = await getBySLK(this.slk);
-      } else {
-        result = await getByIDAndType(this.idVal, this.idType);
-      }
+      if (this.picked_type === "by_name" || this.idType === "slk")
+        result = await SurveyService.getBySLK(this.slk);
+      else result = await SurveyService.getByIDAndType(this.idVal, this.idType);
+
       if (result && result.value && result.value.length > 0) {
         console.log(" vale ", result.value);
         this.$emit("survey-data-received", result.value);

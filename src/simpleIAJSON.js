@@ -1,5 +1,5 @@
 export default {
-  title: "SIMPLE ANSA Initial Assessment",
+  title: "ANSA Initial Assessment",
   completedHtml: "Submitted ... PDC : {PrincipalDrugOfConcern}",
   pages: [
     {

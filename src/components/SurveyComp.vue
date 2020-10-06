@@ -1,7 +1,13 @@
 <template>
   <div>
     <survey :survey="survey"></survey>
-    <button @click.prevent="savePartialSurvey">Save Incomplete Survey</button>
+    <button
+      v-if="dirtyData"
+      class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+      @click.prevent="savePartialSurvey"
+    >
+      Save Incomplete Survey
+    </button>
   </div>
 </template>
 
@@ -9,28 +15,15 @@
 import { mapActions } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 import simpleIAJSON from "../simpleIAJSON";
+import FakeEpisodes from "@/FakeEpisodes";
+import { ROW_KEY } from "@/common/constants";
+import { generateRowKey } from "@/helper-functions/survey-helpers";
 // import { createEpisode } from "@/api/SurveyService";
 // eslint-disable-next-line
 const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
-const fakeData = {
-  PartitionKey: "SLKFT010820012",
-  RowKey: "TSS_20200614",
-  AODHistory:
-    '[{ drug_type: "nicotine", method_of_use: "smokes",  age_first_used: 15,  amount_used: 15,   how_often_used: "weekly",  units_consumed_per_period: "50 - 59",  usage_units: "cigarettes" }]',
-  ClientID: "1111",
-  "CommencementDate@odata.type": "Edm.DateTime",
-  CommencementDate: "2020-06-14T00:00:00Z",
-  IDType: "CCARE",
-  MethodOfUse: "ingests",
-  OtherDrugsOfConcern:
-    '[{ how_many_days: 15, drug_type: "opioids", method_of_use: "injects" }]',
-  PrincipalDrugOfConcern: "alcohol",
-  Staff: "ronan.oconnor",
-  SurveyMeta:
-    '{type: "InitialAssessment","version:": "1.0",status: "Incomplete"}',
-  Team: "SAPPHIRE"
-};
+
+const fakeData = FakeEpisodes[0];
 
 export default {
   name: "SurveyComp",
@@ -38,7 +31,8 @@ export default {
   //emits: ["search-index-built"],
   data() {
     return {
-      survey: {}
+      survey: {},
+      dirtyData: false
       // surveys: []
     };
   },
@@ -49,16 +43,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["ADD_SURVEY_DATASERVER"]),
+    ...mapActions(["ADD_SURVEY_DATASERVER", "UPDATE_SURVEY_DATASERVER"]),
     savePartialSurvey() {
       console.log("survey data", this.survey.data);
-      this.ADD_SURVEY_DATASERVER(fakeData); //survey.data);
+      this.UPDATE_SURVEY_DATASERVER(fakeData); //survey.data);
+      this.dirtyData = false;
     }
   },
   created() {
     console.log(simpleIAJSON);
     this.survey = new SurveyVue.Model(simpleIAJSON);
     let me = this;
+    this.survey.data["SurveyMeta"] =
+      '{type: "InitialAssessment","version:": "1.0",status: "Incomplete"}';
+
+    this.survey.onValueChanged.add(() => {
+      me.dirtyData = true;
+    });
+
     this.survey.onComplete.add(function(survey, options) {
       // if (me.isNewSurvey) {
       //   console.log("new survey");
@@ -110,7 +112,24 @@ export default {
     const clientDataEnc = sessionStorage.getItem("ClientData");
     if (!clientDataEnc) return;
     const alldata = atob(clientDataEnc);
-    this.survey.data = JSON.parse(alldata)[this.$route.params.index];
+    const thisSurvey = JSON.parse(alldata)[this.$route.params.index];
+    const surveyType = this.$route.params.type;
+    //const rowKey = getRowKey(this.survey.title);
+    if (surveyType === "edit") {
+      // don't re-generate the Row Key
+    } else if (
+      // this.$route.params.type !== undefined &&
+      this.$route.params.type === "clone" // this is done when a survey was "Complete"
+    ) {
+      // TODO: if it is the same day - warn the user !
+
+      thisSurvey["SurveyMeta"] =
+        '{type: "InitialAssessment","version:": "1.0",status: "Incomplete"}';
+      //in the clone case, we want to set a different Row Key
+      thisSurvey[ROW_KEY] = generateRowKey(this.survey.title);
+      this.survey.data = thisSurvey;
+    } // else -> "Incomplete" :  "edit"
+
     console.log("survey data", this.survey.data);
   },
   beforeDestroy() {

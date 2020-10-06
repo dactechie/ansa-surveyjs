@@ -24,4 +24,19 @@ async function promisify(object, fn, ...args) {
   });
 }
 
-export { checkAssign, promisify };
+function getCurrentYearMonthDay() {
+  const now = new Date();
+  return { year: now.getFullYear(), month: now.getMonth(), day: now.getDate() };
+}
+
+function getCurrentYearMonthDayString() {
+  const { year, month, day } = getCurrentYearMonthDay();
+  return `${year}${month}${day}`;
+}
+
+export {
+  checkAssign,
+  promisify,
+  getCurrentYearMonthDay,
+  getCurrentYearMonthDayString
+};

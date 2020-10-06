@@ -1,7 +1,8 @@
 import {
   getClientEpisodesByPartitionKey,
   getClientEpisodesByClientID,
-  createClientEpisode
+  createClientEpisode,
+  updateClientEpisode
 } from "./AZTableService";
 
 export default {
@@ -15,5 +16,9 @@ export default {
 
   async createEpisode(episodeData) {
     return await createClientEpisode(episodeData);
+  },
+
+  async updateEpisode(episodeData) {
+    return await updateClientEpisode(episodeData);
   }
 };
