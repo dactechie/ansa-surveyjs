@@ -28,7 +28,11 @@
             <router-link
               :to="{
                 name: 'SurveyView',
-                params: { type: myData.actions[index], index: index }
+                params: {
+                  type: myData.actions[index],
+                  index: index,
+                  name: k['Survey Type']
+                }
               }"
             >
               {{ myData.actions[index] }}</router-link
@@ -37,14 +41,33 @@
         </tr>
       </tbody>
     </table>
+    <div v-for="survey in surveys" :key="survey.id">
+      <router-link
+        class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+        :to="{
+          name: 'SurveyView',
+          params: { type: 'new', surveyid: survey.surveyid, name: survey.name }
+        }"
+      >
+        Create New {{ survey.name }}</router-link
+      >
+    </div>
   </div>
 </template>
 
 <script>
+import { SURVEY_ID_MAP } from "@/common/constants";
+
 export default {
   name: "ClientSurveyHistory",
   props: ["clientData"],
+  data() {
+    return {
+      surveys: SURVEY_ID_MAP
+    };
+  },
   computed: {
+    // Why is this a computed property ???????
     myData() {
       let colHeaders = [
         // "PartitionKey",
@@ -53,7 +76,6 @@ export default {
         "CommencementDate",
         "PrincipalDrugOfConcern"
       ];
-
       const srvyMeta = this.clientData.map(e => {
         return e["SurveyMeta"];
       });
@@ -67,10 +89,14 @@ export default {
         td["Survey Type"] = srvyMeta[i]["type"];
         tableVals.push(td);
       });
+
       return { data: tableVals, actions: actions };
     }
   },
   methods: {
+    // setSurveyName(surveyName) {
+    //   this.$store.state["surveyName"] = surveyName;
+    // },
     clearLookupResults() {
       this.$emit("clear-lookup-results");
     }

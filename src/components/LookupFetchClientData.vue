@@ -157,6 +157,7 @@ import { getSLK } from "@/helper-functions/slk";
 //import { getBySLK, getByIDAndType } from "../api/TableStorageService";
 import SurveyService from "@/api/SurveyService";
 import { getCurrentYearMonthDay } from "@/common/utils";
+import { PARTITION_KEY } from "@/common/constants";
 export default {
   name: "LookupFetchClientData",
   emits: ["survey-data-received", "mode-updated"],
@@ -202,6 +203,10 @@ export default {
 
       if (result && result.value && result.value.length > 0) {
         console.log(" vale ", result.value);
+        if (!this.slk)
+          this.$store.state.currentClientSLK = result.value[0][PARTITION_KEY];
+        else this.$store.state.currentClientSLK = this.slk;
+
         this.$emit("survey-data-received", result.value);
       } else {
         this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;

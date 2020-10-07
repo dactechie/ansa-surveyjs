@@ -15,6 +15,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
+    currentClientSLK: "",
+    clientData: [],
+    surveyName: ""
   },
   mutations: {},
   //actions,

@@ -55,6 +55,9 @@ export default {
     // Search,
     SurveyComp
   },
+  created() {
+    console.log("survey type in view", this.$route.params.type);
+  },
   methods: {
     visitPage(page) {
       this.currentPage = page;

@@ -51,7 +51,9 @@ export default {
       }
       let str_data = JSON.stringify(cdata);
       console.log(str_data);
-      sessionStorage.setItem("ClientData", btoa(str_data));
+      //sessionStorage.setItem("ClientData", btoa(str_data));
+      sessionStorage.setItem("ClientData", str_data);
+      this.$store.state["clientData"] = [...cdata];
 
       console.log("DATA ", this.clientData);
       this.mode = 1;
