@@ -16,18 +16,8 @@ import { mapActions } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 //import simpleIAJSON from "../simpleIAJSON";
 // import FakeEpisodes from "@/FakeEpisodes";
-import {
-  ROW_KEY,
-  PARTITION_KEY,
-  SURVEY_TYPE_MAP,
-  SURVEY_ID_MAP
-} from "@/common/constants";
-import {
-  generateRowKey,
-  serializeDeepObjects,
-  deSerializeDeepObjects
-} from "@/helper-functions/survey-helpers";
-// import { createEpisode } from "@/api/SurveyService";
+import { PARTITION_KEY, SURVEY_ID_MAP } from "@/common/constants";
+
 // eslint-disable-next-line
 const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
@@ -62,22 +52,19 @@ export default {
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
+
       this.saveSurvey(this.UPDATE_SURVEY_DATASERVER);
     },
-    saveSurvey(saveMethod) {
-      //if (!this.$store.state.program) {
+    saveSurvey(asyncSaveMethod) {
       if (!this.isProgramSet) {
         console.error("Progarm not set . Unable to ssave");
         return;
       }
-      const surveyTypeCode = SURVEY_TYPE_MAP[this.$route.params.name];
-      this.survey.data[ROW_KEY] = generateRowKey(
-        //to be cautious, ALWAYS re-generate the rowKey
-        surveyTypeCode,
+      asyncSaveMethod(
+        this.survey.data,
+        this.$route.params.name,
         this.survey.data["Team"]
       );
-      const flatSurveyData = serializeDeepObjects(this.survey.data);
-      saveMethod(flatSurveyData);
       this.dirtyData = false;
     }
   },
@@ -92,12 +79,11 @@ export default {
       // last survey with this survet name
 
       // TEMPORARY HACK : works only if there are prior episodes
-      this.survey.data = deSerializeDeepObjects(
-        this.$store.state["clientData"][this.$route.params.index]
-      );
+      this.survey.data = this.$store.state["clientData"][
+        this.$route.params.index
+      ];
     } else {
       // type: clone or edit
-
       const surveyIdDict = SURVEY_ID_MAP.find(
         kv => kv.name === this.$route.params.name
       );
@@ -109,15 +95,16 @@ export default {
       this.survey = new SurveyVue.Model({
         surveyId: surveyIdDict.surveyid
       });
-      this.survey.data = deSerializeDeepObjects(
-        this.$store.state["clientData"][this.$route.params.index]
-      );
+      this.survey.data = this.$store.state["clientData"][
+        this.$route.params.index
+      ];
     }
 
     this.survey.data[PARTITION_KEY] = this.$store.currentClientSLK;
-    this.survey.data[
-      "SurveyMeta"
-    ] = `{type: ${this.$route.params.name}, status: "Incomplete"}`;
+    this.survey.data["SurveyMeta"] = {
+      type: this.$route.params.name,
+      status: "Incomplete"
+    };
 
     const me = this;
     this.survey.onValueChanged.add(() => {
@@ -125,7 +112,7 @@ export default {
     });
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
-      console.log("survey data (not saving..just logging) ", survey.data);
+      //console.log("survey data (not saving..just logging) ", survey.data);
       me.survey.data["SurveyMeta"] = {
         type: me.$route.params.name,
         status: "Complete"
@@ -166,29 +153,6 @@ export default {
     // });
   },
   mounted() {
-    /*  const clientDataEnc = sessionStorage.getItem("ClientData");
-    this.survey.data[PARTITION_KEY] = this.$store.currentClientSLK;
-
-    if (!clientDataEnc) {
-      return;
-    }
-    //const alldata = atob(clientDataEnc);
-    const thisSurvey = JSON.parse(clientDataEnc)[this.$route.params.index];
-
-    const surveyType = this.$route.params.type;
-    if (surveyType === "edit") {
-      this.survey.data = thisSurvey;
-    } else if (this.$route.params.type === "clone") {
-      // for completed Surve
-      // TODO: if it is the same day - warn the user !
-
-      thisSurvey["SurveyMeta"] =
-        '{type: "InitialAssessment","version:": "1.0",status: "Incomplete"}';
-      //in the clone case, we want to set a different Row Key
-
-      this.survey.data = thisSurvey;
-    } // else -> "Incomplete" :  "edit"
-*/
     console.log(" mounted -> survey data", this.survey.data);
   },
   beforeDestroy() {

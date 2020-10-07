@@ -10,9 +10,19 @@ export default {
       console.log("error ", error);
     }
   },
-  UPDATE_SURVEY_DATASERVER: async function(context, surveyData) {
+
+  UPDATE_SURVEY_DATASERVER: async function(
+    context,
+    surveyData,
+    surveyName,
+    teamProgram
+  ) {
     try {
-      const response = await SurveyService.updateEpisode(surveyData);
+      const response = await SurveyService.updateEpisode(
+        surveyData,
+        surveyName,
+        teamProgram
+      );
       console.log(response);
       //commit( , response);
     } catch (error) {

@@ -22,7 +22,7 @@
 // import LookupFetchClient from "@/components/LookupFetchClient.vue";
 import LookupFetchClientData from "@/components/LookupFetchClientData.vue";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory.vue";
-import { parseAZLogicAppRESTJSON } from "@/common/parseJSON";
+
 export default {
   name: "Home",
   components: {
@@ -41,7 +41,7 @@ export default {
       this.mode = data;
     },
     updateClientData(data) {
-      let cdata = parseAZLogicAppRESTJSON(data);
+      let cdata = [...data];
 
       this.clientData = cdata;
       if (!cdata) {
@@ -53,7 +53,7 @@ export default {
       console.log(str_data);
       //sessionStorage.setItem("ClientData", btoa(str_data));
       sessionStorage.setItem("ClientData", str_data);
-      this.$store.state["clientData"] = [...cdata];
+      this.$store.state["clientData"] = cdata;
 
       console.log("DATA ", this.clientData);
       this.mode = 1;
