@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"; //mapGetters, mapState
+import { mapActions, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 //import simpleIAJSON from "../simpleIAJSON";
 // import FakeEpisodes from "@/FakeEpisodes";
-import { PARTITION_KEY, SURVEY_ID_MAP } from "@/common/constants";
+import { PARTITION_KEY } from "@/common/constants";
 
 // eslint-disable-next-line
 const Survey = SurveyVue.Survey;
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     ...mapActions(["ADD_SURVEY_DATASERVER", "UPDATE_SURVEY_DATASERVER"]),
-
+    ...mapMutations(["clearClientState"]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
@@ -66,57 +66,53 @@ export default {
         this.survey.data["Team"]
       );
       this.dirtyData = false;
+    },
+    getSurveyNameFromID(id) {
+      // store GETTER
+      const foundDict = this.$store.state["surveyNameIDList"].find(s => {
+        if (s.surveyid === id) return s.name;
+      });
+      if (foundDict) {
+        return foundDict;
+      }
+      console.log(" NOT FOUND SURVEY FOR ID>>>", id);
     }
   },
   created() {
-    console.log("survey type in component ", this.$route.params.type);
-
-    if (this.$route.params.type === "new") {
-      this.survey = new SurveyVue.Model({
-        surveyId: this.$route.params.surveyid
-      });
-      //find data to prefil
-      // last survey with this survet name
-
-      // TEMPORARY HACK : works only if there are prior episodes
-      this.survey.data = this.$store.state["clientData"][
-        this.$route.params.index
-      ];
-    } else {
-      // type: clone or edit
-      const surveyIdDict = SURVEY_ID_MAP.find(
-        kv => kv.name === this.$route.params.name
-      );
-      if (!surveyIdDict) {
-        console.log("surveyID not found. Survey : ", this.$route.params.name);
-        return;
-      }
-      // QUESTION: unset the program ? this should be set by the staff who logs in ?
-      this.survey = new SurveyVue.Model({
-        surveyId: surveyIdDict.surveyid
-      });
-      this.survey.data = this.$store.state["clientData"][
-        this.$route.params.index
-      ];
-    }
-
-    this.survey.data[PARTITION_KEY] = this.$store.currentClientSLK;
-    this.survey.data["SurveyMeta"] = {
-      type: this.$route.params.name,
-      status: "Incomplete"
-    };
-
+    //console.log("survey type in component ", this.$route.params.type);
+    this.survey = new SurveyVue.Model({
+      surveyId: this.$route.params.surveyid
+    });
     const me = this;
+    this.survey.onLoadedSurveyFromService.add((sender, options) => {
+      console.log("sender ", sender);
+      console.log("options", options);
+      if (me.$store.state["surveyMode"] !== "new") {
+        // QUESTION: unset the program ? this should be set by the staff who logs in ?
+        me.survey.data =
+          me.$store.state["clientData"][me.$store.state["prefillIndex"]];
+        me.survey.data["SurveyMeta"] = {
+          type: me.getSurveyNameFromID(me.$route.params.surveyid)
+        };
+      } else {
+        console.log("nothing to prefil ?");
+        // fill with last survey with this survet name
+      }
+
+      me.survey.data[PARTITION_KEY] = me.$store.state.currentClientSLK;
+      console.log(me.survey.data);
+
+      me.survey.data["SurveyMeta"]["status"] = "Incomplete";
+    });
+
     this.survey.onValueChanged.add(() => {
       me.dirtyData = true;
     });
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
       //console.log("survey data (not saving..just logging) ", survey.data);
-      me.survey.data["SurveyMeta"] = {
-        type: me.$route.params.name,
-        status: "Complete"
-      };
+      this.survey.data["SurveyMeta"]["status"] = "Incomplete";
+
       me.saveSurvey(me.ADD_SURVEY_DATASERVER);
     });
     // TODO : build search index from pages
@@ -156,7 +152,8 @@ export default {
     console.log(" mounted -> survey data", this.survey.data);
   },
   beforeDestroy() {
-    sessionStorage.removeItem("ClientData");
+    console.log("before destroy, clearing client sate");
+    this.clearClientState();
   }
 };
 </script>

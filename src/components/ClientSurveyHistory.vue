@@ -1,6 +1,11 @@
 <template>
   <div class="sv-page sv-body__page">
-    <button @click="clearLookupResults">Clear</button>
+    <button
+      class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-300 hover:border-red-400 hover:bg-red-300 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+      @click="clearLookupResults"
+    >
+      Clear
+    </button>
     <table class="table" v-if="clientData">
       <thead>
         <!-- <th>SLK</th> -->
@@ -25,7 +30,14 @@
           </td>
           <td>
             <!-- {{  myData.actions[index] }} -->
-            <router-link
+            <button
+              @click.prevent="
+                openSurvey(myData.actions[index], k['Survey Type'], index)
+              "
+            >
+              {{ myData.actions[index] }}
+            </button>
+            <!-- <router-link
               :to="{
                 name: 'SurveyView',
                 params: {
@@ -34,9 +46,10 @@
                   name: k['Survey Type']
                 }
               }"
+              tag="button"
             >
               {{ myData.actions[index] }}</router-link
-            >
+            > -->
           </td>
         </tr>
       </tbody>
@@ -46,7 +59,7 @@
         class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
         :to="{
           name: 'SurveyView',
-          params: { type: 'new', surveyid: survey.surveyid, name: survey.name }
+          params: { type: 'new', surveyid: survey.surveyid }
         }"
       >
         Create New {{ survey.name }}</router-link
@@ -56,18 +69,16 @@
 </template>
 
 <script>
-import { SURVEY_ID_MAP } from "@/common/constants";
-
 export default {
   name: "ClientSurveyHistory",
   props: ["clientData"],
   data() {
     return {
-      surveys: SURVEY_ID_MAP
+      surveys: this.$store.state["surveyNameIDList"]
     };
   },
   computed: {
-    // Why is this a computed property ???????
+    // QUESTION: Why is this a computed property ???????
     myData() {
       let colHeaders = [
         // "PartitionKey",
@@ -77,6 +88,7 @@ export default {
         "PrincipalDrugOfConcern"
       ];
       const srvyMeta = this.clientData.map(e => {
+        /// ANSWER :computed property because client data is set in an async way ?
         return e["SurveyMeta"];
       });
       const actions = srvyMeta.map(
@@ -97,6 +109,20 @@ export default {
     // setSurveyName(surveyName) {
     //   this.$store.state["surveyName"] = surveyName;
     // },
+    openSurvey(newEditOrClone, surveyName, selectedIndexToPrefillFrom) {
+      this.$store.state["surveyMode"] = newEditOrClone;
+      this.$store.state["prefillIndex"] = selectedIndexToPrefillFrom;
+      const foundSurvey = this.surveys.find(s => s.name === surveyName);
+
+      if (!foundSurvey) {
+        console.log(" not found survey: ", surveyName);
+        return;
+      }
+      this.$router.push({
+        name: "SurveyView",
+        params: { surveyid: foundSurvey.surveyid }
+      });
+    },
     clearLookupResults() {
       this.$emit("clear-lookup-results");
     }

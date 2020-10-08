@@ -1,7 +1,37 @@
 <template>
   <!-- <div class="home"> -->
-  <div class="sv-container-modern">
-    <div class="sv-body">
+  <div class="bg-gray-100 py-2  sm:py-12 mx-12">
+    <div class="sv-body grid grid-cols-2 gap-2">
+      <!-- <div class="sv-table__cell" id="lookup_new"> -->
+      <div class="px-12">
+        <input
+          class="form-radio h-6 w-6"
+          type="radio"
+          id="lookup"
+          name="picked_type"
+          value="lookup"
+          v-model="picked_type"
+        />
+        <label class="sv-table__cell" for="lookup"
+          ><strong>Lookup Client</strong></label
+        >
+      </div>
+      <div>
+        <input
+          class="form-radio h-6 w-6"
+          type="radio"
+          id="newclient"
+          name="picked_type"
+          value="newclient"
+          v-model="picked_type"
+        />
+        <label class="sv-table__cell" for="newclient"
+          ><strong>New Client </strong></label
+        >
+      </div>
+    </div>
+
+    <div class="sv-body" id="lookup" v-if="picked_type === 'lookup'">
       <LookupFetchClientData
         :mode="mode"
         @mode-updated="updateMode"
@@ -13,30 +43,47 @@
         :clientData="clientData"
       />
     </div>
+
+    <div class="sv-body" id="newclient" v-else-if="picked_type === 'newclient'">
+      <NewClientStart />
+    </div>
   </div>
+
   <!-- </div> -->
 </template>
 
 <script>
 // @ is an alias to /src
 // import LookupFetchClient from "@/components/LookupFetchClient.vue";
+import { mapActions } from "vuex";
 import LookupFetchClientData from "@/components/LookupFetchClientData.vue";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory.vue";
+import NewClientStart from "@/components/NewClientStart.vue";
+
+//import { getSurveysNameID } from "@/api/SurveyQuestionnaireService";
 
 export default {
   name: "Home",
   components: {
     //LookupFetchClient,
     LookupFetchClientData,
-    ClientSurveyHistory
+    ClientSurveyHistory,
+    NewClientStart
   },
   data() {
     return {
       clientData: {},
-      mode: 0
+      mode: 0,
+      picked_type: ""
     };
   },
+  mounted() {
+    // fetch survey name:id list from surveyjs.io / azure
+    this.GET_QUESTIONNAIRE_LISTING();
+    //console.log("Home mounted State", this.$store.state["surveyNameIDList"]);
+  },
   methods: {
+    ...mapActions(["GET_QUESTIONNAIRE_LISTING"]),
     updateMode(data) {
       this.mode = data;
     },

@@ -30,10 +30,7 @@ function setTypesAndTypeKVs(data) {
   dates.forEach(d => {
     if (data[d] !== null) {
       //QUESTION : undefined ?
-      if (data[d].length !== 20) {
-        console.error(data[d]);
-        return;
-      }
+      data[d] = data[d].toISOString();
       data[`${data[d]}${dataTypeKey}`] = "Edm.DateTime";
     }
   });

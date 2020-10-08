@@ -4,6 +4,7 @@ import Vuex from "vuex";
 // import survey from "./survey/";
 
 import actions from "./actions";
+import { mutations } from "./mutations";
 
 Vue.use(Vuex);
 
@@ -15,12 +16,15 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
+
+    surveyNameIDList: [],
     currentClientSLK: "",
+    prefillIndex: 0,
     clientData: [],
-    surveyName: ""
+    //surveyName: "",// this in the route url this.$route.params.type
+    surveyMode: ""
   },
-  mutations: {},
-  //actions,
+  mutations: mutations,
   actions: actions
   //modules: { survey }
 });
