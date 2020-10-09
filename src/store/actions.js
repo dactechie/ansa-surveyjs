@@ -2,6 +2,9 @@ import SurveyService from "@/api/SurveyService";
 import QuestionnaireService from "@/api/SurveyQuestionnaireService";
 import { PARTITION_KEY } from "@/common/constants";
 export default {
+  toggleSidebar(context) {
+    context.commit("toggleSidebar");
+  },
   GET_QUESTIONNAIRE_LISTING: async function({ commit }) {
     try {
       const response = await QuestionnaireService.getSurveysNameID();

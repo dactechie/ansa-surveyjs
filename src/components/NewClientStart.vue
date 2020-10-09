@@ -65,11 +65,24 @@
       <br />
     </div>
     <!-- sex -->
+    <div class="m-3">
+      <button
+        :disabled="!slk"
+        @click.prevent="startRego"
+        class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+      >
+        <span class="mx-auto">Start Registration</span>
+      </button>
+    </div>
+    <br />
+    SLK : {{ slk }}
   </div>
 </template>
 
 <script>
 import { getCurrentYearMonthDay } from "@/common/utils";
+import { getSLK } from "@/helper-functions/slk";
+
 export default {
   name: "NewClientStart",
 
@@ -77,10 +90,6 @@ export default {
     const { year, month, day } = getCurrentYearMonthDay();
 
     return {
-      picked_type: "",
-      no_client_found: "",
-      idType: "",
-      idVal: "",
       sex_type: "",
       dob: "",
       fname: "",
@@ -88,7 +97,28 @@ export default {
       minDate: new Date(year - 90, month, day),
       maxDate: new Date(year - 15, month, day)
     };
+  },
+  computed: {
+    slk: function() {
+      if (this.picked_type === "by_id") {
+        return this.idVal;
+      }
+      if (!this.fname || !this.lname || !this.dob || !this.sex_type) return "";
+      return getSLK(this.fname, this.lname, this.dob, this.sex_type);
+    }
+  },
+  methods: {
+    startRego() {
+      console.log("can start rego..");
+    }
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+</style>

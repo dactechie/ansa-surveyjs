@@ -1,6 +1,25 @@
 <template>
-  <div class="home">
-    <!--<header class="border-t-4 border-blue-700 bg-white   w-full shadow-md">
+  <!-- <div class="home"> -->
+  <div class="leading-normal tracking-normal" id="main-body">
+    <div class="flex flex-wrap">
+      <LeftsideNavbar />
+      <div
+        class="w-full bg-gray-100 pl-0 lg:pl-64 min-h-screen"
+        :class="sideBarOpen ? 'overlay' : ''"
+        id="main-content"
+      >
+        <Navbar />
+
+        <div class="p-6 bg-gray-100 mb-20">
+          <SurveyComp
+            @search-index-built="onSearchReady"
+            :currentPage="currentPage"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<header class="border-t-4 border-blue-700 bg-white   w-full shadow-md">
       <nav
         class="container mx-auto px-8 flex flex-wrap justify-between items-center py-8"
       >
@@ -31,16 +50,15 @@
         </ul>
       </nav>
     </header> -->
-    <SurveyComp
-      @search-index-built="onSearchReady"
-      :currentPage="currentPage"
-    />
-  </div>
 </template>
 
 <script>
 // @ is an alias to /src
 // import Search from "@/components/Search.vue";
+import { mapState } from "vuex";
+import LeftsideNavbar from "@/components/LeftsideNavbar"; // https://github.com/Murked/vue-tailwind-admin/tree/master/src/components
+import Navbar from "@/components/NavbarComponents/Navbar";
+// import Footer from './Footer'
 import SurveyComp from "@/components/SurveyComp.vue";
 
 export default {
@@ -53,9 +71,13 @@ export default {
   },
   components: {
     // Search,
-    SurveyComp
+    SurveyComp,
+    LeftsideNavbar,
+    Navbar
   },
-
+  computed: {
+    ...mapState(["sideBarOpen"])
+  },
   methods: {
     visitPage(page) {
       this.currentPage = page;

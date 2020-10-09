@@ -17,5 +17,11 @@ export const mutations = {
     state.clientData = [];
     //surveyName: "",// this in the route url this.$route.params.type
     state.surveyMode = "";
+  },
+  toggleSidebar(state) {
+    state.sideBarOpen = !state.sideBarOpen;
+  },
+  setNavPages(state, payload) {
+    state.navPages = payload;
   }
 };

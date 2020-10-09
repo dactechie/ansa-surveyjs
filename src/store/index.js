@@ -16,13 +16,22 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
-
+    navPages: [],
+    sideBarOpen: false,
     surveyNameIDList: [],
     currentClientSLK: "",
     prefillIndex: 0,
     clientData: [],
     //surveyName: "",// this in the route url this.$route.params.type
     surveyMode: ""
+  },
+  getters: {
+    sideBarOpen: state => {
+      return state.sideBarOpen;
+    },
+    navPages: state => {
+      return state.navPages;
+    }
   },
   mutations: mutations,
   actions: actions

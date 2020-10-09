@@ -17,6 +17,7 @@ import * as SurveyVue from "survey-vue";
 //import simpleIAJSON from "../simpleIAJSON";
 // import FakeEpisodes from "@/FakeEpisodes";
 import { PARTITION_KEY } from "@/common/constants";
+import { buildNav } from "@/helper-functions/survey-helpers";
 
 // eslint-disable-next-line
 const Survey = SurveyVue.Survey;
@@ -48,7 +49,7 @@ export default {
   },
   methods: {
     ...mapActions(["ADD_SURVEY_DATASERVER", "UPDATE_SURVEY_DATASERVER"]),
-    ...mapMutations(["clearClientState"]),
+    ...mapMutations(["clearClientState", "setNavPages"]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
@@ -103,6 +104,8 @@ export default {
       console.log(me.survey.data);
 
       me.survey.data["SurveyMeta"]["status"] = "Incomplete";
+
+      buildNav(me.survey);
     });
 
     this.survey.onValueChanged.add(() => {

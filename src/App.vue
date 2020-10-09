@@ -1,9 +1,10 @@
 <template>
-  <div id="app" class="bg-red-100">
-    <div class="bg-blue" id="nav">
+  <div id="app">
+    <!-- class="bg-red-100" -->
+    <!-- <div class="bg-blue" id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-    </div>
+    </div> -->
     <router-view />
   </div>
 </template>
