@@ -1,55 +1,63 @@
 <template>
   <!-- <div class="home"> -->
-  <div class="bg-gray-100 py-2  sm:py-12 mx-12">
-    <div class="sv-body grid grid-cols-2 gap-2">
-      <!-- <div class="sv-table__cell" id="lookup_new"> -->
-      <div class="px-12">
-        <input
-          class="form-radio h-6 w-6"
-          type="radio"
-          id="lookup"
-          name="picked_type"
-          value="lookup"
-          v-model="picked_type"
-        />
-        <label class="sv-table__cell" for="lookup"
-          ><strong>Lookup Client</strong></label
-        >
+  <div>
+    <div class="container mx-auto px-4 h-full">
+      <div class="flex content-center items-center justify-center h-full">
+        <div class="w-full lg:w-6/12 px-4">
+          <div
+            class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 border-0"
+          >
+            <div class="rounded-t mb-0 px-6 py-6  lg:px-8 lg:mx-6">
+              <ul class="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row">
+                <li class="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                  <button
+                    class="btn btn--active"
+                    id="lookup"
+                    @click.prevent="picked_type = 'lookup'"
+                  >
+                    Lookup
+                  </button>
+                </li>
+                <li class="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                  <button
+                    class="btn btn--inactive"
+                    id="newRego"
+                    @click.prevent="picked_type = 'newclient'"
+                  >
+                    New Client Rego
+                  </button>
+                </li>
+              </ul>
+              <div
+                v-if="mode === 0"
+                class="  relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded"
+              >
+                <div class="px-4 py-5 flex-auto">
+                  <div class="tab-content tab-space">
+                    <div v-if="picked_type === 'lookup'">
+                      <LookupFetchClientData
+                        :mode="mode"
+                        @mode-updated="updateMode"
+                        @survey-data-received="updateClientData"
+                      />
+                    </div>
+                    <div v-else-if="picked_type === 'newclient'">
+                      <NewClientStart />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <input
-          class="form-radio h-6 w-6"
-          type="radio"
-          id="newclient"
-          name="picked_type"
-          value="newclient"
-          v-model="picked_type"
-        />
-        <label class="sv-table__cell" for="newclient"
-          ><strong>New Client </strong></label
-        >
-      </div>
-    </div>
-
-    <div class="sv-body" id="lookup" v-if="picked_type === 'lookup'">
-      <LookupFetchClientData
-        :mode="mode"
-        @mode-updated="updateMode"
-        @survey-data-received="updateClientData"
-      />
       <ClientSurveyHistory
         v-if="mode == 1"
         @clear-lookup-results="mode = 0"
         :clientData="clientData"
       />
     </div>
-
-    <div class="sv-body" id="newclient" v-else-if="picked_type === 'newclient'">
-      <NewClientStart />
-    </div>
   </div>
-
-  <!-- </div> -->
 </template>
 
 <script>
@@ -73,8 +81,8 @@ export default {
   data() {
     return {
       clientData: {},
-      mode: 0,
-      picked_type: ""
+      mode: 0, // TODO : remove, redundant -> same as clientData == undefined
+      picked_type: "lookup"
     };
   },
   mounted() {

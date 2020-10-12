@@ -3,3 +3,24 @@
 @tailwind components;
 
 @tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply text-center block border rounded-md py-2 px-4 shadow-sm;
+  }
+
+  .btn--active {
+    @apply border-blue-500  bg-blue-500 text-white;
+  }
+  .btn--active:hover {
+    @apply bg-blue-400 text-white;
+  }
+
+  .btn--inactive {
+    @apply border-white   text-blue-500;
+  }
+
+  .btn--inactive:hover {
+    @apply bg-gray-200  border-gray-200;
+  }
+}

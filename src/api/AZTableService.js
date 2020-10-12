@@ -2,39 +2,36 @@ import { doPostAction } from "./RESTClient";
 import {
   PARTITION_KEY,
   ROW_KEY,
-  DB_EPISODE,
-  DB_IDTYPE_MCARE
+  DB_ANSA,
+  DB_IDTYPE_CCARE
 } from "@/common/constants";
-import { toAZDataStructure, fromAZDataArray } from "@/common/AZDataAdapter";
+import { fromAZDataArray } from "@/common/AZDataAdapter";
 
 const GET_URL = process.env.VUE_APP_GET_TABLESTORE_LOGAPP;
 const UPSERT_URL = process.env.VUE_APP_UPSERT_TABLESTORE_LOGAPP;
 
-function createClientEpisode(episodeData, entity = DB_EPISODE) {
-  const azTableJSON = toAZDataStructure(episodeData);
+function createClientData(rowData, entity = DB_ANSA) {
+  //const azTableJSON = toAZDataStructure(rowData);
   let data = {
     Entity: entity,
-    EntityJSON: azTableJSON
+    EntityJSON: rowData
   };
   return doPostAction(UPSERT_URL, data);
 }
 
-function updateClientEpisode(episodeData, entity = DB_EPISODE) {
-  const azTableJSON = toAZDataStructure(episodeData);
+function updateClientData(rowData, entity = DB_ANSA) {
+  //const azTableJSON = toAZDataStructure(rowData);
   let data = {
     Entity: entity,
     Operation: "update",
-    PartitionKey: episodeData[PARTITION_KEY],
-    RowKey: episodeData[ROW_KEY],
-    EntityJSON: azTableJSON
+    PartitionKey: rowData[PARTITION_KEY],
+    RowKey: rowData[ROW_KEY],
+    EntityJSON: rowData
   };
   return doPostAction(UPSERT_URL, data);
 }
 
-async function getClientEpisodesByPartitionKey(
-  partitionKey,
-  entity = DB_EPISODE
-) {
+async function getClientDataByPartitionKey(partitionKey, entity = DB_ANSA) {
   let data = {
     Entity: entity,
     idType: PARTITION_KEY,
@@ -45,10 +42,10 @@ async function getClientEpisodesByPartitionKey(
   return fromAZDataArray(await result.value);
 }
 
-async function getClientEpisodesByClientID(
+async function getClientDataByClientID(
   clientID,
-  entity = DB_EPISODE,
-  idType = DB_IDTYPE_MCARE
+  entity = DB_ANSA,
+  idType = DB_IDTYPE_CCARE
 ) {
   let data = {
     Entity: entity,
@@ -61,8 +58,8 @@ async function getClientEpisodesByClientID(
 }
 
 export {
-  getClientEpisodesByPartitionKey,
-  getClientEpisodesByClientID,
-  createClientEpisode,
-  updateClientEpisode
+  getClientDataByPartitionKey,
+  getClientDataByClientID,
+  createClientData,
+  updateClientData
 };

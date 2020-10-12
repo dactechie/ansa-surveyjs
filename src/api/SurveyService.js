@@ -1,8 +1,8 @@
 import {
-  getClientEpisodesByPartitionKey,
-  getClientEpisodesByClientID,
-  createClientEpisode,
-  updateClientEpisode
+  getClientDataByPartitionKey,
+  getClientDataByClientID,
+  createClientData,
+  updateClientData
 } from "./AZTableService";
 import {
   ROW_KEY,
@@ -14,26 +14,21 @@ import { generateRowKey } from "@/helper-functions/survey-helpers";
 
 export default {
   async getBySLK(slk) {
-    return await getClientEpisodesByPartitionKey(slk);
+    return await getClientDataByPartitionKey(slk);
   },
 
   async getByIDAndType(id, idType) {
-    return await getClientEpisodesByClientID(id, idType);
+    return await getClientDataByClientID(id, idType);
   },
 
-  async createEpisode(episodeData, surveyName, teamProgram) {
-    episodeData[ROW_KEY] = generateRowKey(
-      SURVEY_TYPE_MAP[surveyName],
-      teamProgram
-    );
-    return await createClientEpisode(episodeData);
+  async createData(rowData, surveyName, teamProgram) {
+    rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[surveyName], teamProgram);
+    return await createClientData(rowData);
   },
 
-  async updateEpisode(episodeData, surveyName, teamProgram) {
-    episodeData[ROW_KEY] = generateRowKey(
-      SURVEY_TYPE_MAP[surveyName],
-      teamProgram
-    );
-    return await updateClientEpisode(episodeData);
+  async updateData(rowData, surveyName, teamProgram) {
+    //let data = {SurveyData: rowData
+    rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[surveyName], teamProgram);
+    return await updateClientData(rowData);
   }
 };

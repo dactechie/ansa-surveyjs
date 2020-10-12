@@ -1,6 +1,6 @@
 import SurveyService from "@/api/SurveyService";
 import QuestionnaireService from "@/api/SurveyQuestionnaireService";
-import { PARTITION_KEY } from "@/common/constants";
+import { PARTITION_KEY, DB_META_KEYS } from "@/common/constants";
 export default {
   toggleSidebar(context) {
     context.commit("toggleSidebar");
@@ -22,7 +22,7 @@ export default {
       const result = await SurveyService.getBySLK(slk);
       if (result && result.length > 0) {
         commit("setClientData", await result);
-        commit("setClientSLK", await result[0][PARTITION_KEY]);
+        commit("setClientSLK", await result[0][PARTITION_KEY]);        
       }
 
       return await result;
@@ -42,9 +42,21 @@ export default {
       console.log("error ", error);
     }
   },
-  ADD_SURVEY_DATASERVER: async function(context, surveyData) {
-    try {
-      const response = await SurveyService.createEpisode(surveyData);
+  ADD_SURVEY_DATASERVER: async function(context, data) {
+    try {  
+      let dbObj = {"SurveyData": {}};
+      //get keys to push into "SurveyData" key for database
+      Object.keys(data).forEach( key =>{
+        if(DB_META_KEYS.indexOf(key) >= 0) {
+          dbObj[key] = data[key];
+        } else {
+          dbObj["SurveyData"][key] = data[key];
+        }
+      });
+      delete dbObj["SurveyData"]["Timestamp"];
+      dbObj["SurveyData"] = JSON.stringify(dbObj["SurveyData"]);
+
+      const response = await SurveyService.createData(dbObj, dbObj["SurveyName"], dbObj["Program"]);
       console.log(response);
       //commit( , response);
     } catch (error) {
@@ -59,7 +71,7 @@ export default {
     teamProgram
   ) {
     try {
-      const response = await SurveyService.updateEpisode(
+      const response = await SurveyService.updateData(
         surveyData,
         surveyName,
         teamProgram

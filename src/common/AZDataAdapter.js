@@ -21,64 +21,64 @@
     "odata.etag": '"W/"datetime\'2020-09-28T13%3A49%3A03.8768148Z\'""'
   }*/
 
-const dataTypeKey = "@odata.type";
-const lenDataTypeKey = dataTypeKey.length;
+// const dataTypeKey = "@odata.type";
+//const lenDataTypeKey = dataTypeKey.length;
 
-function setTypesAndTypeKVs(data) {
-  const dates = ["CommencementDate", "EndDate"];
-  //"2020-06-14T00:00:00Z", , is it in this format ? if not set to this.
-  dates.forEach(d => {
-    if (data[d] !== null) {
-      //QUESTION : undefined ?
-      data[d] = data[d].toISOString();
-      data[`${data[d]}${dataTypeKey}`] = "Edm.DateTime";
-    }
-  });
-}
+// function setTypesAndTypeKVs(data) {
+//   const dates = ["CommencementDate", "EndDate"];
+//   //"2020-06-14T00:00:00Z", , is it in this format ? if not set to this.
+//   dates.forEach(d => {
+//     if (data[d] !== null) {
+//       //QUESTION : undefined ?
+//       data[d] = data[d].toISOString();
+//       data[`${data[d]}${dataTypeKey}`] = "Edm.DateTime";
+//     }
+//   });
+// }
 /**
  * @function toAZDataStructure
  * @returns  Stringified (flattened) format for storage into AZ Table
  * @param {*} data
  */
-export function toAZDataStructure(data) {
-  const azTypedData = setTypesAndTypeKVs({ ...data });
-  //stringify objects
-  // for (const [k, v] of azTypedData) {
-  //   if (typeof v === "object" && v !== null) {
-  //     azTypedData[k] = JSON.stringify(v);
-  //   }
-  // }
+// export function toAZDataStructure(data) {
+//   const azTypedData = setTypesAndTypeKVs({ ...data });
+//   //stringify objects
+//   // for (const [k, v] of azTypedData) {
+//   //   if (typeof v === "object" && v !== null) {
+//   //     azTypedData[k] = JSON.stringify(v);
+//   //   }
+//   // }
 
-  // no need to stringify :
-  //> JSON.stringify({ b: {d:"sd"}, c: new Date() })  > '{"b":{"d":"sd"},"c":"2020-10-07T12:34:23.103Z"}'
+//   // no need to stringify :
+//   //> JSON.stringify({ b: {d:"sd"}, c: new Date() })  > '{"b":{"d":"sd"},"c":"2020-10-07T12:34:23.103Z"}'
 
-  return azTypedData;
-}
+//   return azTypedData;
+// }
 
-function _getTypesAndNonTypeKVs(data) {
-  let types = {},
-    nonTypeKV = {};
+// function _getTypesAndNonTypeKVs(data) {
+//   let types = {},
+//     nonTypeKV = {};
 
-  Object.keys(data).filter(s => {
-    // TODO: this should not be filter() rite ?
-    if (s.includes(dataTypeKey)) {
-      types[s.substr(0, s.length - lenDataTypeKey)] = data[s];
-    } else {
-      nonTypeKV[s] = data[s];
-    }
-  });
-  return [types, nonTypeKV];
-}
-function _fixTypes(dataDict) {
-  // don't assume that each row of data has same types
-  const [types, goodKeysVals] = _getTypesAndNonTypeKVs(dataDict);
-  Object.keys(types).forEach(k => {
-    if (types[k] === "Edm.DateTime") {
-      goodKeysVals[k] = new Date(goodKeysVals[k]);
-    }
-  });
-  return goodKeysVals;
-}
+//   Object.keys(data).filter(s => {
+//     // TODO: this should not be filter() rite ?
+//     if (s.includes(dataTypeKey)) {
+//       types[s.substr(0, s.length - lenDataTypeKey)] = data[s];
+//     } else {
+//       nonTypeKV[s] = data[s];
+//     }
+//   });
+//   return [types, nonTypeKV];
+// }
+// function _fixTypes(dataDict) {
+//   // don't assume that each row of data has same types
+//   const [types, goodKeysVals] = _getTypesAndNonTypeKVs(dataDict);
+//   Object.keys(types).forEach(k => {
+//     if (types[k] === "Edm.DateTime") {
+//       goodKeysVals[k] = new Date(goodKeysVals[k]);
+//     }
+//   });
+//   return goodKeysVals;
+// }
 
 /**
  * @function fromAZDataArray
@@ -90,7 +90,10 @@ export function fromAZDataArray(data) {
 
   for (const dat in data) {
     let cd = {};
-    let dataDict = _fixTypes(data[dat]);
+    //let dataDict = _fixTypes(data[dat]); 
+    let dataDict = { ...data[dat],
+                      "Timestamp": new Date(data[dat]["Timestamp"]).toDateString()
+                    };
 
     delete dataDict["odata.etag"];
     for (const [k, v] of Object.entries(dataDict)) {
@@ -98,7 +101,7 @@ export function fromAZDataArray(data) {
       if (v[0] === "[" || v[0] === "{") cd[k] = JSON.parse(v);
       else cd[k] = v;
     }
-    cd["Timestamp"] = new Date(cd["Timestamp"]);
+    //cd["Timestamp"] = new Date(cd["Timestamp"]);
     cdata.push(cd);
   }
   return cdata;

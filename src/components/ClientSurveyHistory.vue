@@ -4,19 +4,20 @@
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-300 hover:border-red-400 hover:bg-red-300 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       @click="clearLookupResults"
     >
-      Clear
+      Clear Results
     </button>
     <table class="table" v-if="clientData">
       <thead>
         <!-- <th>SLK</th> -->
+        <th class="sv-table__cell sv-table__cell--header">Last Modified</th>
         <th class="sv-table__cell sv-table__cell--header">Team</th>
         <th class="sv-table__cell sv-table__cell--header">Staff</th>
-        <th class="sv-table__cell sv-table__cell--header">Commencement Date</th>
-        <th class="sv-table__cell sv-table__cell--header">
+
+        <!-- <th class="sv-table__cell sv-table__cell--header">
           Principal Drug Of Concern
-        </th>
+        </th> -->
         <th class="sv-table__cell sv-table__cell--header">Status</th>
-        <th class="sv-table__cell sv-table__cell--header">Survey Type</th>
+        <th class="sv-table__cell sv-table__cell--header">Survey Name</th>
         <th class="sv-table__cell sv-table__cell--header">Action</th>
       </thead>
       <tbody>
@@ -31,8 +32,9 @@
           <td>
             <!-- {{  myData.actions[index] }} -->
             <button
+              class="btn btn--active"
               @click.prevent="
-                openSurvey(myData.actions[index], k['Survey Type'], index)
+                openSurvey(myData.actions[index], myData.data[index][4], index)
               "
             >
               {{ myData.actions[index] }}
@@ -82,23 +84,21 @@ export default {
     myData() {
       let colHeaders = [
         // "PartitionKey",
-        "Team",
+        "Timestamp",
+        "Program",
         "Staff",
-        "CommencementDate",
-        "PrincipalDrugOfConcern"
+        "Status",
+        "SurveyName"
+        //"PrincipalDrugOfConcern"
       ];
-      const srvyMeta = this.clientData.map(e => {
-        /// ANSWER :computed property because client data is set in an async way ?
-        return e["SurveyMeta"];
-      });
-      const actions = srvyMeta.map(
-        e => (e["status"] === "Complete" ? "clone" : "edit") // only the last one can be cloned
+
+      const actions = this.clientData.map(
+        e => (e["Status"] === "Complete" ? "clone" : "edit") // only the last one can be cloned
       );
       let tableVals = [];
-      this.clientData.forEach(function(c, i) {
+      this.clientData.forEach(function(c) {
         let td = colHeaders.map(h => c[h]);
-        td["Status"] = srvyMeta[i]["status"];
-        td["Survey Type"] = srvyMeta[i]["type"];
+        //td["Survey Type"] = c["SurveyName"];
         tableVals.push(td);
       });
 

@@ -58,20 +58,19 @@
         placeholder="mcare_id"
       />
       <label class="sv-table__cell" for="mcare_id">MCARE ID</label>
-      <p>
-        <input
-          class="sv-table__cell"
-          type="text"
-          id="id_val"
-          v-model="idVal"
-          value="ALLFT210719811"
-          placeholder="Enter an ID"
-        />
-      </p>
+      <br />
+      <input
+        class="sv-table__cell"
+        type="text"
+        id="id_val"
+        v-model="idVal"
+        value="ALLFT210719811"
+        placeholder="Enter an ID"
+      />
     </div>
 
     <div class="sv-table__cell" id="by_name" v-show="picked_type === 'by_name'">
-      <label class="sv-table__cell" for="fname">First Name</label>
+      <!-- <label class="sv-table__cell" for="fname">First Name</label> -->
       <input
         class="sv-table__cell"
         type="text"
@@ -81,7 +80,7 @@
         v-model="fname"
       />
       <br />
-      <label class="sv-table__cell" for="lname">Last Name</label>
+      <!-- <label class="sv-table__cell" for="lname">Last Name</label> -->
       <input
         class="sv-table__cell"
         type="text"
@@ -91,9 +90,8 @@
         v-model="lname"
       />
       <br />
-      <label class="sv-table__cell" for="dob">DOB</label>
+      <label for="dob">DOB</label>
       <input
-        class="sv-table__cell"
         type="date"
         id="dob"
         name="DOB"

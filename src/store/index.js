@@ -5,6 +5,7 @@ import Vuex from "vuex";
 
 import actions from "./actions";
 import { mutations } from "./mutations";
+//import {DBSurveyObject} from "./survey/state";
 
 Vue.use(Vuex);
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     clientData: [],
     //surveyName: "",// this in the route url this.$route.params.type
     surveyMode: ""
+    //dbObject: DBSurveyObject
   },
   getters: {
     sideBarOpen: state => {

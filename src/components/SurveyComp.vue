@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     isProgramSet() {
-      return !!this.survey.data["Team"];
+      return !!this.survey.data["Program"];
     }
   },
   methods: {
@@ -62,22 +62,23 @@ export default {
         return;
       }
       asyncSaveMethod(
+        // SLK ,
         this.survey.data,
         this.$route.params.name,
-        this.survey.data["Team"]
+        this.survey.data["Program"]
       );
       this.dirtyData = false;
-    },
-    getSurveyNameFromID(id) {
-      // store GETTER
-      const foundDict = this.$store.state["surveyNameIDList"].find(s => {
-        if (s.surveyid === id) return s.name;
-      });
-      if (foundDict) {
-        return foundDict;
-      }
-      console.log(" NOT FOUND SURVEY FOR ID>>>", id);
     }
+    // getSurveyNameFromID(id) {
+    //   // store GETTER
+    //   const foundDict = this.$store.state["surveyNameIDList"].find(s => {
+    //     if (s.surveyid === id) return s.name;
+    //   });
+    //   if (foundDict) {
+    //     return foundDict;
+    //   }
+    //   console.log(" NOT FOUND SURVEY FOR ID>>>", id);
+    // }
   },
   created() {
     //console.log("survey type in component ", this.$route.params.type);
@@ -90,11 +91,18 @@ export default {
       console.log("options", options);
       if (me.$store.state["surveyMode"] !== "new") {
         // QUESTION: unset the program ? this should be set by the staff who logs in ?
-        me.survey.data =
+        const currentSurvey =
           me.$store.state["clientData"][me.$store.state["prefillIndex"]];
-        me.survey.data["SurveyMeta"] = {
-          type: me.getSurveyNameFromID(me.$route.params.surveyid)
-        };
+
+        Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
+          currentSurvey[k] = v;
+        });
+        delete currentSurvey["SurveyData"];
+        // {
+        //   me.survey.data[mk] = currentSurvey[mk];
+        // });
+        me.survey.data = { ...currentSurvey };
+        me.survey.data["SurveyID"] = me.$route.params.surveyid;
       } else {
         console.log("nothing to prefil ?");
         // fill with last survey with this survet name
@@ -103,7 +111,7 @@ export default {
       me.survey.data[PARTITION_KEY] = me.$store.state.currentClientSLK;
       console.log(me.survey.data);
 
-      me.survey.data["SurveyMeta"]["status"] = "Incomplete";
+      me.survey.data["Status"] = "Incomplete";
 
       buildNav(me.survey);
     });
@@ -114,7 +122,7 @@ export default {
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
       //console.log("survey data (not saving..just logging) ", survey.data);
-      this.survey.data["SurveyMeta"]["status"] = "Incomplete";
+      me.survey.data["Status"] = "Complete";
 
       me.saveSurvey(me.ADD_SURVEY_DATASERVER);
     });
