@@ -82,6 +82,16 @@ export default {
   },
   created() {
     //console.log("survey type in component ", this.$route.params.type);
+    if(this.$route.params.surveyid) {
+      if (!this.store.$state["ClientData"]) {
+        console.log("page was refreshed. trying to get data from loca")
+      }
+      let clientData = sessionStorage.getItem("ClientData"); 
+
+    } else {
+      console.error("No Survey ID");
+      return;
+    }
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });

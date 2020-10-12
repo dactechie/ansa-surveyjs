@@ -84,7 +84,7 @@ export default {
     myData() {
       let colHeaders = [
         // "PartitionKey",
-        "Timestamp",
+        "LastModifiedDate",
         "Program",
         "Staff",
         "Status",

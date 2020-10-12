@@ -77,7 +77,7 @@ export function fromAZDataArray(data) {
     //let dataDict = _fixTypes(data[dat]);
     let dataDict = {
       ...data[dat],
-      Timestamp: new Date(data[dat]["Timestamp"]).toDateString()
+      LastModifiedDate: new Date(data[dat]["Timestamp"]).toDateString()
     };
 
     delete dataDict["odata.etag"];

@@ -25,6 +25,9 @@
         <p class="font-semibold text-2xl text-red-400 pl-4">
           ANSA Initial Assessment
         </p>
+        <p class="font-semibold text-1xl text-red-300 pl-4">
+          Created on 10 Oct 2020
+        </p>
 
         <!-- search bar -->
         <div class="relative text-gray-600">
@@ -56,10 +59,12 @@
             </svg>
           </button>
         </div>
+
       </div>
 
       <!-- right navbar -->
-      <div class="flex items-center relative">
+      <div class="flex items-center relative space-x-4">
+        
         <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           height="24"
