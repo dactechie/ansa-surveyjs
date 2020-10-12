@@ -1,25 +1,34 @@
 /*{
-    AODHistory:
-      '[{"drug_type":"nicotine","method_of_use":"smokes","age_first_used":15,"amount_used":15,"how_often_used": "weekly","units_consumed_per_period":"50 - 59","usage_units":"cigarettes"}]',
-    ClientID: "2343",
-    CommencementDate: "2020-06-14T00:00:00Z",
-    "CommencementDate@odata.type": "Edm.DateTime",
-    EndDate: "2020-07-14T00:00:00Z",
-    "EndDate@odata.type": "Edm.DateTime",
-    IDType: "MCARE",
-    MethodOfUse: "ingests",
-    OtherDrugsOfConcern:
-      '[{"how_many_days":15,"drug_type":"opioids","method_of_use":"injects"}]',
-    PartitionKey: "ALLFT210719811",
-    PrincipalDrugOfConcern: "alcohol",
-    RowKey: "TSS_20200614",
-    Staff: "michelle.figares",
-    SurveyMeta:
-      '{"type":"InitialAssessment","version:":"1.0", "status":"Complete"}',
-    Team: "BEGAPATH",
-    Timestamp: "2020-09-28T13:49:03.8768148Z",
-    "odata.etag": '"W/"datetime\'2020-09-28T13%3A49%3A03.8768148Z\'""'
-  }*/
+  "SurveyData": {
+    "Timestamp": "Mon Oct 12 2020",
+    "Status": "Incomplete",
+    "SurveyID": "ddc3dec4-6de5-4bc9-a963-87e20896feed",
+    "PartitionKey": "ALLFT210719811",
+    "RowKey": "undefined_undefined_2020912",
+    "ClientID": "1234",
+    "Program": "SAPPHIRE",
+    "SourceDatabase": "CCARE",
+    "Staff": "Tim.Ireson",
+    "SurveyName": "ANSA InitialAssessment"
+
+    // Survey data: 
+    "AODHistory": [
+      { "drug_type": "nicotine", "method_of_use": "smokes",   "age_first_used": 15, "amount_used": 15, "how_often_used": "weekly",
+        "units_consumed_per_period": "50 - 59", "usage_units": "cigarettes"}],
+    "MethodOfUse": "ingests",
+    "OtherDrugsOfConcern": [{ "how_many_days": 15,"drug_type": "opioids","method_of_use": "injects" }],
+    "PrincipalDrugOfConcern": "alcohol",
+    "AddictiveBehaviours": ["sex","gambling"],
+    "Risks": ["usealone", "other", "violence" ],
+    "RisksOtherComments": "",
+    "ImpactOnDailyActivities": 3,
+    "aod_history": [
+      { "drug_type": "alcohol","method_of_use": "ingests", "how_often_used": "daily","age_first_used": 2, "usage_units": "shots", "units_consumed_per_period": "15 - 19" } ],
+    "aod_harms_risks": ["usealone" ],
+    "impctdaily": "1",
+    "additive_behaviours": [ "sex" ]
+  }
+}*/
 
 // const dataTypeKey = "@odata.type";
 //const lenDataTypeKey = dataTypeKey.length;
@@ -55,31 +64,6 @@
 //   return azTypedData;
 // }
 
-// function _getTypesAndNonTypeKVs(data) {
-//   let types = {},
-//     nonTypeKV = {};
-
-//   Object.keys(data).filter(s => {
-//     // TODO: this should not be filter() rite ?
-//     if (s.includes(dataTypeKey)) {
-//       types[s.substr(0, s.length - lenDataTypeKey)] = data[s];
-//     } else {
-//       nonTypeKV[s] = data[s];
-//     }
-//   });
-//   return [types, nonTypeKV];
-// }
-// function _fixTypes(dataDict) {
-//   // don't assume that each row of data has same types
-//   const [types, goodKeysVals] = _getTypesAndNonTypeKVs(dataDict);
-//   Object.keys(types).forEach(k => {
-//     if (types[k] === "Edm.DateTime") {
-//       goodKeysVals[k] = new Date(goodKeysVals[k]);
-//     }
-//   });
-//   return goodKeysVals;
-// }
-
 /**
  * @function fromAZDataArray
  * @returns Parsed (unflattened) dict with Dates and Objects
@@ -90,10 +74,11 @@ export function fromAZDataArray(data) {
 
   for (const dat in data) {
     let cd = {};
-    //let dataDict = _fixTypes(data[dat]); 
-    let dataDict = { ...data[dat],
-                      "Timestamp": new Date(data[dat]["Timestamp"]).toDateString()
-                    };
+    //let dataDict = _fixTypes(data[dat]);
+    let dataDict = {
+      ...data[dat],
+      Timestamp: new Date(data[dat]["Timestamp"]).toDateString()
+    };
 
     delete dataDict["odata.etag"];
     for (const [k, v] of Object.entries(dataDict)) {
@@ -101,7 +86,6 @@ export function fromAZDataArray(data) {
       if (v[0] === "[" || v[0] === "{") cd[k] = JSON.parse(v);
       else cd[k] = v;
     }
-    //cd["Timestamp"] = new Date(cd["Timestamp"]);
     cdata.push(cd);
   }
   return cdata;
