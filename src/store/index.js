@@ -17,7 +17,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
-    navPages: [],
+    currentSurvey: {},
     sideBarOpen: false,
     surveyNameIDList: [],
     currentClientSLK: "",
@@ -29,9 +29,6 @@ export default new Vuex.Store({
   getters: {
     sideBarOpen: state => {
       return state.sideBarOpen;
-    },
-    navPages: state => {
-      return state.navPages;
     },
     getCurrentSurveyName: state => {
       return state.surveyName;

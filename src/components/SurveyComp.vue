@@ -16,8 +16,6 @@ import { mapActions, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 //import simpleIAJSON from "../simpleIAJSON";
 // import FakeEpisodes from "@/FakeEpisodes";
-// import { PARTITION_KEY } from "@/common/constants";
-import { buildNav } from "@/helper-functions/survey-helpers";
 
 // eslint-disable-next-line
 const Survey = SurveyVue.Survey;
@@ -49,7 +47,7 @@ export default {
   },
   methods: {
     ...mapActions(["ADD_SURVEY_DATASERVER", "UPDATE_SURVEY_DATASERVER"]),
-    ...mapMutations(["clearClientState", "setNavPages"]),
+    ...mapMutations(["clearClientState", "setCurrentSurvey"]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
@@ -75,31 +73,8 @@ export default {
       });
       this.dirtyData = false;
     }
-    // getSurveyNameFromID(id) {
-    //   // store GETTER
-    //   const foundDict = this.$store.state["surveyNameIDList"].find(s => {
-    //     if (s.surveyid === id) return s.name;
-    //   });
-    //   if (foundDict) {
-    //     return foundDict;
-    //   }
-    //   console.log(" NOT FOUND SURVEY FOR ID>>>", id);
-    // }
   },
   created() {
-    //console.log("survey type in component ", this.$route.params.type);
-    // use vuex-persist
-    // if(this.$route.params.surveyid) {
-    //   if (this.store.$state["ClientData"] == undefined) {
-    //     console.log("page was refreshed. trying to get data from loca");
-    //     let clientData = sessionStorage.getItem("ClientData");
-    //     this.$store.state["clientData"] = clientData;
-    //   }
-
-    // } else {
-    //   console.error("No Survey ID");
-    //   return;
-    // }
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
@@ -113,28 +88,24 @@ export default {
           me.$store.state["clientData"][me.$store.state["prefillIndex"]];
 
         //TODO: move this to a  vuex action for GET or SurveyService
-        Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
-          currentSurvey[k] = v;
-        });
-        delete currentSurvey["SurveyData"];
-        // {
-        //   me.survey.data[mk] = currentSurvey[mk];
-        // });
-        me.survey.data = { ...currentSurvey };
+        if (!currentSurvey) {
+          console.log("Could not find survey. reload ?");
+          //TODO Add toast
+        } else {
+          Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
+            currentSurvey[k] = v;
+          });
+          delete currentSurvey["SurveyData"];
+
+          // {
+          //   me.survey.data[mk] = currentSurvey[mk];
+          // });
+          me.survey.data = { ...currentSurvey };
+        }
       } else {
         console.log("nothing to prefil ?");
-        // fill with last survey with this survet name
-        // me.survey.data["Staff"] = "Steve.Farrugia";
-        // me.survey.data["Program"] = "SAPPHIRE";
-        // me.survey.data = {
-        //   SurveyName: this.$store.state.surveyName
-        // };
       }
-      //me.survey.data["SurveyID"] = me.$route.params.surveyid;
-      //me.survey.data["Status"] = "Incomplete";
-      console.log(me.survey.data);
-
-      buildNav(me.survey);
+      me.setCurrentSurvey(me.survey); // for Nav to work
     });
 
     this.survey.onValueChanged.add(() => {

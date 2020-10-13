@@ -6,7 +6,9 @@ export const mutations = {
   setClientData(state, payload) {
     state.clientData = payload;
   },
-
+  setCurrentSurvey(state, payload) {
+    state.currentSurvey = payload;
+  },
   setClientSLK(state, payload) {
     state.currentClientSLK = payload;
   },
@@ -23,8 +25,5 @@ export const mutations = {
   },
   toggleSidebar(state) {
     state.sideBarOpen = !state.sideBarOpen;
-  },
-  setNavPages(state, payload) {
-    state.navPages = payload;
   }
 };

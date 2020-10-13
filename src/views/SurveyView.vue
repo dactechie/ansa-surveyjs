@@ -2,7 +2,7 @@
   <!-- <div class="home"> -->
   <div class="leading-normal tracking-normal" id="main-body">
     <div class="flex flex-wrap">
-      <LeftsideNavbar />
+      <LeftsideNavbar @page-change="visitPage" />
       <div
         class="w-full bg-gray-100 pl-0 lg:pl-64 min-h-screen"
         :class="sideBarOpen ? 'overlay' : ''"
@@ -58,8 +58,7 @@
 import { mapState } from "vuex";
 import LeftsideNavbar from "@/components/NavSidebarComponents/LeftsideNavbar"; // https://github.com/Murked/vue-tailwind-admin/tree/master/src/components
 import Navbar from "@/components/NavSidebarComponents/Navbar";
-// import Footer from './Footer'
-import SurveyComp from "@/components/SurveyComp.vue";
+import SurveyComp from "@/components/SurveyComp";
 
 export default {
   name: "SurveyView",
@@ -81,7 +80,6 @@ export default {
   methods: {
     visitPage(page) {
       this.currentPage = page;
-      console.log("Page", page);
     },
     onSearchReady(searchIndexData) {
       this.searchIndexData = searchIndexData;
