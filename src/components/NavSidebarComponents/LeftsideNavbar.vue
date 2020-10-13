@@ -7,7 +7,7 @@
     id="main-nav"
   >
     <div class="w-full h-20 border-b flex px-3 items-center mb-6">
-      <p class="font-semibold text-2xl text-blue-400 pl-4">
+      <p class="font-semibold text-1xl text-blue-400 pl-4">
         Directions Health Services
       </p>
     </div>

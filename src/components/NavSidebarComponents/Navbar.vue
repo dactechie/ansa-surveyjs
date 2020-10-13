@@ -1,7 +1,7 @@
 <template>
   <div class="sticky top-0 z-40">
     <div
-      class="w-full h-20 px-6 bg-gray-100 border-b flex items-center justify-between"
+      class="w-full px-6 bg-gray-100 border-b flex items-center justify-between"
     >
       <!-- left navbar -->
       <div class="flex">
@@ -22,13 +22,13 @@
             </svg>
           </button>
         </div>
-        <p class="font-semibold text-2xl text-red-400 pl-4">
-          ANSA Initial Assessment
-        </p>
-        <p class="font-semibold text-1xl text-red-300 pl-4">
-          Created on 10 Oct 2020
-        </p>
+        <div class="font-bold text-1xl text-indigo-700 pl-4 pr-4">
+          {{ surveyName }}
 
+          <div class="font-semibold text-xs text-red-300 ">
+            Created: 10/10/2020 Modified: 11/10/2020
+          </div>
+        </div>
         <!-- search bar -->
         <div class="relative text-gray-600">
           <input
@@ -59,12 +59,16 @@
             </svg>
           </button>
         </div>
-
       </div>
 
       <!-- right navbar -->
-      <div class="flex items-center relative space-x-4">
-        
+      <div class="flex items-center relative space-x-2">
+        <p class="font-semibold text-sm text-orange-400 pl-4">
+          Completed: 5/10
+        </p>
+        <p class="font-semibold text-sm text-red-600 pl-4 pr-4">
+          Mandatory: 2/4
+        </p>
         <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           height="24"
@@ -90,9 +94,11 @@
       class="absolute bg-gray-100 border border-t-0 shadow-xl text-gray-700 rounded-b-lg w-48 bottom-10 right-0 mr-6"
       :class="dropDownOpen ? '' : 'hidden'"
     >
-      <a href="#" class="block px-4 py-2 hover:bg-gray-200">Account</a>
-      <a href="#" class="block px-4 py-2 hover:bg-gray-200">Settings</a>
-      <a href="#" class="block px-4 py-2 hover:bg-gray-200">Logout</a>
+      <!-- <a href="#" class="block px-4 py-2 hover:bg-gray-200">Account</a> -->
+      <!-- <a href="#" class="block px-4 py-2 hover:bg-gray-200">Settings</a> -->
+      <a href="#" class="block px-4 py-2 hover:bg-gray-200"
+        >Logout Aftab.Jalal</a
+      >
     </div>
     <!-- dropdown menu end -->
   </div>
@@ -103,7 +109,7 @@ import { mapState } from "vuex";
 export default {
   name: "Navbar",
   computed: {
-    ...mapState(["sideBarOpen"])
+    ...mapState(["sideBarOpen", "surveyName"])
   },
   data() {
     return {

@@ -154,6 +154,7 @@
 import { mapActions } from "vuex";
 import { getSLK } from "@/helper-functions/slk";
 import { getCurrentYearMonthDay } from "@/common/utils";
+import { SLK_LENGTH, MODE_EMPTY_CLIENT_DATA } from "@/common/constants";
 export default {
   name: "LookupFetchClientData",
   emits: ["survey-data-received", "mode-updated"],
@@ -177,10 +178,10 @@ export default {
   computed: {
     canFetch: function() {
       if (this.picked_type === "by_id") {
-        if (this.idType === "slk") return this.idVal.length === 14;
+        if (this.idType === "slk") return this.idVal.length === SLK_LENGTH;
         else return this.idVal.length > 1;
       }
-      return this.slk.length === 14;
+      return this.slk.length === SLK_LENGTH;
     },
     slk: function() {
       if (this.picked_type === "by_id") {
@@ -207,7 +208,7 @@ export default {
         this.$emit("survey-data-received", result);
       } else {
         this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
-        this.$emit("mode-updated", 0);
+        this.$emit("mode-updated", MODE_EMPTY_CLIENT_DATA);
       }
     }
   }

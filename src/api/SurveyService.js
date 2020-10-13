@@ -1,12 +1,11 @@
 import {
   getClientDataByPartitionKey,
   getClientDataByClientID,
-  createClientData,
   updateClientData
 } from "./AZTableService";
 import {
   ROW_KEY,
-  // PARTITION_KEY,
+  PARTITION_KEY,
   SURVEY_TYPE_MAP
   // SURVEY_ID_MAP
 } from "@/common/constants";
@@ -21,14 +20,10 @@ export default {
     return await getClientDataByClientID(id, idType);
   },
 
-  async createData(rowData, surveyName, teamProgram) {
-    rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[surveyName], teamProgram);
-    return await createClientData(rowData);
-  },
-
-  async updateData(rowData, surveyName, teamProgram) {
-    //let data = {SurveyData: rowData
-    rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[surveyName], teamProgram);
+  async createOrUpdateData(SLK, rowData) {
+    const { SurveyName, Program } = rowData;
+    rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[SurveyName], Program);
+    rowData[PARTITION_KEY] = SLK;
     return await updateClientData(rowData);
   }
 };

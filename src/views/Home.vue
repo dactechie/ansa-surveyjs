@@ -52,7 +52,7 @@
         </div>
       </div>
       <ClientSurveyHistory
-        v-if="mode == 1"
+        v-if="mode === 1"
         @clear-lookup-results="mode = 0"
         :clientData="clientData"
       />
@@ -63,11 +63,14 @@
 <script>
 // @ is an alias to /src
 // import LookupFetchClient from "@/components/LookupFetchClient.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import LookupFetchClientData from "@/components/LookupFetchClientData.vue";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory.vue";
 import NewClientStart from "@/components/NewClientStart.vue";
-
+import {
+  MODE_CLIENT_DATA_SET,
+  MODE_EMPTY_CLIENT_DATA
+} from "@/common/constants";
 //import { getSurveysNameID } from "@/api/SurveyQuestionnaireService";
 
 export default {
@@ -81,7 +84,7 @@ export default {
   data() {
     return {
       clientData: {},
-      mode: 0, // TODO : remove, redundant -> same as clientData == undefined
+      mode: MODE_EMPTY_CLIENT_DATA, // TODO : remove, redundant -> same as clientData == undefined
       picked_type: "lookup"
     };
   },
@@ -92,6 +95,7 @@ export default {
   },
   methods: {
     ...mapActions(["GET_QUESTIONNAIRE_LISTING"]),
+    ...mapMutations(["setClientData"]),
     updateMode(data) {
       this.mode = data;
     },
@@ -100,7 +104,7 @@ export default {
 
       this.clientData = cdata;
       if (!cdata) {
-        this.mode = 0;
+        this.mode = MODE_EMPTY_CLIENT_DATA;
         console.log("EMPTY DATA ", this.clientData);
         return;
       }
@@ -108,10 +112,10 @@ export default {
       console.log(str_data);
       //sessionStorage.setItem("ClientData", btoa(str_data));
       sessionStorage.setItem("ClientData", str_data);
-      this.$store.state["clientData"] = cdata;
+      this.setClientData(cdata);
 
       console.log("DATA ", this.clientData);
-      this.mode = 1;
+      this.mode = MODE_CLIENT_DATA_SET;
     }
   }
 };

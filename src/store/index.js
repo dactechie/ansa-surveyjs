@@ -23,9 +23,8 @@ export default new Vuex.Store({
     currentClientSLK: "",
     prefillIndex: 0,
     clientData: [],
-    //surveyName: "",// this in the route url this.$route.params.type
+    surveyName: "",
     surveyMode: ""
-    //dbObject: DBSurveyObject
   },
   getters: {
     sideBarOpen: state => {
@@ -33,7 +32,19 @@ export default new Vuex.Store({
     },
     navPages: state => {
       return state.navPages;
+    },
+    getCurrentSurveyName: state => {
+      return state.surveyName;
     }
+    // getSurveyIDForName: (state, surveyName) => {
+    //   console.log("getting id for ", surveyName);
+    //   debugger;
+    //   const result = state.surveyNameIDList.find(id_name => {
+    //     console.log(id_name)
+    //     if (id_name.name === surveyName) return id_name.surveyid;
+    //   });
+    //   return result;
+    // }
   },
   mutations: mutations,
   actions: actions

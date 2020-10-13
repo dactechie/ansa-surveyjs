@@ -1,8 +1,13 @@
 export const PARTITION_KEY = "PartitionKey";
 export const ROW_KEY = "RowKey";
 
+export const MODE_EMPTY_CLIENT_DATA = 0;
+export const MODE_CLIENT_DATA_SET = 1; // show client survey history
+
 export const DB_EPISODE = "Episode";
 export const DB_ANSA = "ANSA";
+
+export const SLK_LENGTH = 14;
 
 export const DB_IDTYPE_MCARE = "MCARE";
 export const DB_IDTYPE_CCARE = "CCARE";

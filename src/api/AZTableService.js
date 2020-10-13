@@ -10,15 +10,6 @@ import { fromAZDataArray } from "@/common/AZDataAdapter";
 const GET_URL = process.env.VUE_APP_GET_TABLESTORE_LOGAPP;
 const UPSERT_URL = process.env.VUE_APP_UPSERT_TABLESTORE_LOGAPP;
 
-function createClientData(rowData, entity = DB_ANSA) {
-  //const azTableJSON = toAZDataStructure(rowData);
-  let data = {
-    Entity: entity,
-    EntityJSON: rowData
-  };
-  return doPostAction(UPSERT_URL, data);
-}
-
 function updateClientData(rowData, entity = DB_ANSA) {
   //const azTableJSON = toAZDataStructure(rowData);
   let data = {
@@ -60,6 +51,5 @@ async function getClientDataByClientID(
 export {
   getClientDataByPartitionKey,
   getClientDataByClientID,
-  createClientData,
   updateClientData
 };

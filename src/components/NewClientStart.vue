@@ -6,7 +6,6 @@
       type="text"
       id="fname"
       placeholder="first name"
-      value="Aftab"
       v-model="fname"
     />
     <br />
@@ -16,7 +15,6 @@
       type="text"
       id="lname"
       placeholder="last name"
-      value="Jalal"
       v-model="lname"
     />
     <br />
@@ -30,7 +28,6 @@
       :min="minDate"
       :max="maxDate"
       placeholder="Date of birth"
-      value="21071981"
     />
     <div class="sv-table__cell" id="sex_type">
       <input
@@ -68,7 +65,7 @@
     <div class="m-3">
       <button
         :disabled="!slk"
-        @click.prevent="startRego"
+        @click.prevent="checkAndStartRego"
         class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       >
         <span class="mx-auto">Start Registration</span>
@@ -80,6 +77,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import { getCurrentYearMonthDay } from "@/common/utils";
 import { getSLK } from "@/helper-functions/slk";
 
@@ -90,10 +88,10 @@ export default {
     const { year, month, day } = getCurrentYearMonthDay();
 
     return {
-      sex_type: "",
-      dob: "",
-      fname: "",
-      lname: "",
+      sex_type: "female",
+      dob: "21071999",
+      fname: "Aftab",
+      lname: "Jackson",
       minDate: new Date(year - 90, month, day),
       maxDate: new Date(year - 15, month, day)
     };
@@ -107,9 +105,25 @@ export default {
       return getSLK(this.fname, this.lname, this.dob, this.sex_type);
     }
   },
+  mounted() {
+    this.clearClientState();
+    sessionStorage.clear();
+  },
   methods: {
-    startRego() {
+    ...mapMutations(["setClientSLK", "clearClientState", "setSurveyName"]),
+    //...mapGetters(["getSurveyIDForName"]),
+    checkAndStartRego() {
       console.log("can start rego..");
+      this.$store.state["surveyMode"] = "new";
+      this.setClientSLK(this.slk);
+      const rego_survey = this.$store.state.surveyNameIDList.find(
+        id_name => id_name.name === "ANSA ClientRegistration"
+      );
+      this.setSurveyName("ANSA ClientRegistration");
+      this.$router.push({
+        name: "SurveyView",
+        params: { surveyid: rego_survey.surveyid }
+      });
     }
   }
 };

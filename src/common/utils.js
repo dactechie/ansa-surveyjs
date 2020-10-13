@@ -24,19 +24,35 @@ async function promisify(object, fn, ...args) {
   });
 }
 
+function getFriendlyTimestampString(dateObj) {
+  return `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString()}`;
+}
+
+function getCurrentTimestamp() {
+  return getFriendlyTimestampString(new Date());
+}
+
 function getCurrentYearMonthDay() {
   const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth(), day: now.getDate() };
+  return {
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate()
+  };
 }
 
 function getCurrentYearMonthDayString() {
-  const { year, month, day } = getCurrentYearMonthDay();
-  return `${year}${month}${day}`;
+  let { year, month, day } = getCurrentYearMonthDay();
+  const monthStr = `${month}`.padStart(2, "0");
+  const dateStr = `${day}`.padStart(2, "0");
+  return `${year}${monthStr}${dateStr}`;
 }
 
 export {
   checkAssign,
   promisify,
   getCurrentYearMonthDay,
-  getCurrentYearMonthDayString
+  getCurrentYearMonthDayString,
+  getCurrentTimestamp,
+  getFriendlyTimestampString
 };

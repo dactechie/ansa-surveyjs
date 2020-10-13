@@ -1,6 +1,8 @@
 import SurveyService from "@/api/SurveyService";
 import QuestionnaireService from "@/api/SurveyQuestionnaireService";
 import { PARTITION_KEY, DB_META_KEYS } from "@/common/constants";
+import { getCurrentTimestamp } from "@/common/utils";
+
 export default {
   toggleSidebar(context) {
     context.commit("toggleSidebar");
@@ -10,9 +12,7 @@ export default {
       const response = await QuestionnaireService.getSurveysNameID();
       commit("setSurveyList", await response);
       // state["surveyNameIDList"] = await response;
-      // debugger;
       console.log("questsionnari service: ", response);
-      //commit( , response);
     } catch (error) {
       console.log("error ", error);
     }
@@ -42,46 +42,37 @@ export default {
       console.log("error ", error);
     }
   },
-  ADD_SURVEY_DATASERVER: async function(context, data) {
-    try {
-      let dbObj = { SurveyData: {} };
-      //get keys to push into "SurveyData" key for database
-      Object.keys(data).forEach(key => {
-        if (DB_META_KEYS.indexOf(key) >= 0) {
-          dbObj[key] = data[key];
-        } else {
-          dbObj["SurveyData"][key] = data[key];
-        }
-      });
-      delete dbObj["SurveyData"]["Timestamp"];
-      dbObj["SurveyData"] = JSON.stringify(dbObj["SurveyData"]);
-
-      const response = await SurveyService.createData(
-        dbObj,
-        dbObj["SurveyName"],
-        dbObj["Program"]
-      );
-      console.log(response);
-      //commit( , response);
-    } catch (error) {
-      console.log("error ", error);
-    }
-  },
-
-  UPDATE_SURVEY_DATASERVER: async function(
-    context,
-    surveyData,
-    surveyName,
-    teamProgram
+  ADD_SURVEY_DATASERVER: async function(
+    { state },
+    { SLK, surveyData, surveyId, status }
   ) {
     try {
-      const response = await SurveyService.updateData(
-        surveyData,
-        surveyName,
-        teamProgram
-      );
+      let dbObj = {};
+      const data = {};
+      // Meta Keys are common to all surveys.
+      // before uploading, unflatten the survey data and push it into "SurveyData" string
+      Object.entries(surveyData).forEach(([key, value]) => {
+        if (DB_META_KEYS.indexOf(key) >= 0) dbObj[key] = value;
+        else data[key] = value;
+      });
+      // if this is a brand new object to be stored, there won't be a 'Timestamp'
+      // use this info to capture the created date time.
+      if (!("Timestamp" in data)) {
+        data["CreatedDatetime"] = getCurrentTimestamp();
+      } else {
+        // data update (Put):
+        // no need to try and override the Timestamp that was drawn from the server
+        delete data["Timestamp"];
+      }
+      dbObj = {
+        ...dbObj,
+        SurveyID: surveyId,
+        Status: status,
+        SurveyData: JSON.stringify(data),
+        SurveyName: state.surveyName
+      };
+      const response = await SurveyService.createOrUpdateData(SLK, dbObj);
       console.log(response);
-      //commit( , response);
     } catch (error) {
       console.log("error ", error);
     }

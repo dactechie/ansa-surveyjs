@@ -34,7 +34,11 @@
             <button
               class="btn btn--active"
               @click.prevent="
-                openSurvey(myData.actions[index], myData.data[index][4], index)
+                cloneOrEditSurvey(
+                  myData.actions[index],
+                  myData.data[index][4],
+                  index
+                )
               "
             >
               {{ myData.actions[index] }}
@@ -63,6 +67,7 @@
           name: 'SurveyView',
           params: { type: 'new', surveyid: survey.surveyid }
         }"
+        @click.native="setSurveyName(survey.name)"
       >
         Create New {{ survey.name }}</router-link
       >
@@ -71,6 +76,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "ClientSurveyHistory",
   props: ["clientData"],
@@ -84,7 +90,7 @@ export default {
     myData() {
       let colHeaders = [
         // "PartitionKey",
-        "LastModifiedDate",
+        "Timestamp",
         "Program",
         "Staff",
         "Status",
@@ -109,15 +115,19 @@ export default {
     // setSurveyName(surveyName) {
     //   this.$store.state["surveyName"] = surveyName;
     // },
-    openSurvey(newEditOrClone, surveyName, selectedIndexToPrefillFrom) {
-      this.$store.state["surveyMode"] = newEditOrClone;
+    ...mapMutations(["setSurveyName"]),
+
+    cloneOrEditSurvey(cloneOrEdit, surveyName, selectedIndexToPrefillFrom) {
+      this.$store.state["surveyMode"] = cloneOrEdit;
       this.$store.state["prefillIndex"] = selectedIndexToPrefillFrom;
-      const foundSurvey = this.surveys.find(s => s.name === surveyName);
+      const foundSurvey = this.surveys.find(s => s.name === surveyName); // downloaded from survey.js
 
       if (!foundSurvey) {
         console.log(" not found survey: ", surveyName);
         return;
       }
+      this.setSurveyName(surveyName);
+
       this.$router.push({
         name: "SurveyView",
         params: { surveyid: foundSurvey.surveyid }

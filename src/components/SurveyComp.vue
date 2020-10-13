@@ -16,7 +16,7 @@ import { mapActions, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 //import simpleIAJSON from "../simpleIAJSON";
 // import FakeEpisodes from "@/FakeEpisodes";
-import { PARTITION_KEY } from "@/common/constants";
+// import { PARTITION_KEY } from "@/common/constants";
 import { buildNav } from "@/helper-functions/survey-helpers";
 
 // eslint-disable-next-line
@@ -53,20 +53,26 @@ export default {
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
-
-      this.saveSurvey(this.UPDATE_SURVEY_DATASERVER);
+      this.survey.data["Status"] = "Incomplete";
+      this.saveSurvey(
+        this.ADD_SURVEY_DATASERVER,
+        "Incomplete",
+        this.$route.params.surveyid
+      );
     },
-    saveSurvey(asyncSaveMethod) {
+    saveSurvey(asyncSaveMethod, status, surveyId) {
       if (!this.isProgramSet) {
         console.error("Progarm not set . Unable to ssave");
         return;
       }
-      asyncSaveMethod(
-        // SLK ,
-        this.survey.data,
-        this.$route.params.name,
-        this.survey.data["Program"]
-      );
+      //this.survey.data["SurveyID"] = this.$route.params.surveyid;
+      asyncSaveMethod({
+        SLK: this.$store.state.currentClientSLK,
+        surveyData: this.survey.data,
+        surveyId: surveyId,
+        //surveyName: this.$store.state.surveyName,
+        status: status
+      });
       this.dirtyData = false;
     }
     // getSurveyNameFromID(id) {
@@ -82,16 +88,18 @@ export default {
   },
   created() {
     //console.log("survey type in component ", this.$route.params.type);
-    if(this.$route.params.surveyid) {
-      if (!this.store.$state["ClientData"]) {
-        console.log("page was refreshed. trying to get data from loca")
-      }
-      let clientData = sessionStorage.getItem("ClientData"); 
+    // use vuex-persist
+    // if(this.$route.params.surveyid) {
+    //   if (this.store.$state["ClientData"] == undefined) {
+    //     console.log("page was refreshed. trying to get data from loca");
+    //     let clientData = sessionStorage.getItem("ClientData");
+    //     this.$store.state["clientData"] = clientData;
+    //   }
 
-    } else {
-      console.error("No Survey ID");
-      return;
-    }
+    // } else {
+    //   console.error("No Survey ID");
+    //   return;
+    // }
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
@@ -104,6 +112,7 @@ export default {
         const currentSurvey =
           me.$store.state["clientData"][me.$store.state["prefillIndex"]];
 
+        //TODO: move this to a  vuex action for GET or SurveyService
         Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
           currentSurvey[k] = v;
         });
@@ -112,16 +121,18 @@ export default {
         //   me.survey.data[mk] = currentSurvey[mk];
         // });
         me.survey.data = { ...currentSurvey };
-        me.survey.data["SurveyID"] = me.$route.params.surveyid;
       } else {
         console.log("nothing to prefil ?");
         // fill with last survey with this survet name
+        // me.survey.data["Staff"] = "Steve.Farrugia";
+        // me.survey.data["Program"] = "SAPPHIRE";
+        // me.survey.data = {
+        //   SurveyName: this.$store.state.surveyName
+        // };
       }
-
-      me.survey.data[PARTITION_KEY] = me.$store.state.currentClientSLK;
+      //me.survey.data["SurveyID"] = me.$route.params.surveyid;
+      //me.survey.data["Status"] = "Incomplete";
       console.log(me.survey.data);
-
-      me.survey.data["Status"] = "Incomplete";
 
       buildNav(me.survey);
     });
@@ -132,9 +143,13 @@ export default {
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
       //console.log("survey data (not saving..just logging) ", survey.data);
-      me.survey.data["Status"] = "Complete";
+      //me.survey.data["Status"] = "Complete";
 
-      me.saveSurvey(me.ADD_SURVEY_DATASERVER);
+      me.saveSurvey(
+        me.ADD_SURVEY_DATASERVER,
+        "Complete",
+        me.$route.params.surveyid
+      );
     });
     // TODO : build search index from pages
     //  survey.visiblePages

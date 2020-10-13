@@ -15,8 +15,8 @@ export default {
       },
 
       {
-        name: "Minimum InitialAssessment",
-        surveyid: "9fe4d164-8c6c-4b0a-ac60-aabf803413b7"
+        name: "ANSA ClientRegistration",
+        surveyid: "ef269b86-8397-4d15-9a13-a46e683b9a12"
       }
     ];
 
