@@ -30,6 +30,9 @@ export default new Vuex.Store({
     sideBarOpen: state => {
       return state.sideBarOpen;
     },
+    getClientData: state => {
+      return state.clientData;
+    },
     getCurrentSurveyName: state => {
       return state.surveyName;
     }

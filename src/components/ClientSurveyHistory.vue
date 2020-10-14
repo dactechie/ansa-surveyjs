@@ -6,6 +6,13 @@
     >
       Clear Results
     </button>
+    <!-- <ITSPCompareModal
+      v-if="showModal"
+      :selectedIndex="selectedIndex"
+      @close="showModal = false"
+    ></ITSPCompareModal> -->
+
+    <DetailsTable :selectedIndex="selectedIndex"></DetailsTable>
     <table class="table" v-if="clientData">
       <thead>
         <!-- <th>SLK</th> -->
@@ -21,7 +28,11 @@
         <th class="sv-table__cell sv-table__cell--header">Action</th>
       </thead>
       <tbody>
-        <tr v-for="(k, index) of myData.data" :key="index">
+        <tr
+          v-for="(k, index) of myData.data"
+          :key="index"
+          @click="showModalWithIndex(index)"
+        >
           <td
             v-for="(v, indx) of Object.values(k)"
             :key="indx"
@@ -43,23 +54,11 @@
             >
               {{ myData.actions[index] }}
             </button>
-            <!-- <router-link
-              :to="{
-                name: 'SurveyView',
-                params: {
-                  type: myData.actions[index],
-                  index: index,
-                  name: k['Survey Type']
-                }
-              }"
-              tag="button"
-            >
-              {{ myData.actions[index] }}</router-link
-            > -->
           </td>
         </tr>
       </tbody>
     </table>
+
     <div v-for="survey in surveys" :key="survey.id">
       <router-link
         class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
@@ -77,12 +76,22 @@
 
 <script>
 import { mapMutations } from "vuex";
+// eslint-disable-line no-unused-vars
+// import ITSPCompareModal from "@/components/DetailsModal/ITSPCompareModal";
+import DetailsTable from "@/components/DetailsModal/DetailsTable";
+
 export default {
   name: "ClientSurveyHistory",
+  components: {
+    //ITSPCompareModal
+    DetailsTable
+  },
   props: ["clientData"],
   data() {
     return {
-      surveys: this.$store.state["surveyNameIDList"]
+      surveys: this.$store.state["surveyNameIDList"],
+      showModal: false,
+      selectedIndex: 0
     };
   },
   computed: {
@@ -135,6 +144,11 @@ export default {
     },
     clearLookupResults() {
       this.$emit("clear-lookup-results");
+    },
+
+    showModalWithIndex(index) {
+      this.selectedIndex = index;
+      this.showModal = true;
     }
   }
 };

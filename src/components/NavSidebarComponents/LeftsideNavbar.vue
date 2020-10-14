@@ -20,7 +20,7 @@
       </p>
       <ul v-for="(nPage, index) in currentSurvey.pages" :key="index">
         <li
-          class="mb-3 lg:mb-1"
+          class="mb-4 lg:mb-2"
           :class="[nPage.isActive ? 'text-teal-600' : 'text-gray-600']"
         >
           <a
