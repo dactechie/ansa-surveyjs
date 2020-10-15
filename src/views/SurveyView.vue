@@ -56,8 +56,8 @@
 // @ is an alias to /src
 // import Search from "@/components/Search.vue";
 import { mapState } from "vuex";
-import LeftsideNavbar from "@/components/NavSidebarComponents/LeftsideNavbar"; // https://github.com/Murked/vue-tailwind-admin/tree/master/src/components
-import Navbar from "@/components/NavSidebarComponents/Navbar";
+import LeftsideNavbar from "@/components/NavSidebars/Survey/LeftsideNavbar"; // https://github.com/Murked/vue-tailwind-admin/tree/master/src/components
+import Navbar from "@/components/NavSidebars/Survey/Navbar";
 import SurveyComp from "@/components/SurveyComp";
 
 export default {

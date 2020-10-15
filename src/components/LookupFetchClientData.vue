@@ -1,6 +1,6 @@
 <template>
   <div class="sv-page sv-body__page" id="sp_100">
-    <span>How do you want to lookup the client ?</span>
+    <span class="font-semibold">How do you want to lookup the client ?</span>
     <div class="sv-table__cell" id="lookup_type">
       <input
         class="form-radio h-6 w-6"
