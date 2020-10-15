@@ -1,13 +1,22 @@
 <template>
   <!-- <div class="home"> -->
-    <div class="container mx-auto px-4 h-full">
-      <div class="flex flex-wrap">
-        <LeftsideNavbar :mode="mode" @mode-updated="updateMode" @survey-data-received="updateClientData"/>
+  <div class="container mx-auto h-full">
+    <div class="flex flex-wrap">
+      <LeftsideNavbar
+        :mode="mode"
+        @mode-updated="updateMode"
+        @survey-data-received="updateClientData"
+      />
+      <div
+        class="w-full bg-gray-100 pl-0 lg:pl-64 min-h-screen"
+        id="main-content"
+      >
         <ClientSurveyHistory
           v-if="mode === 1"
           @clear-lookup-results="mode = 0"
           :clientData="clientData"
         />
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +42,7 @@ export default {
   components: {
     LeftsideNavbar,
     // LookupFetchClientData,
-    ClientSurveyHistory,
+    ClientSurveyHistory
     // NewClientStart
   },
   data() {

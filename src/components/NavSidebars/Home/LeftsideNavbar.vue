@@ -6,24 +6,23 @@
     :class="sideBarOpen ? '' : 'hidden'"
     id="main-nav"
   >
-    <div class="w-full h-20 border-b flex px-3 items-center mb-6">
+    <!-- <div class="w-full h-20 border-b flex px-3 items-center mb-6">
       <p class="font-semibold text-1xl text-blue-400 pl-4">
         Directions Health Services
       </p>
-    </div>
+    </div> -->
 
-    <div class="mb-4 px-3">
+    <div class="mt-20 mb-4 px-3">
       <p
         class="mb-3 lg:mb-2 uppercase tracking-wide font-bold text-sm lg:text-xs text-gray-500"
       >
         Look up Client
       </p>
       <LookupFetchClientData
-                        :mode="mode"
-                        @mode-updated="updateMode"
-                        @survey-data-received="updateClientData"
-                      />
- 
+        :mode="mode"
+        @mode-updated="updateMode"
+        @survey-data-received="updateClientData"
+      />
     </div>
   </div>
 </template>
@@ -33,7 +32,7 @@ import { mapState } from "vuex";
 import LookupFetchClientData from "@/components/LookupFetchClientData";
 export default {
   name: "LeftsideNavbar",
-  components :{LookupFetchClientData},
+  components: { LookupFetchClientData },
   emits: ["survey-data-received", "mode-updated"],
   props: ["mode"],
 
@@ -47,11 +46,11 @@ export default {
         this.$emit("page-change", index);
       }
     },
-    updateClientData(data){
+    updateClientData(data) {
       this.$emit("survey-data-received", data);
     },
-    updateMode(data){
-      this.$emit("mode-updated",data);
+    updateMode(data) {
+      this.$emit("mode-updated", data);
     }
   }
 };

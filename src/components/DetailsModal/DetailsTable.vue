@@ -25,7 +25,11 @@ export default {
 
       // const cols = ["PrincipalDrugOfConcern", "how_many_days", "aod_harms_risks"];
 
-      let bodyHtml = "<table><tr>";
+      let bodyHtml = "<table><thead>";
+      Object.keys(surveyData).forEach(k => {
+        bodyHtml = `${bodyHtml} \n <th> ${k}</th>`;
+      });
+      bodyHtml = `${bodyHtml}</thead> <tr>`;
       Object.keys(surveyData).forEach(k => {
         //if (cols.includes(k)) {
         bodyHtml = `${bodyHtml} \n <td> ${surveyData[k]}</td>`;

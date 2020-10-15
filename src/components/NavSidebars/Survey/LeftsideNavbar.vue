@@ -2,17 +2,17 @@
   <!-- give the sidebar z-50 class so its higher than the navbar if you want to see the logo -->
   <!-- you will need to add a little "X" button next to the logo in order to close it though -->
   <div
-    class="w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-gray-100 border-r z-30"
+    class="w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen bg-gray-100 border-r z-30"
     :class="sideBarOpen ? '' : 'hidden'"
     id="main-nav"
   >
-    <div class="w-full h-20 border-b flex px-3 items-center mb-6">
+    <!-- <div class="w-full h-20 border-b flex px-3 items-center mb-6">
       <p class="font-semibold text-1xl text-blue-400 pl-4">
         Directions Health Services
       </p>
-    </div>
+    </div> -->
 
-    <div class="mb-4 px-4">
+    <div class="mt-20 mb-4 px-4">
       <p
         class="mb-3 lg:mb-2 uppercase tracking-wide font-bold text-sm lg:text-xs text-gray-500"
       >
@@ -20,6 +20,7 @@
       </p>
       <ul v-for="(nPage, index) in currentSurvey.pages" :key="index">
         <li
+          @click="toggleSidebar"
           class="mb-4 lg:mb-2"
           :class="[nPage.isActive ? 'text-teal-600' : 'text-gray-600']"
         >
@@ -55,6 +56,9 @@ export default {
         console.log("here", index);
         this.$emit("page-change", index);
       }
+    },
+    toggleSidebar() {
+      this.$store.dispatch("toggleSidebar");
     }
   }
 };

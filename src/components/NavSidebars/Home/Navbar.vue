@@ -6,7 +6,7 @@
       <!-- left navbar -->
       <div class="flex">
         <!-- mobile hamburger -->
-        <div class="lg:hidden flex items-center mr-4">
+        <div class="flex items-center mr-4">
           <button
             class="hover:text-blue-500 hover:border-white focus:outline-none navbar-burger"
             @click="toggleSidebar()"

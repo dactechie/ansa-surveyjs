@@ -13,19 +13,34 @@
     ></ITSPCompareModal> -->
 
     <DetailsTable :selectedIndex="selectedIndex"></DetailsTable>
-    <table class="table" v-if="clientData">
+    <!-- https://tailwindcomponents.com/component/responsive-table -->
+    <table class="table-auto" v-if="clientData">
       <thead>
         <!-- <th>SLK</th> -->
-        <th class="sv-table__cell sv-table__cell--header">Last Modified</th>
-        <th class="sv-table__cell sv-table__cell--header">Team</th>
-        <th class="sv-table__cell sv-table__cell--header">Staff</th>
+        <th>
+          Last Modified
+        </th>
+        <th>
+          Team
+        </th>
+        <th>
+          Staff
+        </th>
 
         <!-- <th class="sv-table__cell sv-table__cell--header">
           Principal Drug Of Concern
         </th> -->
-        <th class="sv-table__cell sv-table__cell--header">Status</th>
-        <th class="sv-table__cell sv-table__cell--header">Survey Name</th>
-        <th class="sv-table__cell sv-table__cell--header">Action</th>
+        <th>
+          Status
+        </th>
+        <th>
+          Survey Name
+        </th>
+        <th
+          class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
+        >
+          Action
+        </th>
       </thead>
       <tbody>
         <tr
@@ -36,7 +51,7 @@
           <td
             v-for="(v, indx) of Object.values(k)"
             :key="indx"
-            class="sv-table__cell"
+            class="border px-4 py-2"
           >
             <center>{{ v }}</center>
           </td>
@@ -59,7 +74,7 @@
       </tbody>
     </table>
 
-    <div v-for="survey in surveys" :key="survey.id">
+    <div flex v-for="survey in surveys" :key="survey.id">
       <router-link
         class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
         :to="{
@@ -165,7 +180,7 @@ th {
 
 tr:hover td {
   /* th:hover also if you wish */
-  background: yellow;
+  background: rgb(230, 227, 217);
 }
 tbody tr:nth-child(odd) {
   background: #eee;

@@ -1,17 +1,15 @@
 <template>
-  <!-- <div class="home"> -->
+  <!-- <div class="home"> 
+    https://dev.to/fayaz/making-a-navigation-drawer-sliding-sidebar-with-tailwindcss-blueprint-581l
+    -->
   <div class="leading-normal tracking-normal" id="main-body">
+    <Navbar />
     <div class="flex flex-wrap">
-      <LeftsideNavbar @page-change="visitPage" />
-      <div
-        class="w-full bg-gray-100 pl-0 lg:pl-64 min-h-screen"
-        :class="sideBarOpen ? 'overlay' : ''"
-        id="main-content"
-      >
-        <Navbar />
-
+      <LeftsideNavbar class="flex-auto" @page-change="visitPage" />
+      <div class="w-full bg-gray-100 pl-0 min-h-screen" id="main-content">
         <div class="p-6 bg-gray-100 mb-20">
           <SurveyComp
+            @click.native="sideBarOpen ? 'ove' : ''"
             @search-index-built="onSearchReady"
             :currentPage="currentPage"
           />
@@ -56,7 +54,7 @@
 // @ is an alias to /src
 // import Search from "@/components/Search.vue";
 import { mapState } from "vuex";
-import LeftsideNavbar from "@/components/NavSidebars/Survey/LeftsideNavbar"; // https://github.com/Murked/vue-tailwind-admin/tree/master/src/components
+import LeftsideNavbar from "@/components/NavSidebars/Survey/LeftsideNavbar"; // https://tailwindcss-layouts.netlify.app/ https://github.com/Murked/vue-tailwind-admin/tree/master/src/components
 import Navbar from "@/components/NavSidebars/Survey/Navbar";
 import SurveyComp from "@/components/SurveyComp";
 
@@ -83,6 +81,9 @@ export default {
     },
     onSearchReady(searchIndexData) {
       this.searchIndexData = searchIndexData;
+    },
+    toggleSidebar() {
+      this.$store.dispatch("toggleSidebar");
     }
   }
 };
