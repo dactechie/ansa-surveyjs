@@ -1,5 +1,5 @@
 <template>
-  <div class="sv-page sv-body__page">
+  <div>
     <button
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-300 hover:border-red-400 hover:bg-red-300 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       @click="clearLookupResults"
@@ -11,69 +11,6 @@
       :selectedIndex="selectedIndex"
       @close="showModal = false"
     ></ITSPCompareModal> -->
-
-    <DetailsTable :selectedIndex="selectedIndex"></DetailsTable>
-    <!-- https://tailwindcomponents.com/component/responsive-table -->
-    <table class="table-auto" v-if="clientData">
-      <thead>
-        <!-- <th>SLK</th> -->
-        <th>
-          Last Modified
-        </th>
-        <th>
-          Team
-        </th>
-        <th>
-          Staff
-        </th>
-
-        <!-- <th class="sv-table__cell sv-table__cell--header">
-          Principal Drug Of Concern
-        </th> -->
-        <th>
-          Status
-        </th>
-        <th>
-          Survey Name
-        </th>
-        <th
-          class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
-        >
-          Action
-        </th>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(k, index) of myData.data"
-          :key="index"
-          @click="showModalWithIndex(index)"
-        >
-          <td
-            v-for="(v, indx) of Object.values(k)"
-            :key="indx"
-            class="border px-4 py-2"
-          >
-            <center>{{ v }}</center>
-          </td>
-          <td>
-            <!-- {{  myData.actions[index] }} -->
-            <button
-              class="btn btn--active"
-              @click.prevent="
-                cloneOrEditSurvey(
-                  myData.actions[index],
-                  myData.data[index][4],
-                  index
-                )
-              "
-            >
-              {{ myData.actions[index] }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
     <div flex v-for="survey in surveys" :key="survey.id">
       <router-link
         class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
@@ -86,6 +23,46 @@
         Create New {{ survey.name }}</router-link
       >
     </div>
+
+    <!-- https://tailwindcomponents.com/component/responsive-table -->
+    <table class="table-auto" v-if="clientData">
+      <thead>
+        <!-- <th>SLK</th> -->
+        <th>Last Modified</th>
+        <th>Team</th>
+        <th>Staff</th>
+
+        <!-- <th class="sv-table__cell sv-table__cell--header">
+          Principal Drug Of Concern
+        </th> -->
+        <th>Status</th>
+        <th
+          class="p-3 font-bold  bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
+        >
+          Survey Name
+        </th>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(k, index) of myData"
+          :key="index"
+          @click="showModalWithIndex(index)"
+        >
+          <td
+            v-for="(v, indx) of Object.values(k)"
+            :key="indx"
+            class="border px-4 py-2"
+          >
+            <center>{{ v }}</center>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <DetailsTable
+      v-if="clientData"
+      :selectedIndex="selectedIndex"
+    ></DetailsTable>
   </div>
 </template>
 
@@ -122,9 +99,6 @@ export default {
         //"PrincipalDrugOfConcern"
       ];
 
-      const actions = this.clientData.map(
-        e => (e["Status"] === "Complete" ? "clone" : "edit") // only the last one can be cloned
-      );
       let tableVals = [];
       this.clientData.forEach(function(c) {
         let td = colHeaders.map(h => c[h]);
@@ -132,7 +106,7 @@ export default {
         tableVals.push(td);
       });
 
-      return { data: tableVals, actions: actions };
+      return tableVals;
     }
   },
   methods: {

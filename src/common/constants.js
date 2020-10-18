@@ -15,8 +15,6 @@ export const DB_IDTYPE_CCARE = "CCARE";
 
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
-  "ANSA ClientRegistration": "REGO",
-  // "ANSA Brief Intervention Assessment": "BRIV",
   "ANSA InitialAssessment": "INAS",
   "ANSA ITSPReviewAssessment": "ITSP"
 };

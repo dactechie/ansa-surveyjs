@@ -7,10 +7,7 @@
         @mode-updated="updateMode"
         @survey-data-received="updateClientData"
       />
-      <div
-        class="w-full bg-gray-100 pl-0 lg:pl-64 min-h-screen"
-        id="main-content"
-      >
+      <div class="w-full bg-gray-100 pl-0 lg:pl-64 " id="main-content">
         <ClientSurveyHistory
           v-if="mode === 1"
           @clear-lookup-results="mode = 0"
@@ -62,6 +59,9 @@ export default {
     ...mapMutations(["setClientData"]),
     updateMode(data) {
       this.mode = data;
+      if (this.mode === MODE_EMPTY_CLIENT_DATA) {
+        this.clientData == {};
+      }
     },
     updateClientData(data) {
       let cdata = [...data];
@@ -73,7 +73,7 @@ export default {
         return;
       }
       let str_data = JSON.stringify(cdata);
-      console.log(str_data);
+      //console.log(str_data);
       //sessionStorage.setItem("ClientData", btoa(str_data));
       sessionStorage.setItem("ClientData", str_data);
       this.setClientData(cdata);
