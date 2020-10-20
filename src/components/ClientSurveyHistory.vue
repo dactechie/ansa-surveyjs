@@ -14,18 +14,6 @@
       :selectedIndex="selectedIndex"
       @close="showModal = false"
     ></ITSPCompareModal> -->
-    <div flex v-for="survey in surveys" :key="survey.id">
-      <router-link
-        class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
-        :to="{
-          name: 'SurveyView',
-          params: { type: 'new', surveyid: survey.surveyid }
-        }"
-        @click.native="setSurveyName(survey.name)"
-      >
-        Create New {{ survey.name }}</router-link
-      >
-    </div>
 
     <!-- https://tailwindcomponents.com/component/responsive-table -->
     <table class="table-auto" v-if="clientData">
@@ -87,7 +75,6 @@ export default {
   props: ["clientData"],
   data() {
     return {
-      surveys: this.$store.state["surveyNameIDList"],
       showModal: false,
       selectedIndex: -1
     };
@@ -122,22 +109,22 @@ export default {
     // },
     ...mapMutations(["setSurveyName"]),
 
-    cloneOrEditSurvey(cloneOrEdit, surveyName, selectedIndexToPrefillFrom) {
-      this.$store.state["surveyMode"] = cloneOrEdit;
-      this.$store.state["prefillIndex"] = selectedIndexToPrefillFrom;
-      const foundSurvey = this.surveys.find(s => s.name === surveyName); // downloaded from survey.js
+    // cloneOrEditSurvey(cloneOrEdit, surveyName, selectedIndexToPrefillFrom) {
+    //   this.$store.state["surveyMode"] = cloneOrEdit;
+    //   this.$store.state["prefillIndex"] = selectedIndexToPrefillFrom;
+    //   const foundSurvey = this.surveys.find(s => s.name === surveyName); // downloaded from survey.js
 
-      if (!foundSurvey) {
-        console.log(" not found survey: ", surveyName);
-        return;
-      }
-      this.setSurveyName(surveyName);
+    //   if (!foundSurvey) {
+    //     console.log(" not found survey: ", surveyName);
+    //     return;
+    //   }
+    //   this.setSurveyName(surveyName);
 
-      this.$router.push({
-        name: "SurveyView",
-        params: { surveyid: foundSurvey.surveyid }
-      });
-    },
+    //   this.$router.push({
+    //     name: "SurveyView",
+    //     params: { surveyid: foundSurvey.surveyid }
+    //   });
+    // },
     clearLookupResults() {
       this.$emit("clear-lookup-results");
     },

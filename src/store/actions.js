@@ -11,7 +11,6 @@ export default {
     try {
       const response = await QuestionnaireService.getSurveysNameID();
       commit("setSurveyList", await response);
-      // state["surveyNameIDList"] = await response;
       console.log("questsionnari service: ", response);
     } catch (error) {
       console.log("error ", error);

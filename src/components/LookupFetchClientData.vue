@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import { getSLK } from "@/helper-functions/slk";
 import { getCurrentYearMonthDay } from "@/common/utils";
 import { SLK_LENGTH, MODE_EMPTY_CLIENT_DATA } from "@/common/constants";
@@ -178,11 +178,16 @@ export default {
   },
   computed: {
     canFetch: function() {
+      let result = false;
       if (this.picked_type === "by_id") {
-        if (this.idType === "slk") return this.idVal.length === SLK_LENGTH;
-        else return this.idVal.length > 1;
+        if (this.idType === "slk") result = this.idVal.length === SLK_LENGTH;
+        else result = this.idVal.length > 1;
       }
-      return this.slk.length === SLK_LENGTH;
+      result = this.slk.length === SLK_LENGTH;
+      if (!result) {
+        this.setClientSLK(""); // side effect ! FIXME
+      }
+      return result;
     },
     slk: function() {
       if (this.picked_type === "by_id") {
@@ -194,11 +199,16 @@ export default {
   },
   methods: {
     ...mapActions(["GET_CLIENT_DATA_BYSLK", "GET_CLIENT_DATA_BYID"]),
+    ...mapMutations(["setClientSLK"]),
 
     async fetchClientDataByLookupValues() {
       let result = {};
 
       if (this.picked_type === "by_name" || this.idType === "slk") {
+        // doing this allows us to show the "Create New Survey"
+        // buttons for a client that never existed in the DB.
+        this.setClientSLK(this.slk);
+
         result = await this.GET_CLIENT_DATA_BYSLK(this.slk);
       } else {
         result = await this.GET_CLIENT_DATA_BYID(this.idVal, this.idType);
