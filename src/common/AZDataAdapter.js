@@ -64,7 +64,7 @@
 //   return azTypedData;
 // }
 
-import { getFriendlyTimestampString } from "@/common/utils";
+// import { getFriendlyTimestampString } from "@/common/utils";
 /**
  * @function fromAZDataArray
  * @returns Parsed (unflattened) dict with Dates and Objects
@@ -78,7 +78,7 @@ export function fromAZDataArray(data) {
     //let dataDict = _fixTypes(data[dat]);
     let dataDict = {
       ...data[dat],
-      Timestamp: getFriendlyTimestampString(new Date(data[dat]["Timestamp"]))
+      Timestamp: new Date(data[dat]["Timestamp"])
     };
     // delete data[dat]["Timestamp"];
     delete dataDict["odata.etag"];
@@ -89,5 +89,8 @@ export function fromAZDataArray(data) {
     }
     cdata.push(cd);
   }
+  cdata.sort((a, b) => {
+    return a["Timestamp"] < b["Timestamp"] ? -1 : 1;
+  });
   return cdata;
 }

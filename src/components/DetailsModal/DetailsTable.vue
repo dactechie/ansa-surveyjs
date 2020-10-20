@@ -1,11 +1,10 @@
 <template>
   <div>
-    <div id="body"></div>
-    <button class="btn" @click="buildTable">Build Table</button>
+    <!-- <div id="body"></div>    -->
     <table class="text-xs">
       <thead>
-        <th>Key</th>
-        <th>value</th>
+        <th class="p-3">Key</th>
+        <th class="p-3">value</th>
       </thead>
       <tbody>
         <tr v-for="title in Object.keys(selectedSurveyData)" :key="title">
@@ -64,6 +63,14 @@ export default {
       objectOfObjectTypeKeys: [],
       objectOfStringsTypeKeys: []
     };
+  },
+  watch: {
+    selectedIndex: {
+      immediate: true,
+      handler() {
+        this.buildTable();
+      }
+    }
   },
   methods: {
     buildTable() {

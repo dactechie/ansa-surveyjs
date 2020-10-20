@@ -2,7 +2,7 @@
   <div>
     <table class="text-xs">
       <thead>
-        <th v-for="cTitle in colTitles" :key="cTitle">
+        <th class="p-3" v-for="cTitle in colTitles" :key="cTitle">
           {{ cTitle }}
         </th>
       </thead>

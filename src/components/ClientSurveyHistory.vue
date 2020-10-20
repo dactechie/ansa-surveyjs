@@ -1,5 +1,8 @@
 <template>
   <div>
+    <p class="py-5 font-bold text-red-500 align-middle">
+      Showing Results for {{ clientData[0].PartitionKey }}
+    </p>
     <button
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-300 hover:border-red-400 hover:bg-red-300 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       @click="clearLookupResults"
@@ -47,6 +50,8 @@
           v-for="(k, index) of myData"
           :key="index"
           @click="showModalWithIndex(index)"
+          class="cursor-pointer"
+          :class="index == selectedIndex ? 'bg-red-300' : ''"
         >
           <td
             v-for="(v, indx) of Object.values(k)"
@@ -60,7 +65,7 @@
     </table>
 
     <DetailsTable
-      v-if="clientData"
+      v-if="clientData && selectedIndex > 0"
       :selectedIndex="selectedIndex"
     ></DetailsTable>
   </div>
@@ -71,6 +76,7 @@ import { mapMutations } from "vuex";
 // eslint-disable-line no-unused-vars
 // import ITSPCompareModal from "@/components/DetailsModal/ITSPCompareModal";
 import DetailsTable from "@/components/DetailsModal/DetailsTable";
+import { getFriendlyTimestampString } from "@/common/utils";
 
 export default {
   name: "ClientSurveyHistory",
@@ -83,7 +89,7 @@ export default {
     return {
       surveys: this.$store.state["surveyNameIDList"],
       showModal: false,
-      selectedIndex: 0
+      selectedIndex: -1
     };
   },
   computed: {
@@ -101,6 +107,7 @@ export default {
 
       let tableVals = [];
       this.clientData.forEach(function(c) {
+        c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
         let td = colHeaders.map(h => c[h]);
         //td["Survey Type"] = c["SurveyName"];
         tableVals.push(td);

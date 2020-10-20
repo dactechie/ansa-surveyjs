@@ -48,7 +48,7 @@
       />
       <label class="sv-table__cell" for="ccare_id">CCARE ID</label>
       <br />
-      <input
+      <!-- <input
         class="form-radio h-6 w-6"
         type="radio"
         id="MCARE"
@@ -57,10 +57,10 @@
         v-model="idType"
         placeholder="mcare_id"
       />
-      <label class="sv-table__cell" for="mcare_id">MCARE ID</label>
+      <label class="sv-table__cell" for="mcare_id">MCARE ID</label> -->
       <br />
       <input
-        class="sv-table__cell"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="id_val"
         v-model="idVal"
@@ -72,7 +72,7 @@
     <div class="sv-table__cell" id="by_name" v-show="picked_type === 'by_name'">
       <!-- <label class="sv-table__cell" for="fname">First Name</label> -->
       <input
-        class="sv-table__cell"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="fname"
         placeholder="first name"
@@ -82,7 +82,7 @@
       <br />
       <!-- <label class="sv-table__cell" for="lname">Last Name</label> -->
       <input
-        class="sv-table__cell"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="lname"
         placeholder="last name"
@@ -92,6 +92,7 @@
       <br />
       <label for="dob">DOB</label>
       <input
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="date"
         id="dob"
         name="DOB"

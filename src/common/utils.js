@@ -25,7 +25,11 @@ async function promisify(object, fn, ...args) {
 }
 
 function getFriendlyTimestampString(dateObj) {
-  return `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString()}`;
+  return `${dateObj.toLocaleDateString("en-au", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  })} ${dateObj.toLocaleTimeString()}`;
 }
 
 function getCurrentTimestamp() {

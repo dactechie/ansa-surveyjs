@@ -2,8 +2,8 @@
   <div>
     <table class="text-xs">
       <thead>
-        <th>Type</th>
-        <th v-for="cTitle in colTitles" :key="cTitle">
+        <th class="p-3">Type</th>
+        <th class="p-3" v-for="cTitle in colTitles" :key="cTitle">
           <!-- yesNo   | Days |  -->
           {{ cTitle }}
         </th>
