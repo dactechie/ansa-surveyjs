@@ -8,7 +8,7 @@
         @survey-data-received="updateClientData"
       />
       <div class="w-full bg-gray-100 pl-0 lg:pl-64 " id="main-content">
-        <div v-if="currentSLK === ''">
+        <div v-if="slk === ''">
           <p>
             no current SLK
           </p>
@@ -63,17 +63,31 @@ export default {
     return {
       clientData: {},
       mode: MODE_EMPTY_CLIENT_DATA, // TODO : remove, redundant -> same as clientData == undefined
-      picked_type: "lookup"
+      picked_type: "lookup",
+      slk: ""
     };
   },
   computed: {
     surveys: function() {
       return this.$store.state["surveyNameIDList"];
     },
-    currentSLK: function() {
-      return this.$store.state["currentClientSLK"];
+    currentSLK: {
+      get: function() {
+        return this.slk;
+      },
+      set: function(value) {
+        this.slk = value;
+      }
     }
   },
+  // watch: {
+  //   currentSLK: {
+  //     immediate: true,
+  //     handler: function() {
+  //       return this.$store.state["currentClientSLK"];
+  //     }
+  //   }
+  // },
   mounted() {
     // fetch survey name:id list from surveyjs.io / azure
     this.GET_QUESTIONNAIRE_LISTING();
@@ -92,6 +106,7 @@ export default {
       this.mode = data;
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
         this.clientData == {};
+        this.currentSLK = "";
       }
     },
     updateClientData(data) {
@@ -107,6 +122,7 @@ export default {
       //console.log(str_data);
       //sessionStorage.setItem("ClientData", btoa(str_data));
       sessionStorage.setItem("ClientData", str_data);
+      this.currentSLK = cdata[0]["PartitionKey"];
       this.setClientData(cdata);
 
       console.log("DATA ", this.clientData);

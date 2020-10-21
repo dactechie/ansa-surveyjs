@@ -53,7 +53,7 @@
     </table>
 
     <DetailsTable
-      v-if="clientData && selectedIndex > 0"
+      v-if="clientData && selectedIndex >= 0"
       :selectedIndex="selectedIndex"
     ></DetailsTable>
   </div>

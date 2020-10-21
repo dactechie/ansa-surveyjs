@@ -40,13 +40,13 @@
       <input
         class="form-radio h-6 w-6"
         type="radio"
-        id="CCARE"
+        id="CCAREClientID"
         name="lookup_id"
         value="CCARE"
         v-model="idType"
         placeholder="ccare_id"
       />
-      <label class="sv-table__cell" for="ccare_id">CCARE ID</label>
+      <label class="sv-table__cell" for="CCAREClientID">CCARE ID</label>
       <br />
       <!-- <input
         class="form-radio h-6 w-6"
@@ -178,16 +178,13 @@ export default {
   },
   computed: {
     canFetch: function() {
-      let result = false;
-      if (this.picked_type === "by_id") {
-        if (this.idType === "slk") result = this.idVal.length === SLK_LENGTH;
-        else result = this.idVal.length > 1;
+      if (this.picked_type === "by_id" && this.idType === "slk") {
+        return this.idVal.length === SLK_LENGTH;
+      } else if (this.picked_type === "by_name") {
+        return this.slk.length === SLK_LENGTH;
       }
-      result = this.slk.length === SLK_LENGTH;
-      if (!result) {
-        this.setClientSLK(""); // side effect ! FIXME
-      }
-      return result;
+      this.setClientSLK("");
+      return this.idVal.length > 1;
     },
     slk: function() {
       if (this.picked_type === "by_id") {
@@ -216,9 +213,14 @@ export default {
 
       if ((await result) && result.length > 0) {
         console.log(" vale ", result);
+        console.log("setting slk in store", result[0]["PartitionKey"]);
+        this.setClientSLK(result[0]["PartitionKey"]);
         this.$emit("survey-data-received", result);
       } else {
-        this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
+        //this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
+        alert(
+          `Unable to find any results for client with ${this.idType}: ${this.idVal}`
+        );
         this.$emit("mode-updated", MODE_EMPTY_CLIENT_DATA);
       }
     }

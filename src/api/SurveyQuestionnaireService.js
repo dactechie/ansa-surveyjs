@@ -7,7 +7,7 @@ export default {
     return [
       {
         name: "ANSA InitialAssessment",
-        surveyid: "fe8a031d-f505-43bd-b146-47e5acb0f3d6"
+        surveyid: "7fa3ef89-dd2f-4dfe-88ba-b7cc90f3489d"
       },
       {
         name: "ITSP ReviewAssessment",

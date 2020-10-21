@@ -63,6 +63,7 @@
 
       <!-- right navbar -->
       <div class="flex items-center relative space-x-2">
+        SLK: {{ currentClientSLK }}
         <p class="font-semibold text-sm text-orange-400 pl-4">
           Completed: 5/10
         </p>
@@ -109,7 +110,7 @@ import { mapState } from "vuex";
 export default {
   name: "Navbar",
   computed: {
-    ...mapState(["sideBarOpen", "surveyName"])
+    ...mapState(["sideBarOpen", "surveyName", "currentClientSLK"])
   },
   data() {
     return {

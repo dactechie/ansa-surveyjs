@@ -9,7 +9,6 @@ export const DB_ANSA = "ANSA";
 
 export const SLK_LENGTH = 14;
 
-export const DB_IDTYPE_MCARE = "MCARE";
 export const DB_IDTYPE_CCARE = "CCARE";
 //export const DB_IDTYPE_TED = "TED";
 
