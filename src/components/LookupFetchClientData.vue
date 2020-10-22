@@ -147,7 +147,6 @@
         <span class="mx-auto">Fetch Client Data</span>
       </button>
     </div>
-    <span class="sv-table__cell" v-if="mode == 0"> {{ no_client_found }}</span>
   </div>
 </template>
 
@@ -165,7 +164,7 @@ export default {
 
     return {
       picked_type: "",
-      no_client_found: "",
+      // no_client_found: "",
       idType: "",
       idVal: "",
       sex_type: "",
@@ -217,17 +216,17 @@ export default {
         this.setClientSLK(result[0]["PartitionKey"]);
         this.$emit("survey-data-received", result);
       } else {
-        //this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
-        alert(
-          `Unable to find any results for client with ${this.idType}: ${this.idVal}`
-        );
         if (this.slk.length === SLK_LENGTH) {
           // get action may set it to ""
 
           this.setClientSLK(this.slk);
           console.log("setting SLK ", this.$store.state.currentClientSLK);
         }
-        this.$emit("mode-updated", MODE_EMPTY_CLIENT_DATA);
+        //this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
+        this.$emit("mode-updated", {
+          mode: MODE_EMPTY_CLIENT_DATA,
+          text: `Unable to find any results for client with ${this.idType}: ${this.idVal}`
+        });
       }
     }
   }

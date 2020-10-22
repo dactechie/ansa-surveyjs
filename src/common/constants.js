@@ -15,7 +15,8 @@ export const DB_IDTYPE_CCARE = "CCARE";
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
   "ANSA Initial Assessment": "INAS",
-  "ANSA ITSP Review Assessment": "ITSP"
+  "ANSA ITSP Review Assessment": "ITSP",
+  TestSurvey: "TEST"
 };
 
 export const DB_META_KEYS = [

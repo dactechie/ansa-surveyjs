@@ -9,6 +9,7 @@
       <div class="w-full bg-gray-100 pl-0 min-h-screen" id="main-content">
         <div class="p-6 bg-gray-100 mb-20">
           <SurveyComp
+            class="lg:w-2/3"
             @click.native="sideBarOpen ? 'ove' : ''"
             @search-index-built="onSearchReady"
             :currentPage="currentPage"
