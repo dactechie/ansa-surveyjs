@@ -35,6 +35,9 @@ export default new Vuex.Store({
     },
     getCurrentSurveyName: state => {
       return state.surveyName;
+    },
+    getCurrenClientSLK: state => {
+      return state.currentClientSLK;
     }
     // getSurveyIDForName: (state, surveyName) => {
     //   console.log("getting id for ", surveyName);

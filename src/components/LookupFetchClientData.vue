@@ -221,6 +221,12 @@ export default {
         alert(
           `Unable to find any results for client with ${this.idType}: ${this.idVal}`
         );
+        if (this.slk.length === SLK_LENGTH) {
+          // get action may set it to ""
+
+          this.setClientSLK(this.slk);
+          console.log("setting SLK ", this.$store.state.currentClientSLK);
+        }
         this.$emit("mode-updated", MODE_EMPTY_CLIENT_DATA);
       }
     }

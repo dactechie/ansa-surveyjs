@@ -8,7 +8,7 @@
         @survey-data-received="updateClientData"
       />
       <div class="w-full bg-gray-100 pl-0 lg:pl-64 " id="main-content">
-        <div v-if="slk === ''">
+        <div v-if="getCurrenClientSLK === ''">
           <p>
             no current SLK
           </p>
@@ -36,26 +36,19 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import LookupFetchClient from "@/components/LookupFetchClient.vue";
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
-//import Navbar from "@/components/NavSidebars/Home/Navbar";
-// import LookupFetchClientData from "@/components/LookupFetchClientData.vue";
-
 import ClientSurveyHistory from "@/components/ClientSurveyHistory.vue";
-// import NewClientStart from "@/components/NewClientStart.vue";
+
 import {
   MODE_CLIENT_DATA_SET,
   MODE_EMPTY_CLIENT_DATA
 } from "@/common/constants";
-//import { getSurveysNameID } from "@/api/SurveyQuestionnaireService";
 
 export default {
   name: "Home",
   components: {
     LeftsideNavbar,
-    // LookupFetchClientData,
     ClientSurveyHistory
     // NewClientStart
   },
@@ -63,31 +56,16 @@ export default {
     return {
       clientData: {},
       mode: MODE_EMPTY_CLIENT_DATA, // TODO : remove, redundant -> same as clientData == undefined
-      picked_type: "lookup",
-      slk: ""
+      picked_type: "lookup"
     };
   },
   computed: {
     surveys: function() {
       return this.$store.state["surveyNameIDList"];
     },
-    currentSLK: {
-      get: function() {
-        return this.slk;
-      },
-      set: function(value) {
-        this.slk = value;
-      }
-    }
+    ...mapGetters(["getCurrenClientSLK"])
   },
-  // watch: {
-  //   currentSLK: {
-  //     immediate: true,
-  //     handler: function() {
-  //       return this.$store.state["currentClientSLK"];
-  //     }
-  //   }
-  // },
+
   mounted() {
     // fetch survey name:id list from surveyjs.io / azure
     this.GET_QUESTIONNAIRE_LISTING();
@@ -106,7 +84,7 @@ export default {
       this.mode = data;
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
         this.clientData == {};
-        this.currentSLK = "";
+        //this.currentSLK = "";
       }
     },
     updateClientData(data) {
