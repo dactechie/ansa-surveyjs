@@ -20,7 +20,7 @@
           <div flex v-for="survey in surveys" :key="survey.id">
             <router-link
               class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
-              @click.native="handleClickSurvey(survey.name)"
+              @click.native="handleClickNewSurvey(survey.name)"
               :to="{
                 name: 'SurveyView',
                 params: { type: 'new', surveyid: survey.surveyid }
@@ -81,9 +81,10 @@ export default {
   },
   methods: {
     ...mapActions(["GET_QUESTIONNAIRE_LISTING"]),
-    ...mapMutations(["setClientData", "setSurveyName"]),
+    ...mapMutations(["setClientData", "setSurveyName", "setSurveyMode"]),
 
-    handleClickSurvey(surveyName) {
+    handleClickNewSurvey(surveyName) {
+      this.setSurveyMode("new");
       this.setSurveyName(surveyName);
     },
     updateMode({ mode, text }) {

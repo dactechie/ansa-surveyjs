@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex"; //mapGetters, mapState
+import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 //import simpleIAJSON from "../simpleIAJSON";
 // import FakeEpisodes from "@/FakeEpisodes";
@@ -48,6 +48,7 @@ export default {
   methods: {
     ...mapActions(["ADD_SURVEY_DATASERVER", "UPDATE_SURVEY_DATASERVER"]),
     ...mapMutations(["clearClientState", "setCurrentSurvey"]),
+    ...mapGetters(["getCurrentSurveyName"]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
@@ -72,6 +73,13 @@ export default {
         status: status
       });
       this.dirtyData = false;
+    },
+    yankOutSurveyData(me, currentSurvey) {
+      Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
+        currentSurvey[k] = v;
+      });
+      delete currentSurvey["SurveyData"];
+      return { ...currentSurvey };
     }
   },
   created() {
@@ -82,26 +90,32 @@ export default {
     this.survey.onLoadedSurveyFromService.add((sender, options) => {
       console.log("sender ", sender);
       console.log("options", options);
+      const clientData = me.$store.state["clientData"];
       if (me.$store.state["surveyMode"] !== "new") {
         // QUESTION: unset the program ? this should be set by the staff who logs in ?
-        const currentSurvey =
-          me.$store.state["clientData"][me.$store.state["prefillIndex"]];
+        const currentSurvey = clientData[me.$store.state["prefillIndex"]];
 
         //TODO: move this to a  vuex action for GET or SurveyService
         if (!currentSurvey) {
           console.log("Could not find survey. reload ?");
           //TODO Add toast
         } else {
-          Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
-            currentSurvey[k] = v;
-          });
-          delete currentSurvey["SurveyData"];
-
-          // {
-          //   me.survey.data[mk] = currentSurvey[mk];
+          me.survey.data = this.yankOutSurveyData(me, currentSurvey);
+          // Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
+          //   currentSurvey[k] = v;
           // });
-          me.survey.data = { ...currentSurvey };
+          // delete currentSurvey["SurveyData"];
+          // me.survey.data = { ...currentSurvey };
         }
+      } else if (clientData.length > 0) {
+        // find the last survey with the same id/name
+        const sName = this.getCurrentSurveyName();
+        //reverse to search from newest to oldest
+        let foundSurvey = clientData
+          .reverse()
+          .find(e => e["SurveyName"] === sName);
+        console.log("Last survey that was found in hisry ", foundSurvey);
+        me.survey.data = this.yankOutSurveyData(me, foundSurvey);
       } else {
         console.log("nothing to prefil ?");
       }

@@ -9,6 +9,9 @@ export const mutations = {
   setCurrentSurvey(state, payload) {
     state.currentSurvey = payload;
   },
+  setSurveyMode(state, payload) {
+    state.surveyMode = payload;
+  },
   setClientSLK(state, payload) {
     state.currentClientSLK = payload;
   },
