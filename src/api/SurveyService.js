@@ -25,12 +25,12 @@ export default {
     rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[SurveyName], Program);
     rowData[PARTITION_KEY] = SLK;
 
-    if (rowData["SurveyData"]["DB_ID"]) {
-      rowData["ClientID"] = rowData["SurveyData"]["clientID"];
-      rowData["SourceDatabase"] = rowData["SurveyData"]["idType"];
-      delete rowData["SurveyData"]["clientID"];
-      delete rowData["SurveyData"]["idType"];
-    }
+    // if (rowData["SurveyData"]["DB_ID"]) {
+    //   rowData["ClientID"] = rowData["SurveyData"]["clientID"];
+    //   rowData["SourceDatabase"] = rowData["SurveyData"]["idType"];
+    //   delete rowData["SurveyData"]["clientID"];
+    //   delete rowData["SurveyData"]["idType"];
+    // }
     return await updateClientData(rowData);
   }
 };

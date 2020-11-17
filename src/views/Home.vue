@@ -20,7 +20,7 @@
           <div flex v-for="survey in surveys" :key="survey.id">
             <router-link
               class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
-              @click.native="handleClickSurvey(survey.name)"
+              @click.native="handleClickNewSurvey(survey.name)"
               :to="{
                 name: 'SurveyView',
                 params: { type: 'new', surveyid: survey.surveyid }
@@ -81,17 +81,26 @@ export default {
   },
   methods: {
     ...mapActions(["GET_QUESTIONNAIRE_LISTING"]),
-    ...mapMutations(["setClientData", "setSurveyName"]),
+    ...mapMutations([
+      "setClientData",
+      "setSurveyName",
+      "setSurveyMode",
+      "unsetClientData"
+    ]),
 
-    handleClickSurvey(surveyName) {
-      this.setSurveyName(surveyName);
+    handleClickNewSurvey(surveyName) {
+      this.setSurveyMode("new");
+      const sNameArray = surveyName.split(" ");
+      const idx = sNameArray.findIndex(e => e.includes("rc")); // rc0.5 ABC.. (remove ReleaseCandidate descriptor)
+      const outSurveyName = sNameArray.slice(0, idx).join(" ");
+
+      this.setSurveyName(outSurveyName);
     },
     updateMode({ mode, text }) {
       this.mode = mode;
       this.searchResultText = text;
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
-        this.clientData == {};
-        //this.currentSLK = "";
+        this.unsetClientData();
       }
     },
     updateClientData(data) {
@@ -101,12 +110,9 @@ export default {
       if (!cdata) {
         this.mode = MODE_EMPTY_CLIENT_DATA;
         console.log("EMPTY DATA ", this.clientData);
+        this.unsetClientData();
         return;
       }
-      let str_data = JSON.stringify(cdata);
-      //console.log(str_data);
-      //sessionStorage.setItem("ClientData", btoa(str_data));
-      sessionStorage.setItem("ClientData", str_data);
       this.currentSLK = cdata[0]["PartitionKey"];
       this.setClientData(cdata);
 
