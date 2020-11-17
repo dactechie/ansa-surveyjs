@@ -1,6 +1,7 @@
 <template>
   <div>
     <survey :survey="survey"></survey>
+    <!-- && (!survey || survey.state !== 'completed') -->
     <button
       v-if="dirtyData && isProgramSet"
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
@@ -73,13 +74,6 @@ export default {
         status: status
       });
       this.dirtyData = false;
-    },
-    yankOutSurveyData(me, currentSurvey) {
-      Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
-        currentSurvey[k] = v;
-      });
-      delete currentSurvey["SurveyData"];
-      return { ...currentSurvey };
     }
   },
   created() {
@@ -96,26 +90,26 @@ export default {
         const currentSurvey = clientData[me.$store.state["prefillIndex"]];
 
         //TODO: move this to a  vuex action for GET or SurveyService
-        if (!currentSurvey) {
+        if (!currentSurvey || !currentSurvey.get("SurveyData")) {
           console.log("Could not find survey. reload ?");
+          // check sesssuibStirage.. if clientData exists confirm if this is the client you want..
           //TODO Add toast
         } else {
-          me.survey.data = this.yankOutSurveyData(me, currentSurvey);
-          // Object.entries(currentSurvey["SurveyData"]).forEach(([k, v]) => {
-          //   currentSurvey[k] = v;
-          // });
-          // delete currentSurvey["SurveyData"];
-          // me.survey.data = { ...currentSurvey };
+          me.survey.data = { ...currentSurvey["SurveyData"] };
         }
       } else if (clientData.length > 0) {
         // find the last survey with the same id/name
         const sName = this.getCurrentSurveyName();
+        // const sNameArray = sName.split(" ");
+        // const idx = sNameArray.findIndex(e => e.includes("rc")); // rc0.5 ABC.. (remove ReleaseCandidate descriptor)
+        // const outSurveyName = sNameArray.slice(0, idx).join(" ");
+
         //reverse to search from newest to oldest
         let foundSurvey = clientData
           .reverse()
           .find(e => e["SurveyName"] === sName);
         console.log("Last survey that was found in hisry ", foundSurvey);
-        me.survey.data = this.yankOutSurveyData(me, foundSurvey);
+        me.survey.data = { ...foundSurvey["SurveyData"] };
       } else {
         console.log("nothing to prefil ?");
       }
@@ -135,6 +129,8 @@ export default {
         "Complete",
         me.$route.params.surveyid
       );
+
+      // remove the button to save incomplete survey
     });
     // TODO : build search index from pages
     //  survey.visiblePages

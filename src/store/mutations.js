@@ -5,6 +5,8 @@ export const mutations = {
 
   setClientData(state, payload) {
     state.clientData = payload;
+    let str_data = JSON.stringify(payload);
+    sessionStorage.setItem("ClientData", str_data);
   },
   setCurrentSurvey(state, payload) {
     state.currentSurvey = payload;
@@ -19,6 +21,10 @@ export const mutations = {
     state.surveyName = payload;
   },
 
+  unsetClientData(state) {
+    state.clientData = [];
+    sessionStorage.removeItem("ClientData");
+  },
   clearClientState(state) {
     state.currentClientSLK = "";
     state.prefillIndex = 0;

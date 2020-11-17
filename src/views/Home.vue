@@ -81,18 +81,26 @@ export default {
   },
   methods: {
     ...mapActions(["GET_QUESTIONNAIRE_LISTING"]),
-    ...mapMutations(["setClientData", "setSurveyName", "setSurveyMode"]),
+    ...mapMutations([
+      "setClientData",
+      "setSurveyName",
+      "setSurveyMode",
+      "unsetClientData"
+    ]),
 
     handleClickNewSurvey(surveyName) {
       this.setSurveyMode("new");
-      this.setSurveyName(surveyName);
+      const sNameArray = surveyName.split(" ");
+      const idx = sNameArray.findIndex(e => e.includes("rc")); // rc0.5 ABC.. (remove ReleaseCandidate descriptor)
+      const outSurveyName = sNameArray.slice(0, idx).join(" ");
+
+      this.setSurveyName(outSurveyName);
     },
     updateMode({ mode, text }) {
       this.mode = mode;
       this.searchResultText = text;
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
-        this.clientData == {};
-        //this.currentSLK = "";
+        this.unsetClientData();
       }
     },
     updateClientData(data) {
@@ -102,12 +110,9 @@ export default {
       if (!cdata) {
         this.mode = MODE_EMPTY_CLIENT_DATA;
         console.log("EMPTY DATA ", this.clientData);
+        this.unsetClientData();
         return;
       }
-      let str_data = JSON.stringify(cdata);
-      //console.log(str_data);
-      //sessionStorage.setItem("ClientData", btoa(str_data));
-      sessionStorage.setItem("ClientData", str_data);
       this.currentSLK = cdata[0]["PartitionKey"];
       this.setClientData(cdata);
 
