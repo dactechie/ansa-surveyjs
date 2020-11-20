@@ -1,0 +1,100 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "actions": {
+      "ANSAEmailer": {
+        "inputs": {
+          "body": {
+            "Entity": "@triggerBody()?['Entity']",
+            "EntityJSON": "@triggerBody()?['EntityJSON']",
+            "PartitionKey": "@triggerBody()?['PartitionKey']",
+            "RowKey": "@triggerBody()?['RowKey']"
+          },
+          "host": {
+            "triggerName": "manual",
+            "workflow": {
+              "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Logic/workflows/ANSAEmailer"
+            }
+          }
+        },
+        "runAfter": {
+          "Insert_or_Replace_Entity": ["Succeeded"]
+        },
+        "type": "Workflow"
+      },
+      "Insert_or_Replace_Entity": {
+        "inputs": {
+          "body": "@triggerBody()?['EntityJSON']",
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['azuretables']['connectionId']"
+            }
+          },
+          "method": "put",
+          "path": "/Tables/@{encodeURIComponent(triggerBody()?['Entity'])}/entities(PartitionKey='@{encodeURIComponent(triggerBody()?['PartitionKey'])}',RowKey='@{encodeURIComponent(triggerBody()?['RowKey'])}')"
+        },
+        "runAfter": {},
+        "type": "ApiConnection"
+      },
+      "Response_2": {
+        "inputs": {
+          "body": "ok2",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "statusCode": 200
+        },
+        "kind": "Http",
+        "runAfter": {
+          "ANSAEmailer": ["Succeeded"]
+        },
+        "type": "Response"
+      }
+    },
+    "contentVersion": "1.0.0.0",
+    "outputs": {},
+    "parameters": {
+      "$connections": {
+        "defaultValue": {},
+        "type": "Object"
+      }
+    },
+    "triggers": {
+      "manual": {
+        "inputs": {
+          "method": "POST",
+          "schema": {
+            "properties": {
+              "Entity": {
+                "type": "string"
+              },
+              "EntityJSON": {
+                "type": "object"
+              },
+              "PartitionKey": {
+                "type": "string"
+              },
+              "RowKey": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "kind": "Http",
+        "type": "Request"
+      }
+    }
+  },
+  "parameters": {
+    "$connections": {
+      "value": {
+        "azuretables": {
+          "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansajs/providers/Microsoft.Web/connections/azuretables",
+          "connectionName": "azuretables",
+          "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/azuretables"
+        }
+      }
+    }
+  }
+}
