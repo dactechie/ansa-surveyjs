@@ -18,7 +18,7 @@
       >
         Survey Pages Navigation
       </p>
-      <ul v-for="(nPage, index) in currentSurvey.pages" :key="index">
+      <ul v-for="(nPage, index) in currentSurvey.visiblePages" :key="index">
         <li
           @click="toggleSidebar"
           class="mb-4 lg:mb-2"
