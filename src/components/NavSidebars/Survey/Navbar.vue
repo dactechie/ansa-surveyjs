@@ -60,7 +60,9 @@
           </button>
         </div>
       </div>
-
+      <p class="font-semibold text-md text-blue-900 pl-5 pr-5">
+        {{ getCurrentPageTitle }}
+      </p>
       <!-- right navbar -->
       <div class="flex items-center relative space-x-2">
         SLK: {{ currentClientSLK }}
@@ -106,11 +108,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   name: "Navbar",
   computed: {
-    ...mapState(["sideBarOpen", "surveyName", "currentClientSLK"])
+    ...mapState(["sideBarOpen", "surveyName", "currentClientSLK"]),
+    ...mapGetters(["getCurrentPageTitle"])
   },
   data() {
     return {

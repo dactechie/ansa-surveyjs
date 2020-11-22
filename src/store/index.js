@@ -24,9 +24,13 @@ export default new Vuex.Store({
     prefillIndex: 0,
     clientData: [],
     surveyName: "",
-    surveyMode: ""
+    surveyMode: "",
+    currentPageTitle: ""
   },
   getters: {
+    getCurrentPageTitle: state => {
+      return state.currentPageTitle;
+    },
     sideBarOpen: state => {
       return state.sideBarOpen;
     },

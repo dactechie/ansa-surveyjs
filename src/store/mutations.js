@@ -20,6 +20,9 @@ export const mutations = {
   setSurveyName(state, payload) {
     state.surveyName = payload;
   },
+  setCurrentPageTitle(state, payload) {
+    state.currentPageTitle = payload;
+  },
 
   unsetClientData(state) {
     state.clientData = [];

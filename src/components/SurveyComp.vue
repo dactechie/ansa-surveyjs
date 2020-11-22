@@ -48,7 +48,11 @@ export default {
   },
   methods: {
     ...mapActions(["ADD_SURVEY_DATASERVER", "UPDATE_SURVEY_DATASERVER"]),
-    ...mapMutations(["clearClientState", "setCurrentSurvey"]),
+    ...mapMutations([
+      "clearClientState",
+      "setCurrentSurvey",
+      "setCurrentPageTitle"
+    ]),
     ...mapGetters(["getCurrentSurveyName"]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
@@ -116,6 +120,9 @@ export default {
       me.setCurrentSurvey(me.survey); // for Nav to work
     });
 
+    this.survey.onCurrentPageChanged.add(function(surveyModel) {
+      me.setCurrentPageTitle(surveyModel.currentPage.title);
+    });
     this.survey.onValueChanged.add(() => {
       me.dirtyData = true;
     });
