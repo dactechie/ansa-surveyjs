@@ -51,9 +51,10 @@ export default {
     ...mapMutations([
       "clearClientState",
       "setCurrentSurvey",
-      "setCurrentPageTitle"
+      "setCurrentPageTitle",
+      "setClientSLK"
     ]),
-    ...mapGetters(["getCurrentSurveyName"]),
+    ...mapGetters(["getCurrentSurveyName", "getClientLookupIDs"]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
@@ -88,35 +89,54 @@ export default {
     this.survey.onLoadedSurveyFromService.add((sender, options) => {
       console.log("sender ", sender);
       console.log("options", options);
-      const clientData = me.$store.state["clientData"];
-      if (me.$store.state["surveyMode"] !== "new") {
-        // QUESTION: unset the program ? this should be set by the staff who logs in ?
-        const currentSurvey = clientData[me.$store.state["prefillIndex"]];
 
-        //TODO: move this to a  vuex action for GET or SurveyService
-        if (!currentSurvey || !currentSurvey.get("SurveyData")) {
-          console.log("Could not find survey. reload ?");
-          // check sesssuibStirage.. if clientData exists confirm if this is the client you want..
-          //TODO Add toast
-        } else {
-          me.survey.data = { ...currentSurvey["SurveyData"] };
+      // regardless of whether data was found in vuex/local/session store..
+      // we can prefill data that was just enetered into the lookup fields for Firstname etc.
+      //TODO: prefill name DOB sex
+      const lookupIds = me.getClientLookupIDs();
+      if (lookupIds) {
+        for (const [k, v] of Object.entries(lookupIds)) {
+          me.survey.setValue(k, v);
         }
-      } else if (clientData.length > 0) {
-        // find the last survey with the same id/name
-        const sName = this.getCurrentSurveyName();
-        // const sNameArray = sName.split(" ");
-        // const idx = sNameArray.findIndex(e => e.includes("rc")); // rc0.5 ABC.. (remove ReleaseCandidate descriptor)
-        // const outSurveyName = sNameArray.slice(0, idx).join(" ");
-
-        //reverse to search from newest to oldest
-        let foundSurvey = clientData
-          .reverse()
-          .find(e => e["SurveyName"] === sName);
-        console.log("Last survey that was found in hisry ", foundSurvey);
-        me.survey.data = { ...foundSurvey["SurveyData"] };
-      } else {
-        console.log("nothing to prefil ?");
       }
+
+      //if there is data to prefill for this type of survey, do that.
+      let clientData = me.$store.state["clientData"];
+      if (clientData.length === 0) {
+        console.warn("Nothing in state, loading from sessionStorage");
+        let ssClient = sessionStorage.getItem("ClientData");
+        if (!ssClient) {
+          //can't prefill
+          // for Nav to work
+          me.setCurrentSurvey(me.survey);
+          return;
+        } else {
+          clientData = JSON.parse(ssClient);
+        }
+      }
+      //
+      // find the survey to prefill:
+      //
+      let sName = this.getCurrentSurveyName();
+      let sType = "SurveyName";
+      if (sName === "") {
+        // this happens if the page was re-loaded (not coming from Lookup)
+        sType = "SurveyID";
+        let surveyIdPath = me.$router.currentRoute.path;
+        let surveyIdPathArray = surveyIdPath.split("/");
+        sName = surveyIdPathArray[surveyIdPathArray.length - 1];
+      }
+      //reverse to search from newest to oldest
+      let foundSurvey = clientData.reverse().find(e => e[sType] === sName);
+      if (foundSurvey) {
+        console.log("Last survey that was found in hisry ", foundSurvey);
+        me.survey.data = {
+          ...foundSurvey["SurveyData"],
+          Program: foundSurvey["Program"],
+          Staff: foundSurvey["Staff"]
+        };
+      }
+
       me.setCurrentSurvey(me.survey); // for Nav to work
     });
 
@@ -189,6 +209,13 @@ export default {
 }
 .sv-page__title {
   font-size: 1.5em;
+}
+
+@media only screen and (min-width: 600px) {
+  .sv-body__footer {
+    margin-right: 25%;
+    margin-left: 25%;
+  }
 }
 /*h3 {
   margin: 40px 0 0;

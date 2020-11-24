@@ -25,9 +25,13 @@ export default new Vuex.Store({
     clientData: [],
     surveyName: "",
     surveyMode: "",
-    currentPageTitle: ""
+    currentPageTitle: "",
+    clientLookupIDs: {}
   },
   getters: {
+    getClientLookupIDs: state => {
+      return state.clientLookupIDs;
+    },
     getCurrentPageTitle: state => {
       return state.currentPageTitle;
     },

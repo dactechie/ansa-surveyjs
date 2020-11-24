@@ -22,15 +22,17 @@
             </svg>
           </button>
         </div>
+
+        <!-- </div> -->
         <div class="font-bold text-1xl text-indigo-700 pl-4 pr-4">
           {{ surveyName }}
 
-          <div class="font-semibold text-xs text-red-300 ">
+          <div class="hidden lg:block  font-semibold text-xs text-red-300 ">
             Created: 10/10/2020 Modified: 11/10/2020
           </div>
         </div>
         <!-- search bar -->
-        <div class="relative text-gray-600">
+        <!-- <div class="relative text-gray-600">
           <input
             type="search"
             name="serch"
@@ -58,20 +60,33 @@
               />
             </svg>
           </button>
-        </div>
+        </div> -->
       </div>
-      <p class="font-semibold text-md text-blue-900 pl-5 pr-5">
+      <p class="hidden lg:flex font-semibold text-md text-blue-900 pl-5 pr-5">
         {{ getCurrentPageTitle }}
       </p>
       <!-- right navbar -->
-      <div class="flex items-center relative space-x-2">
-        SLK: {{ currentClientSLK }}
-        <p class="font-semibold text-sm text-orange-400 pl-4">
+      <div class="hidden md:flex flex items-center relative space-x-2">
+        SLK:{{ currentClientSLK }}
+        <!-- <button
+          v-if="dirtyData && isProgramSet"
+          class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+          @click.prevent="savePartialSurvey"
+        >
+          Save Incomplete Survey
+        </button> -->
+        <p class="hidden lg:flex font-semibold text-sm text-orange-400 pl-4">
           Completed: 5/10
         </p>
-        <p class="font-semibold text-sm text-red-600 pl-4 pr-4">
+        <p class="hidden lg:flex font-semibold text-sm text-red-600 pl-4 pr-4">
           Mandatory: 2/4
         </p>
+        <button
+          class="flex items-center  bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 "
+        >
+          Home
+        </button>
+
         <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           height="24"

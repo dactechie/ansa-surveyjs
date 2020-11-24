@@ -85,7 +85,8 @@ export default {
       "setClientData",
       "setSurveyName",
       "setSurveyMode",
-      "unsetClientData"
+      "unsetClientData",
+      "setClientLookupIDData"
     ]),
 
     handleClickNewSurvey(surveyName) {
@@ -96,10 +97,11 @@ export default {
 
       this.setSurveyName(outSurveyName);
     },
-    updateMode({ mode, text }) {
+    updateMode({ mode, text, data }) {
       this.mode = mode;
       this.searchResultText = text;
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
+        this.setClientLookupIDData(data);
         this.unsetClientData();
       }
     },
@@ -116,7 +118,7 @@ export default {
       this.currentSLK = cdata[0]["PartitionKey"];
       this.setClientData(cdata);
 
-      console.log("DATA ", this.clientData);
+      console.log("SET CLIENT DATA AFTER LOOKUP ", this.clientData);
       this.mode = MODE_CLIENT_DATA_SET;
     }
   }

@@ -225,7 +225,17 @@ export default {
         //this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
         this.$emit("mode-updated", {
           mode: MODE_EMPTY_CLIENT_DATA,
-          text: `Unable to find any results for client with ${this.idType}: ${this.idVal}`
+          text: `Unable to find any results for client with ${this.idType}: ${this.idVal}`,
+          // WARNING : These keys need to be same as the SurveyJS field "Name"s
+          data: {
+            FirstName: this.fname,
+            LastName: this.lname,
+            Sex: this.sex_type,
+            DOB: this.dob,
+            SLK: this.slk,
+            IDType: this.idType,
+            ID: this.idVal
+          }
         });
       }
     }
