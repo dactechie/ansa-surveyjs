@@ -4,90 +4,96 @@
     "actions": {
       "ClientType_Check": {
         "actions": {
-          "DrugsOfConcern_Execute_JavaScript_Code": {
-            "inputs": {
-              "code": "var body = workflowContext.actions.ParsePDC_SurveyData.outputs.body;\r\nvar pdrug = body[\"pdoc\"][0];\r\n\r\nreturn { \"PDC\" : pdrug[\"PDCSubstanceOrGambling\"], \r\n         \"PDCMethod\": pdrug[\"PDCMethodOfUse\"],\r\n         \"PDCDaysIn28\": pdrug[\"DaysInLast28\"],\r\n         \"PDCHowMuch\": pdrug[\"HowMuchPerOccasion\"],\r\n         \"PDCAgeFirstUsed\": pdrug[\"AgeFirstUsed\"],    \r\n          };\r\n       \r\n"
-            },
-            "runAfter": {
-              "ParsePDC_SurveyData": ["Succeeded"]
-            },
-            "type": "JavaScriptCode"
-          },
-          "For_each_(loop_over_other_drugs)": {
+          "Condition": {
             "actions": {
-              "ODC_Null_Filter": {
+              "For_each_(loop_over_other_drugs)": {
                 "actions": {
-                  "Append_to_OtherDrugs_variable": {
-                    "inputs": {
-                      "name": "OtherDrugsArray",
-                      "value": {
-                        "Goals": "@items('For_each_(loop_over_other_drugs)')?['Goals']",
-                        "daysin28": "@items('For_each_(loop_over_other_drugs)')?['DaysInLast28']",
-                        "doc": "@items('For_each_(loop_over_other_drugs)')?['OtherSubstancesConcernGambling']",
-                        "howmuch": "@items('For_each_(loop_over_other_drugs)')?['HowMuchPerOccasion']",
-                        "method": "@items('For_each_(loop_over_other_drugs)')?['MethodOfUse']",
-                        "units": "@items('For_each_(loop_over_other_drugs)')?['Units']"
+                  "ODC_Null_Filter": {
+                    "actions": {
+                      "Append_to_OtherDrugs_variable": {
+                        "inputs": {
+                          "name": "OtherDrugsArray",
+                          "value": {
+                            "Goals": "@items('For_each_(loop_over_other_drugs)')?['Goals']",
+                            "daysin28": "@items('For_each_(loop_over_other_drugs)')?['DaysInLast28']",
+                            "doc": "@items('For_each_(loop_over_other_drugs)')?['OtherSubstancesConcernGambling']",
+                            "howmuch": "@items('For_each_(loop_over_other_drugs)')?['HowMuchPerOccasion']",
+                            "method": "@items('For_each_(loop_over_other_drugs)')?['MethodOfUse']",
+                            "units": "@items('For_each_(loop_over_other_drugs)')?['Units']"
+                          }
+                        },
+                        "runAfter": {},
+                        "type": "AppendToArrayVariable"
                       }
                     },
+                    "expression": {
+                      "and": [
+                        {
+                          "not": {
+                            "equals": [
+                              "@items('For_each_(loop_over_other_drugs)')?['HowMuchPerOccasion']",
+                              "@null"
+                            ]
+                          }
+                        },
+                        {
+                          "not": {
+                            "equals": [
+                              "@items('For_each_(loop_over_other_drugs)')?['OtherSubstancesConcernGambling']",
+                              "@null"
+                            ]
+                          }
+                        }
+                      ]
+                    },
                     "runAfter": {},
-                    "type": "AppendToArrayVariable"
+                    "type": "If"
                   }
                 },
-                "expression": {
-                  "and": [
-                    {
-                      "not": {
-                        "equals": [
-                          "@items('For_each_(loop_over_other_drugs)')",
-                          "@null"
-                        ]
-                      }
-                    }
-                  ]
-                },
+                "foreach": "@body('Parse_ODC_JSON')?['odc']",
                 "runAfter": {},
-                "type": "If"
+                "type": "Foreach"
               }
             },
-            "foreach": "@body('Parse_ODC_JSON')?['odc']",
+            "expression": {
+              "and": [
+                {
+                  "not": {
+                    "equals": ["@body('Parse_ODC_JSON')?['odc']", "@null"]
+                  }
+                }
+              ]
+            },
             "runAfter": {
               "Parse_ODC_JSON": ["Succeeded"]
             },
-            "type": "Foreach"
+            "type": "If"
           },
           "ParsePDC_SurveyData": {
             "inputs": {
               "content": "@body('Parse_EntityJSON')?['SurveyData']",
               "schema": {
                 "properties": {
-                  "pdoc": {
-                    "items": {
-                      "properties": {
-                        "AgeFirstUsed": {
-                          "type": "integer"
-                        },
-                        "DaysInLast28": {
-                          "type": "string"
-                        },
-                        "Goals": {
-                          "type": "string"
-                        },
-                        "HowMuchPerOccasion": {
-                          "type": "string"
-                        },
-                        "PDCMethodOfUse": {
-                          "type": "string"
-                        },
-                        "PDCSubstanceOrGambling": {
-                          "type": "string"
-                        },
-                        "units": {
-                          "type": "string"
-                        }
-                      },
-                      "type": "object"
-                    },
-                    "type": "array"
+                  "PDCAgeFirstUsed": {
+                    "type": "integer"
+                  },
+                  "PDCDaysInLast28": {
+                    "type": "string"
+                  },
+                  "PDCGoals": {
+                    "type": "string"
+                  },
+                  "PDCHowMuchPerOccasion": {
+                    "type": "string"
+                  },
+                  "PDCMethodOfUse": {
+                    "type": "string"
+                  },
+                  "PDCSubstanceOrGambling": {
+                    "type": "string"
+                  },
+                  "PDCUnits": {
+                    "type": "string"
                   }
                 },
                 "type": "object"
@@ -138,69 +144,7 @@
               }
             },
             "runAfter": {
-              "Parse_PrincipalDrugOfConcern_JSON": ["Succeeded"]
-            },
-            "type": "ParseJson"
-          },
-          "Parse_PrincipalDrugOfConcern_JSON": {
-            "inputs": {
-              "content": "@outputs('DrugsOfConcern_Execute_JavaScript_Code')?['body']",
-              "schema": {
-                "properties": {
-                  "properties": {
-                    "properties": {
-                      "PDC": {
-                        "properties": {
-                          "type": {
-                            "type": "string"
-                          }
-                        },
-                        "type": "object"
-                      },
-                      "PDCAgeFirstUsed": {
-                        "properties": {
-                          "type": {
-                            "type": "string"
-                          }
-                        },
-                        "type": "object"
-                      },
-                      "PDCDaysIn28": {
-                        "properties": {
-                          "type": {
-                            "type": "string"
-                          }
-                        },
-                        "type": "object"
-                      },
-                      "PDCHowMuch": {
-                        "properties": {
-                          "type": {
-                            "type": "string"
-                          }
-                        },
-                        "type": "object"
-                      },
-                      "PDCMethod": {
-                        "properties": {
-                          "type": {
-                            "type": "string"
-                          }
-                        },
-                        "type": "object"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "type": {
-                    "type": "string"
-                  }
-                },
-                "type": "object"
-              }
-            },
-            "runAfter": {
-              "DrugsOfConcern_Execute_JavaScript_Code": ["Succeeded"]
+              "ParsePDC_SurveyData": ["Succeeded"]
             },
             "type": "ParseJson"
           }
@@ -232,7 +176,7 @@
       },
       "Execute_JavaScript_Code": {
         "inputs": {
-          "code": "var body = workflowContext.actions.Parse_CommonJSON.outputs.body;\r\nvar risk_chklist = Object.entries(body['RiskAssessmentCheck']).map (e => { if( e[1]['Column 1']) return e[0] }).filter( f => f ).join(\", \")\r\n\r\nvar timeSpent = Object.entries(body['HowDoYouSpendTime']).map(e => { let a ={}; a[\"area\"] = e[0]; a[\"rank\"] = parseInt(e[1][\"Rank Importance to You (in terms of time spent)\"]) ; return a;});\r\nvar sortedTimeSpent = timeSpent.sort((a,b) => (a.rank > b.rank) ? 1 : ((b.rank > a.rank) ? -1 : 0)); \r\n\r\nreturn { \r\n         \"RiskAssessmentCheck\": risk_chklist,\r\n         \"sortedTimeSpent\": sortedTimeSpent.map(e => `${e[\"area\"]}(${e[\"rank\"]})`).join(\", <br> \")\r\n          };\r\n       "
+          "code": "var body = workflowContext.actions.Parse_CommonJSON.outputs.body;\r\nvar risk_chklist = \"\"; if(body[\"RiskAssessmentCheck\"])\r\n  risk_chklist = Object.entries(body[\"RiskAssessmentCheck\"])\r\n  .map(e => {\r\n    if (e[1][\"Column 1\"]) return e[0];\r\n  }).filter(f => f).join(\", \");\r\nvar timeSpent = []; if (body[\"HowDoYouSpendTime\"])\r\ntimeSpent = Object.entries(body[\"HowDoYouSpendTime\"]).map(e => {\r\n  let a = {};\r\n  a[\"area\"] = e[0];\r\n  a[\"rank\"] = parseInt(e[1][\"Rank Importance to You (in terms of time spent)\"]);\r\n  return a;\r\n});\r\nvar sortedTimeSpent = timeSpent.sort((a, b) =>\r\n  a.rank > b.rank ? 1 : b.rank > a.rank ? -1 : 0);\r\nreturn { RiskAssessmentCheck: risk_chklist, sortedTimeSpent: sortedTimeSpent.map(e => `${e[\"area\"]}(${e[\"rank\"]})`).join(\",  \")};"
         },
         "runAfter": {
           "Parse_CommonJSON2": ["Succeeded"]
@@ -241,7 +185,7 @@
       },
       "Execute_JavaScript_Code_2": {
         "inputs": {
-          "code": "var body = workflowContext.actions.Parse_CommonJSON.outputs.body;\r\nfunction chkList(list) {\r\n    if(!list) return \"\";\r\n    return list.join(\", \");\r\n}\r\nvar otheractivities = \"\"; if(body['Past4WkEngagedInOtheractivities']) otheractivities = Object.entries(body['Past4WkEngagedInOtheractivities']).map(e => { if(e[1][\"No/Yes\"]) return e[0]; }).filter(e=> e).join(\",\");\r\nvar addictiveBehave = \"\"; if(body['OtherAddictiveBehaviours']) Object.entries(body['OtherAddictiveBehaviours']).map(e => `${e[0]}: ${e[1][\"Days\"]}/28 days`).join(\", \");\r\nreturn {\r\n    \"Past4WkEngagedInOtheractivities\": otheractivities,\r\n      \"OtherAddictiveBehaviours\": addictiveBehave,\r\n      \"FinalChecklist\": chkList(body['FinalChecklist']),\r\n      \"SupportTypeBestMatchesNeedsGoals\": chkList(body['SupportTypeBestMatchesNeedsGoals']),\r\n      \"PrimaryCaregiver\": chkList(body['PrimaryCaregiver']),\r\n      \"MHRecentRiskIssues\": chkList(body['MHRecentRiskIssues']),\r\n      \"MHHistoricalRiskIssues\":chkList(body['MHHistoricalRiskIssues'])\r\n}"
+          "code": "\r\nvar body = workflowContext.actions.Parse_CommonJSON.outputs.body;\r\nfunction chkList(list) { if(!list) return \"\";  return list.join(\", \");}\r\nvar otheractivities = \"\"; if(body['Past4WkEngagedInOtheractivities']) otheractivities = Object.entries(body['Past4WkEngagedInOtheractivities']).map(e => { if(e[1][\"No/Yes\"]) return e[0]; }).filter(e=> e).join(\",\");\r\nvar addictiveBehave = \"\"; if(body['OtherAddictiveBehaviours']) addictiveBehave = Object.entries(body['OtherAddictiveBehaviours']).map(e => `${e[0]}: ${e[1][\"Days\"]}/28 days`).join(\", \");\r\nreturn {\r\n    \"Past4WkEngagedInOtheractivities\": otheractivities,\"OtherAddictiveBehaviours\": addictiveBehave,\r\n      \"FinalChecklist\": chkList(body['FinalChecklist']),\"SupportTypeBestMatchesNeedsGoals\": chkList(body['SupportTypeBestMatchesNeedsGoals']),\r\n      \"PrimaryCaregiver\": chkList(body['PrimaryCaregiver']), \"MHRecentRiskIssues\": chkList(body['MHRecentRiskIssues']), \"MHHistoricalRiskIssues\":chkList(body['MHHistoricalRiskIssues'])}"
         },
         "runAfter": {
           "Execute_JavaScript_Code": ["Succeeded"]
@@ -253,97 +197,106 @@
           "Populate_a_Microsoft_Word_template_2": {
             "inputs": {
               "body": {
+                "6256064": "@body('Parse_CommonJSON2')?['IsAODUseOutOfControl']",
+                "38253494": "@body('Parse_CommonJSON')?['Past4WkHowOftenMentalHealthCausedProblems']",
                 "59456480": "@body('Parse_JsCode-2_JSON')?['OtherAddictiveBehaviours']",
-                "81738125": "@body('Parse_JsCode-2_JSON')?['MHHistoricalRiskIssues']",
-                "106783188": "@{body('Parse_PrincipalDrugOfConcern_JSON')?['properties']?['PDCHowMuch']}",
+                "68076753": "@body('Parse_CommonJSON')?['PhysicalHealthITSPIssues']",
+                "106783188": "@body('ParsePDC_SurveyData')?['PDCHowMuchPerOccasion']",
                 "205615903": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore']",
                 "309912648": "@body('Parse_CommonJSON')?['RelationshipsITSPIssues']",
-                "335736069": "@body('Parse_CommonJSON')?['PhysicalHealthITSPIssues']",
-                "379363774": "@body('Parse_CommonJSON')?['MHHistoricalRiskIssues-Comment']",
+                "345987727": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns-Comment']",
+                "396561042": "@body('Parse_CommonJSON')?['Past4WkPhysicalHealth']",
                 "445896514": "@{body('Parse_CommonJSON')?['AreYouAccessingOtherServices']}",
-                "491998655": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis']",
-                "506878467": "@body('Parse_CommonJSON')?['PhysicalHealthITSPGoals']",
+                "456995323": "@body('Parse_CommonJSON')?['MHRecentRiskIssues-Comment']",
                 "532537670": "@{body('Parse_CommonJSON')?['ExternalReferrals']}",
                 "534323263": "@body('Parse_CommonJSON')?['EverydayLivingITSPIssues']",
                 "615259406": "@body('Parse_CommonJSON2')?['DoYouWishToStop']",
-                "630986672": "@body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulencenotes']",
-                "770977451": "@{body('Parse_PrincipalDrugOfConcern_JSON')?['properties']?['PDC']}",
+                "770977451": "@body('ParsePDC_SurveyData')?['PDCSubstanceOrGambling']",
                 "804822681": "@body('Parse_JSCode_JSON')?['RiskAssessmentCheck']",
-                "917911971": "@body('Parse_CommonJSON')?['HousingSafetyITSPGoals']",
+                "891388424": "@body('Parse_CommonJSON')?['MentalHealthITSPGoals']",
                 "932793510": "@body('Parse_CommonJSON')?['SubstanceUseITSPGoals']",
                 "937715984": "@body('Parse_CommonJSON')?['EverydayLivingITSPGoals']",
-                "977275635": "@{body('Parse_CommonJSON')?['ChildProtectionConcerns']}",
-                "983889406": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns']",
                 "996616515": "@body('Parse_CommonJSON')?['HousingSafetyITSPIssues']",
                 "1025911928": "@body('Parse_EntityJSON')?['Staff']",
                 "1126735331": "@body('Parse_CommonJSON')?['LegalITSPGoals']",
                 "1151565685": "@body('Parse_CommonJSON2')?['Past4WkNumInjectingDays']",
-                "1259955150": "@{body('Parse_PrincipalDrugOfConcern_JSON')?['properties']?['PDCAgeFirstUsed']}",
-                "1273210318": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive']",
+                "1156194059": "@body('Parse_CommonJSON')?['legalITSPIssues']",
+                "1259955150": "@{body('ParsePDC_SurveyData')?['PDCAgeFirstUsed']}",
                 "1288317155": "@body('Parse_CommonJSON')?['Past4WkDifficultyFindingHousing']",
                 "1293788922": "@body('Parse_CommonJSON2')?['HowDifficultToStopOrGoWithout']",
                 "1312838492": "@body('Parse_CommonJSON')?['FirstName']",
-                "1343365329": "@body('Parse_JSCode_JSON')?['addictivebehaviours']",
-                "1346214676": "@body('Parse_CommonJSON')?['PrimaryCaregiver-Comment']",
+                "1346825936": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou-Comment']",
                 "1457217821": "@body('Parse_CommonJSON')?['DoYouFeelSafeWhereYouLive']",
                 "1612091630": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore-Comment']",
+                "1622261413": "@body('Parse_JsCode-2_JSON')?['MHHistoricalRiskIssues']",
                 "1640221018": "@{body('Parse_CommonJSON2')?['SDS_Score']}",
                 "1683393690": "@body('Parse_CommonJSON')?['YourCurrentHousing']",
                 "1723867020": "@body('Parse_CommonJSON')?['AssessmentDate']",
                 "1736819081": "@body('Parse_CommonJSON')?['SupportTypeBestMatchesNeedsGoals-Comment']",
                 "1751854583": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou']",
-                "1771737359": "@{body('Parse_CommonJSON')?['HealthChecklist_STAFF']}",
                 "1796786830": "@body('Parse_CommonJSON2')?['HowMuchDoYouWorryAboutAODUse']",
                 "1837950863": "@body('Parse_CommonJSON')?['RelationshipsITSPGoals']",
                 "1849281492": "@body('Parse_CommonJSON')?['SubjectToCourtOrdersOrPendingCharges']",
                 "1850212294": "@{body('Parse_CommonJSON')?['Past4WkAnyOtherAddictiveB']}",
                 "1851141063": "@body('Parse_JsCode-2_JSON')?['FinalChecklist']",
-                "1951585166": "@body('Parse_CommonJSON')?['Past4WkMentalHealth']",
-                "1964996258": "@{body('Parse_CommonJSON')?['Past4WkHadCaregivingResponsibilities']}",
-                "2004168696": "@body('Parse_CommonJSON')?['Past4WkUseLedToProblemsWithFamilyFriend']",
+                "1876659698": "@body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulencenotes']",
+                "2010095536": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis-Comment']",
                 "2037007272": "@body('Parse_CommonJSON2')?['HowLongSinceLastInjected']",
                 "2040471439": "@body('Parse_CommonJSON')?['ExternalReferrals-Comment']",
                 "2054876705": "@{body('Parse_CommonJSON2')?['HaveYouEverSharedEquipment']}",
-                "2080556733": "@body('Parse_CommonJSON')?['Past4WkHowOftenMentalHealthCausedProblems']",
-                "-1032733159": "@body('Parse_CommonJSON')?['MHRecentRiskIssues-Comment']",
-                "-1128308946": "@body('Parse_JsCode-2_JSON')?['MHRecentRiskIssues']",
+                "-1035571282": "@body('Parse_EntityJSON')?['Program']",
                 "-1131092073": "@{body('Parse_CommonJSON2')?['Past4WkAodRisks']}",
+                "-1163774633": "@{body('Parse_CommonJSON')?['EverDiagnosedMentalHealthIssue']}",
                 "-1198086222": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou-Comment']",
                 "-1265678633": "@body('Parse_CommonJSON')?['Past4WkDailyLivingImpacted']",
+                "-1314798429": "@{body('Parse_CommonJSON')?['HealthChecklist_STAFF']}",
                 "-1315716554": "@body('Parse_CommonJSON')?['Past4WkPhysicalHealth']",
+                "-1320497597": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou']",
+                "-1320814511": "@body('Parse_CommonJSON2')?['Past4WkAodRisks-Comment']",
+                "-1366817897": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns']",
+                "-1398279041": "@triggerBody()?['PartitionKey']",
                 "-1468194288": "@variables('OtherDrugsArray')",
-                "-1470734454": "@body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulencenotes']",
-                "-1478840914": "@body('Parse_CommonJSON2')?['IsAODUseOutOfControl']",
+                "-1640945987": "@{body('Parse_CommonJSON')?['Past4WkHadCaregivingResponsibilities']}",
                 "-1641411615": "@{body('Parse_CommonJSON')?['NeedHelpWrkDevlpmntOrdrPayingOutstndngFines']}",
-                "-1713340059": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive-Comment']",
+                "-1697921975": "@body('Parse_CommonJSON')?['Past4WkUseLedToProblemsWithFamilyFriend']",
                 "-1728680006": "@body('Parse_CommonJSON')?['SubjectToCourtOrdersOrPendingCharges-Comment']",
                 "-1765374855": "@body('Parse_CommonJSON')?['RiskAssessmentNotes']",
+                "-1776399980": "@body('Parse_CommonJSON')?['Past4WkMentalHealth']",
                 "-1804539758": "@body('Parse_JsCode-2_JSON')?['Past4WkEngagedInOtheractivities']",
-                "-1848398780": "@{body('Parse_CommonJSON')?['EverDiagnosedMentalHealthIssue']}",
-                "-1873916793": "@{body('Parse_PrincipalDrugOfConcern_JSON')?['properties']?['PDC']}",
+                "-1873916793": " @{body('ParsePDC_SurveyData')?['PDCSubstanceOrGambling']}\n ",
                 "-1877765276": "@body('Parse_CommonJSON')?['HaveYouServedCustodialSentenceInPast-Comment']",
-                "-1882232899": "@body('Parse_CommonJSON')?['Past4WkBeenArrested']",
+                "-1898350936": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis']",
+                "-1899201441": "@body('Parse_CommonJSON')?['HaveAnySocialSupport-Comment']",
                 "-1902431370": "@{body('Parse_CommonJSON2')?['HaveYouEverInjected']}",
-                "-1977515267": "@{body('Parse_PrincipalDrugOfConcern_JSON')?['properties']?['PDCDaysIn28']}",
+                "-1977515267": "@body('ParsePDC_SurveyData')?['PDCDaysInLast28']",
                 "-2013134270": "@body('Parse_CommonJSON')?['ChildProtectionDetails']",
                 "-2023928766": "@body('Parse_JSCode_JSON')?['sortedTimeSpent']",
+                "-2045040186": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive']",
                 "-2049670359": "@body('Parse_CommonJSON')?['Past4WkHowOftenPhysicalHealthCausedProblems']",
                 "-2068404389": "@body('Parse_CommonJSON')?['CreatedDatetime']",
-                "-2088457054": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns-Comment']",
+                "-2088602565": "@body('Parse_JsCode-2_JSON')?['MHRecentRiskIssues']",
                 "-2136017307": "@body('Parse_CommonJSON')?['SupportFromWhichOtherServices-Comment']",
-                "-312406882": "@body('Parse_CommonJSON')?['HaveAnySocialSupport']",
+                "-270163104": "@body('Parse_JsCode-2_JSON')?['PrimaryCaregiver']",
+                "-285743305": "@body('Parse_CommonJSON')?['PhysicalHealthITSPGoals']",
+                "-338462748": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive-Comment']",
+                "-35041945": "@body('Parse_CommonJSON')?['PrimaryCaregiver-Comment']",
                 "-385032425": "@body('Parse_CommonJSON')?['SubstanceUseITSPIssues']",
-                "-403761394": "@{body('Parse_CommonJSON')?['AreYouCurrentlyTakingMeds']}",
-                "-412775997": "@body('Parse_JsCode-2_JSON')?['PrimaryCaregiver']",
                 "-532112431": "@body('Parse_EntityJSON')?['Program']",
-                "-690911605": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis-Comment']",
+                "-708334838": "@body('Parse_CommonJSON')?['MHHistoricalRiskIssues-Comment']",
+                "-732319510": "@body('Parse_CommonJSON')?['RelationshipsITSPIssues']",
+                "-75205338": "@body('Parse_CommonJSON')?['HaveAnySocialSupport']",
+                "-758285849": "@{body('Parse_CommonJSON')?['AreYouCurrentlyTakingMeds']}",
                 "-763310409": "@body('Parse_JsCode-2_JSON')?['SupportTypeBestMatchesNeedsGoals']",
-                "-779103006": "@body('Parse_CommonJSON')?['MentalHealthITSPGoals']",
+                "-813646467": "@body('Parse_CommonJSON')?['HousingSafetyITSPGoals']",
+                "-861361226": "@{body('Parse_CommonJSON')?['ChildProtectionConcerns']}",
+                "-867839974": "@{body('Parse_CommonJSON')?['Past4WkHadCaregivingResponsibilities']}",
+                "-872914909": "@{body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulence']}",
                 "-895972606": "@body('Parse_CommonJSON')?['HaveYouServedCustodialSentenceInPast']",
                 "-896666621": "@body('Parse_CommonJSON')?['Past4WkHowOftenIllegalActivities']",
                 "-907376112": "@body('Parse_CommonJSON2')?['DoesMissingFixMakeAnxious']",
-                "-916320379": "@{body('Parse_PrincipalDrugOfConcern_JSON')?['properties']?['PDCMethod']}",
-                "-975837373": "@{body('Parse_CommonJSON')?['SupportFromWhichOtherServices']}"
+                "-916320379": "@body('ParsePDC_SurveyData')?['PDCMethodOfUse']",
+                "-975837373": "@{body('Parse_CommonJSON')?['SupportFromWhichOtherServices']}",
+                "-995571847": "@body('Parse_CommonJSON')?['Past4WkHowOftenPhysicalHealthCausedProblems']"
               },
               "host": {
                 "connection": {
@@ -468,20 +421,6 @@
           ]
         },
         "runAfter": {
-          "Initialize_variable": ["Succeeded"]
-        },
-        "type": "InitializeVariable"
-      },
-      "Initialize_variable": {
-        "inputs": {
-          "variables": [
-            {
-              "name": "pdc",
-              "type": "string"
-            }
-          ]
-        },
-        "runAfter": {
           "Parse_EntityJSON": ["Succeeded"]
         },
         "type": "InitializeVariable"
@@ -557,6 +496,9 @@
                 "type": "string"
               },
               "HaveAnySocialSupport": {
+                "type": "string"
+              },
+              "HaveAnySocialSupport-Comment": {
                 "type": "string"
               },
               "HaveDVOrFamilySafetyConcerns": {
@@ -996,6 +938,9 @@
                   "type": "string"
                 },
                 "type": "array"
+              },
+              "Past4WkAodRisks-Comment": {
+                "type": "string"
               },
               "Past4WkNumInjectingDays": {
                 "type": "string"

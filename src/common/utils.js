@@ -45,11 +45,11 @@ function getCurrentYearMonthDay() {
   };
 }
 
-function getCurrentYearMonthDayString() {
+function getCurrentYearMonthDayString(separator = "") {
   let { year, month, day } = getCurrentYearMonthDay();
   const monthStr = `${month}`.padStart(2, "0");
   const dateStr = `${day}`.padStart(2, "0");
-  return `${year}${monthStr}${dateStr}`;
+  return `${year}${separator}${monthStr}${separator}${dateStr}`;
 }
 
 export {

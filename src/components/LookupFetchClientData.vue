@@ -1,7 +1,7 @@
 <template>
   <div id="sp_100">
     <span class="text-md pl-1 font-semibold"
-      >How do you want to lookup the client ?</span
+      >How do you want to lookup the client?</span
     >
     <div class="sv-table__cell" id="lookup_type">
       <input

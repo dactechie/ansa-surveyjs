@@ -1,5 +1,13 @@
 <template>
   <div>
+    <!-- <button id="show-modal" @click="showModal = true">Show Modal</button>
+    <modal v-if="showModal" @close="showModal = false">
+      <template v-slot:body>
+        {{ modalContent }}
+      </template>
+      <h3 slot="header">Question</h3>
+    </modal> -->
+
     <survey :survey="survey"></survey>
     <!-- && (!survey || survey.state !== 'completed') -->
     <button
@@ -15,6 +23,9 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
+import { getCurrentYearMonthDayString } from "@/common/utils";
+// import Modal from "@/components/Modal";
+
 //import simpleIAJSON from "../simpleIAJSON";
 // import FakeEpisodes from "@/FakeEpisodes";
 
@@ -31,10 +42,14 @@ export default {
   data() {
     return {
       survey: {},
-      dirtyData: false
-      // surveys: []
+      dirtyData: false,
+      showModal: false,
+      modalContent: ""
     };
   },
+  // components: {
+  //   Modal
+  // },
   watch: {
     currentPage: function(newVal, oldVal) {
       console.log("Prop changed: ", newVal, " | was: ", oldVal);
@@ -65,22 +80,18 @@ export default {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
       this.survey.data["Status"] = "Incomplete";
-      this.saveSurvey(
-        this.ADD_SURVEY_DATASERVER,
-        "Incomplete",
-        this.$route.params.surveyid
-      );
+      this.saveSurvey("Incomplete");
     },
-    saveSurvey(asyncSaveMethod, status, surveyId) {
+    saveSurvey(status) {
       if (!this.isProgramSet) {
         console.error("Progarm not set . Unable to ssave");
         return;
       }
       //this.survey.data["SurveyID"] = this.$route.params.surveyid;
-      asyncSaveMethod({
+      this.ADD_SURVEY_DATASERVER({
         SLK: this.$store.state.currentClientSLK,
         surveyData: this.survey.data,
-        surveyId: surveyId,
+        surveyId: this.$route.params.surveyid,
         //surveyName: this.$store.state.surveyName,
         status: status
       });
@@ -143,14 +154,23 @@ export default {
       if (sName === "") {
         // this happens if the page was re-loaded (not coming from Lookup)
         sType = "SurveyID";
-        let surveyIdPath = me.$router.currentRoute.path;
-        let surveyIdPathArray = surveyIdPath.split("/");
-        sLookup = surveyIdPathArray[surveyIdPathArray.length - 1];
+        sLookup = me.$route.params.surveyid;
       }
       //reverse to search from newest to oldest
       let foundSurvey = clientData.reverse().find(e => e[sType] === sLookup);
       if (foundSurvey) {
-        console.log("Last survey that was found in hisry ", foundSurvey);
+        // if (foundSurvey["Status"] !== "Complete") {
+        //   // Continuing partially completed assessment
+        //   // do you want to keep the original assessment date ?
+        //   me.modalContent =
+        //     "do you want to keep the original assessment date ?";
+        //   me.showModal = true;
+        // } else {
+        foundSurvey["SurveyData"][
+          "AssessmentDate"
+        ] = getCurrentYearMonthDayString("-");
+        // }
+        console.log("Last survey that was found in history ", foundSurvey);
         me.survey.data = {
           ...foundSurvey["SurveyData"],
           Program: foundSurvey["Program"],
@@ -163,12 +183,19 @@ export default {
           );
           me.setSurveyName(foundSurvey["SurveyName"]);
         }
+      } else if (sName === "") {
+        // Reload page + if this client had no surveys done with this surveyID
+        console.warn(
+          "Unable to get survey name, setting it from the SuvrveyJS title"
+        );
+        me.setSurveyName(me.survey.title);
       }
 
       me.setCurrentSurvey(me.survey); // for Nav to work
     });
 
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
+      window.scrollTo(0, 0);
       me.setCurrentPageTitle(surveyModel.currentPage.title);
       let q = me.survey.getAllQuestions(true); //true=> visible
       let answered = Object(q).filter(e => e.isAnswered);
@@ -189,14 +216,8 @@ export default {
     });
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
-      //console.log("survey data (not saving..just logging) ", survey.data);
-      //me.survey.data["Status"] = "Complete";
 
-      me.saveSurvey(
-        me.ADD_SURVEY_DATASERVER,
-        "Complete",
-        me.$route.params.surveyid
-      );
+      me.saveSurvey("Complete");
 
       // remove the button to save incomplete survey
     });

@@ -100,7 +100,7 @@
         {{ getCurrentPageTitle }}
       </p>
       <!-- right navbar -->
-      <div class="hidden md:flex flex items-center relative space-x-2   pl-4">
+      <div class="hidden md:flex items-center relative space-x-2   pl-4">
         <p class="font-mono font-semibold text-md text-green-800">
           SLK: {{ currentClientSLK }}
         </p>
