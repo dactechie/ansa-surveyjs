@@ -24,6 +24,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 import { getCurrentYearMonthDayString, gapInDays } from "@/common/utils";
+import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -165,7 +166,7 @@ export default {
 
         const gapDays = gapInDays(foundSurveyData["AssessmentDate"]);
         console.log(` Age of lat survey ${Math.round(gapDays)} days`);
-        if (gapDays > 90) {
+        if (gapDays > PREFILL_EXPIRY_DAYS) {
           alert(
             `Last Survey is too old (by ${Math.round(
               gapDays

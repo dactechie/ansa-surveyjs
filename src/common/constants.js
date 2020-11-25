@@ -8,6 +8,8 @@ export const DB_EPISODE = "Episode";
 export const DB_ANSA = "ANSA";
 
 export const SLK_LENGTH = 14;
+export const PREFILL_EXPIRY_DAYS =
+  process.env.VUE_APP_PREFILL_EXPIRY_DAYS || 90;
 
 export const DB_IDTYPE_CCARE = "CCARE";
 //export const DB_IDTYPE_TED = "TED";
