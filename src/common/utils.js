@@ -46,10 +46,23 @@ function getCurrentYearMonthDay() {
 }
 
 function getCurrentYearMonthDayString(separator = "") {
-  let { year, month, day } = getCurrentYearMonthDay();
+  const { year, month, day } = getCurrentYearMonthDay();
   const monthStr = `${month}`.padStart(2, "0");
   const dateStr = `${day}`.padStart(2, "0");
   return `${year}${separator}${monthStr}${separator}${dateStr}`;
+}
+
+// how much older since 3 months ago
+// if negative , newer, can use
+
+function gapInDays(yyyy_mm_dd) {
+  const [y, m, d] = yyyy_mm_dd.split("-");
+
+  const passedInTime = new Date(y, m - 1, d).getTime();
+
+  const currentTime = new Date().getTime();
+
+  return (passedInTime - currentTime) / (24 * 60 * 60 * 1000);
 }
 
 export {
@@ -58,5 +71,6 @@ export {
   getCurrentYearMonthDay,
   getCurrentYearMonthDayString,
   getCurrentTimestamp,
-  getFriendlyTimestampString
+  getFriendlyTimestampString,
+  gapInDays
 };

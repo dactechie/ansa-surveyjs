@@ -23,7 +23,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-import { getCurrentYearMonthDayString } from "@/common/utils";
+import { getCurrentYearMonthDayString, gapInDays } from "@/common/utils";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -144,20 +144,12 @@ export default {
         "Current client SLK >>>>>>> ",
         this.$store.state.currentClientSLK
       );
+      //in case prefill survey not found ,we still want ..
+      me.setCurrentSurvey(me.survey); // for Nav to work
 
-      //
-      // find the survey to prefill:
-      //
-      let sName = this.getCurrentSurveyName();
-      let sType = "SurveyName";
-      let sLookup = sName;
-      if (sName === "") {
-        // this happens if the page was re-loaded (not coming from Lookup)
-        sType = "SurveyID";
-        sLookup = me.$route.params.surveyid;
-      }
-      //reverse to search from newest to oldest
-      let foundSurvey = clientData.reverse().find(e => e[sType] === sLookup);
+      // for prefill, get the last survey done
+      let foundSurvey = clientData[clientData.length - 1];
+
       if (foundSurvey) {
         // if (foundSurvey["Status"] !== "Complete") {
         //   // Continuing partially completed assessment
@@ -171,41 +163,37 @@ export default {
         console.log("Last survey that was found in history ", foundSurvey);
         let foundSurveyData = foundSurvey["SurveyData"];
 
-        foundSurveyData["AssessmentDate"] = getCurrentYearMonthDayString("-");
-
-        // important that instead of doing this :
-        //        // me.survey.data = {
-        //   ...foundSurvey["SurveyData"],
-        // we do this instead :
-        sender.getAllQuestions().forEach(e => {
-          me.survey.setValue(e.name, foundSurveyData[e.name]);
-        });
-        // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
-        // from a previous submission when the current survey has no matching question or answer
-        me.survey.setValue("Program", foundSurvey["Program"]);
-        me.survey.setValue("Staff", foundSurvey["Staff"]);
-
-        // me.survey.data = {
-        //   ...foundSurvey["SurveyData"],
-        //   Program: foundSurvey["Program"],
-        //   Staff: foundSurvey["Staff"]
-        // };
-        if (sName === "") {
-          console.log(
-            "SurvetName was blank (due to page reload) .. settting it to",
-            foundSurvey["SurveyName"]
+        const gapDays = gapInDays(foundSurveyData["AssessmentDate"]);
+        console.log(` Age of lat survey ${Math.round(gapDays)} days`);
+        if (gapDays > 90) {
+          alert(
+            `Last Survey is too old (by ${Math.round(
+              gapDays
+            )} days) from which to prefill.`
           );
-          me.setSurveyName(foundSurvey["SurveyName"]);
+        } else {
+          foundSurveyData["AssessmentDate"] = getCurrentYearMonthDayString("-");
+
+          // important that instead of doing this :
+          //        // me.survey.data = {
+          //   ...foundSurvey["SurveyData"],
+          // we do this instead :
+          sender.getAllQuestions().forEach(e => {
+            me.survey.setValue(e.name, foundSurveyData[e.name]);
+          });
+          // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
+          // from a previous submission when the current survey has no matching question or answer
+          me.survey.setValue("Program", foundSurvey["Program"]);
+          me.survey.setValue("Staff", foundSurvey["Staff"]);
         }
-      } else if (sName === "") {
+      }
+      if (this.getCurrentSurveyName() === "") {
         // Reload page + if this client had no surveys done with this surveyID
         console.warn(
           "Unable to get survey name, setting it from the SuvrveyJS title"
         );
         me.setSurveyName(me.survey.title);
       }
-
-      me.setCurrentSurvey(me.survey); // for Nav to work
     });
 
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
