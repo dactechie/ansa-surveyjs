@@ -2,6 +2,9 @@ export const mutations = {
   setSurveyList(state, payload) {
     state.surveyNameIDList = payload;
   },
+  setQuestionsStatus(state, payload) {
+    state.questionsStatus = payload;
+  },
   setClientLookupIDData(state, payload) {
     state.clientLookupIDs = payload;
   },

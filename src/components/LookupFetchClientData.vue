@@ -1,6 +1,8 @@
 <template>
-  <div class="sv-page sv-body__page" id="sp_100">
-    <span class="font-semibold">How do you want to lookup the client ?</span>
+  <div id="sp_100">
+    <span class="text-md pl-1 font-semibold"
+      >How do you want to lookup the client ?</span
+    >
     <div class="sv-table__cell" id="lookup_type">
       <input
         class="form-radio h-6 w-6"
@@ -10,7 +12,9 @@
         value="by_id"
         v-model="picked_type"
       />
-      <label class="sv-table__cell" for="by_id">By ID</label>
+      <label class="text-sm pl-2 font-semibold align-top" for="by_id"
+        >By ID</label
+      >
       <br />
       <input
         class="form-radio h-6 w-6"
@@ -20,7 +24,9 @@
         value="by_name"
         v-model="picked_type"
       />
-      <label class="sv-table__cell" for="by_name">By Name, DOB, Gender</label>
+      <label class="text-sm pl-2 font-semibold align-top" for="by_name"
+        >By Name, DOB, Gender</label
+      >
       <br />
     </div>
     <p></p>
@@ -35,7 +41,9 @@
         v-model="idType"
         placeholder="slk_id"
       />
-      <label class="sv-table__cell" for="slk_id">SLK</label>
+      <label class="text-sm pl-2 font-semibold align-top" for="slk_id"
+        >SLK</label
+      >
       <br />
       <input
         class="form-radio h-6 w-6"
@@ -46,7 +54,9 @@
         v-model="idType"
         placeholder="ccare_id"
       />
-      <label class="sv-table__cell" for="CCAREClientID">CCARE ID</label>
+      <label class="text-sm pl-2 font-semibold align-top" for="CCAREClientID"
+        >CCARE ID</label
+      >
       <br />
       <!-- <input
         class="form-radio h-6 w-6"
@@ -64,7 +74,6 @@
         type="text"
         id="id_val"
         v-model="idVal"
-        value="ALLFT210719811"
         placeholder="Enter an ID"
       />
     </div>
@@ -76,7 +85,6 @@
         type="text"
         id="fname"
         placeholder="first name"
-        value="Aftab"
         v-model="fname"
       />
       <br />
@@ -86,11 +94,10 @@
         type="text"
         id="lname"
         placeholder="last name"
-        value="Jalal"
         v-model="lname"
       />
-      <br />
-      <label for="dob">DOB</label>
+      <p></p>
+      <label class="text-sm pl-2 font-semibold " for="dob">DOB</label>
       <input
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="date"
@@ -100,7 +107,6 @@
         :min="minDate"
         :max="maxDate"
         placeholder="Date of birth"
-        value="21071981"
       />
       <div class="sv-table__cell" id="sex_type">
         <input
@@ -111,7 +117,9 @@
           name="sex"
           value="male"
         />
-        <label class="sv-table__cell" for="male">Male</label>
+        <label class="text-sm pl-2 font-semibold align-top" for="male"
+          >Male</label
+        >
         <br />
         <input
           class="form-radio h-6 w-6"
@@ -121,7 +129,9 @@
           name="sex"
           value="female"
         />
-        <label class="sv-table__cell" for="female">Female</label>
+        <label class="text-sm pl-2 font-semibold align-top" for="female"
+          >Female</label
+        >
         <br />
         <input
           class="form-radio h-6 w-6"
@@ -131,11 +141,13 @@
           name="sex"
           value="other"
         />
-        <label class="sv-table__cell" for="other">Other</label>
+        <label class="text-sm pl-2 font-semibold align-top" for="other"
+          >Other</label
+        >
         <br />
       </div>
-      <br />
-      SLK : {{ slk }}
+      <label class="text-sm pl-2 font-semibold align-top"> SLK: </label>
+      <span class="text-md pl-1 font-mono align-top">{{ slk }}</span>
     </div>
 
     <div class="m-3">
@@ -228,10 +240,10 @@ export default {
           text: `Unable to find any results for client with ${this.idType}: ${this.idVal}`,
           // WARNING : These keys need to be same as the SurveyJS field "Name"s
           data: {
-            FirstName: this.fname,
-            LastName: this.lname,
-            Sex: this.sex_type,
-            DOB: this.dob,
+            // FirstName: this.fname,
+            // LastName: this.lname,
+            // Sex: this.sex_type,
+            // DOB: this.dob,
             SLK: this.slk,
             IDType: this.idType,
             ID: this.idVal

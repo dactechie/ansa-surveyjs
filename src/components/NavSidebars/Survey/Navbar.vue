@@ -22,7 +22,41 @@
             </svg>
           </button>
         </div>
-
+        <router-link to="/" tag="button">
+          <svg
+            version="1.0"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16.000000pt"
+            height="16.000000pt"
+            viewBox="0 0 1280.000000 1206.000000"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <g
+              transform="translate(0.000000,1206.000000) scale(0.100000,-0.100000)"
+              fill="#000000"
+              stroke="none"
+            >
+              <path
+                d="M5828 11600 c-282 -250 -1418 -1256 -2523 -2235 -1106 -978 -2165
+                -1917 -2355 -2085 -190 -168 -460 -407 -600 -530 -140 -124 -276 -245 -302
+                -270 l-48 -45 330 -370 c181 -203 336 -369 343 -369 8 1 603 521 1323 1156
+                3778 3332 4388 3868 4395 3866 4 -2 470 -413 1036 -914 565 -501 1842 -1631
+                2836 -2512 994 -881 1812 -1602 1817 -1602 5 0 12 5 15 10 5 8 11 7 21 -1 19
+                -15 -10 -45 339 351 153 173 293 331 312 351 l34 36 -838 739 c-461 407 -1544
+                1363 -2408 2124 -863 762 -1919 1693 -2347 2070 l-776 685 -45 0 -45 0 -514
+                -455z"
+              />
+              <path
+                d="M5707 9301 c-364 -322 -1370 -1213 -2235 -1979 l-1572 -1393 2 -2872
+                3 -2872 22 -41 c12 -23 41 -58 64 -77 83 -72 -24 -67 1561 -67 l1428 0 2 1273
+                c3 1266 3 1272 24 1317 26 58 76 108 134 134 45 21 52 21 1224 24 1304 3 1248
+                5 1322 -60 52 -46 81 -97 93 -163 8 -40 11 -454 11 -1292 l0 -1233 1484 2
+                1485 3 30 29 c17 16 45 63 63 105 l33 76 2 2860 2 2860 -2240 1975 c-1270
+                1120 -2249 1976 -2260 1976 -13 1 -247 -200 -682 -585z"
+              />
+            </g>
+          </svg>
+        </router-link>
         <!-- </div> -->
         <div class="font-bold text-1xl text-indigo-700 pl-4 pr-4">
           {{ surveyName }}
@@ -66,8 +100,10 @@
         {{ getCurrentPageTitle }}
       </p>
       <!-- right navbar -->
-      <div class="hidden md:flex flex items-center relative space-x-2">
-        SLK:{{ currentClientSLK }}
+      <div class="hidden md:flex flex items-center relative space-x-2   pl-4">
+        <p class="font-mono font-semibold text-md text-green-800">
+          SLK: {{ currentClientSLK }}
+        </p>
         <!-- <button
           v-if="dirtyData && isProgramSet"
           class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
@@ -75,30 +111,18 @@
         >
           Save Incomplete Survey
         </button> -->
+        <p class="hidden lg:flex font-semibold text-sm text-blue-700 pl-4">
+          Total: {{ totalQuestions }}
+        </p>
         <p class="hidden lg:flex font-semibold text-sm text-orange-400 pl-4">
-          Completed: 5/10
+          Answered: {{ answeredQuestions }}
         </p>
+        <!-- {{ totalTillNow }} -->
         <p class="hidden lg:flex font-semibold text-sm text-red-600 pl-4 pr-4">
-          Mandatory: 2/4
+          Mandatory: {{ reqAnsweredQuestions }}/{{ requiredQuestions }}
         </p>
-        <button
-          class="flex items-center  bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 "
-        >
-          Home
-        </button>
 
-        <!-- <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24"
-          viewBox="0 0 24 24"
-          width="24"
-          class="fill-current mr-3 hover:text-blue-500"
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"
-          />
-        </svg> -->
+        <div class="px-2"></div>
         <img
           src="@/assets/images/mj.png"
           class="w-12 h-12 rounded-full shadow-lg"
@@ -128,8 +152,18 @@ export default {
   name: "Navbar",
   computed: {
     ...mapState(["sideBarOpen", "surveyName", "currentClientSLK"]),
-    ...mapGetters(["getCurrentPageTitle"])
+    ...mapGetters([
+      "getCurrentPageTitle",
+      "totalQuestions",
+      // "totalTillNow",
+      "answeredQuestions",
+      "requiredQuestions",
+      "reqAnsweredQuestions"
+    ])
   },
+  // methods:{
+
+  // },
   data() {
     return {
       dropDownOpen: false

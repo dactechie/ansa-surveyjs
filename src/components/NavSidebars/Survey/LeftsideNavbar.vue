@@ -19,8 +19,8 @@
         Survey Pages Navigation
       </p>
       <ul v-for="(nPage, index) in currentSurvey.visiblePages" :key="index">
+        <!-- @click="toggleSidebar" -->
         <li
-          @click="toggleSidebar"
           class="mb-4 lg:mb-2"
           :class="[nPage.isActive ? 'text-teal-600' : 'text-gray-600']"
         >

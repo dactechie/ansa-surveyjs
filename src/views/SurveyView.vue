@@ -6,8 +6,8 @@
     <Navbar />
     <div class="flex flex-wrap justify-center">
       <LeftsideNavbar class="flex-auto" @page-change="visitPage" />
-      <div class="lg:w-2/3 bg-gray-100 pl-0 min-h-screen" id="main-content">
-        <div class="p-6 bg-gray-100 mb-20">
+      <div class="lg:w-full bg-gray-100 px-10  min-h-screen" id="main-content">
+        <div class="p-10 bg-gray-100 mb-20">
           <SurveyComp
             @click.native="sideBarOpen ? 'ove' : ''"
             @search-index-built="onSearchReady"

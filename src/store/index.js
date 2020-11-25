@@ -18,7 +18,7 @@ export default new Vuex.Store({
   state: {
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
     currentSurvey: {},
-    sideBarOpen: false,
+    sideBarOpen: true,
     surveyNameIDList: [],
     currentClientSLK: "",
     prefillIndex: 0,
@@ -26,7 +26,8 @@ export default new Vuex.Store({
     surveyName: "",
     surveyMode: "",
     currentPageTitle: "",
-    clientLookupIDs: {}
+    clientLookupIDs: {},
+    questionsStatus: {}
   },
   getters: {
     getClientLookupIDs: state => {
@@ -34,6 +35,24 @@ export default new Vuex.Store({
     },
     getCurrentPageTitle: state => {
       return state.currentPageTitle;
+    },
+    totalQuestions: state => {
+      return state.questionsStatus["total"];
+    },
+    totalTillNow: state => {
+      return state.questionsStatus["totalTillNow"] || 0;
+    },
+    answeredQuestions: state => {
+      return state.questionsStatus["answered"];
+    },
+    requiredQuestions: state => {
+      return state.questionsStatus["required"];
+    },
+    reqAnsweredQuestions: state => {
+      return state.questionsStatus["reqAnswered"];
+    },
+    getQuestionsStatus: state => {
+      return state.questionsStatus;
     },
     sideBarOpen: state => {
       return state.sideBarOpen;

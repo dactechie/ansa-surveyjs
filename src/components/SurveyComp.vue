@@ -3,7 +3,7 @@
     <survey :survey="survey"></survey>
     <!-- && (!survey || survey.state !== 'completed') -->
     <button
-      v-if="dirtyData && isProgramSet"
+      v-if="dirtyData && isProgramSet && !survey.isCompleted"
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       @click.prevent="savePartialSurvey"
     >
@@ -52,9 +52,15 @@ export default {
       "clearClientState",
       "setCurrentSurvey",
       "setCurrentPageTitle",
-      "setClientSLK"
+      "setClientSLK",
+      "setQuestionsStatus",
+      "setSurveyName"
     ]),
-    ...mapGetters(["getCurrentSurveyName", "getClientLookupIDs"]),
+    ...mapGetters([
+      "getCurrentSurveyName",
+      "getClientLookupIDs"
+      // "totalTillNow"
+    ]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
@@ -114,20 +120,35 @@ export default {
           clientData = JSON.parse(ssClient);
         }
       }
+      if (!this.$store.state.currentClientSLK) {
+        if (!clientData || clientData.length === 0) {
+          //no SLK found giving up
+          me.$router.push("/");
+          return;
+        }
+        console.log("setting slk.....");
+        me.setClientSLK(clientData[0]["PartitionKey"]);
+      }
+      console.log(
+        "Current client SLK >>>>>>> ",
+        this.$store.state.currentClientSLK
+      );
+
       //
       // find the survey to prefill:
       //
       let sName = this.getCurrentSurveyName();
       let sType = "SurveyName";
+      let sLookup = sName;
       if (sName === "") {
         // this happens if the page was re-loaded (not coming from Lookup)
         sType = "SurveyID";
         let surveyIdPath = me.$router.currentRoute.path;
         let surveyIdPathArray = surveyIdPath.split("/");
-        sName = surveyIdPathArray[surveyIdPathArray.length - 1];
+        sLookup = surveyIdPathArray[surveyIdPathArray.length - 1];
       }
       //reverse to search from newest to oldest
-      let foundSurvey = clientData.reverse().find(e => e[sType] === sName);
+      let foundSurvey = clientData.reverse().find(e => e[sType] === sLookup);
       if (foundSurvey) {
         console.log("Last survey that was found in hisry ", foundSurvey);
         me.survey.data = {
@@ -135,6 +156,13 @@ export default {
           Program: foundSurvey["Program"],
           Staff: foundSurvey["Staff"]
         };
+        if (sName === "") {
+          console.log(
+            "SurvetName was blank (due to page reload) .. settting it to",
+            foundSurvey["SurveyName"]
+          );
+          me.setSurveyName(foundSurvey["SurveyName"]);
+        }
       }
 
       me.setCurrentSurvey(me.survey); // for Nav to work
@@ -142,6 +170,19 @@ export default {
 
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
       me.setCurrentPageTitle(surveyModel.currentPage.title);
+      let q = me.survey.getAllQuestions(true); //true=> visible
+      let answered = Object(q).filter(e => e.isAnswered);
+
+      let required = Object(q).filter(e => e.isRequired);
+      let reqAnswered = Object(required).filter(e => e.isAnswered);
+
+      me.setQuestionsStatus({
+        answered: answered.length,
+        // totalTillNow: me.totalTillNow() +  me.survey.getCurrentPageQuestions().length,
+        total: q.length,
+        required: required.length,
+        reqAnswered: reqAnswered.length
+      });
     });
     this.survey.onValueChanged.add(() => {
       me.dirtyData = true;
