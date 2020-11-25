@@ -166,16 +166,30 @@ export default {
         //     "do you want to keep the original assessment date ?";
         //   me.showModal = true;
         // } else {
-        foundSurvey["SurveyData"][
-          "AssessmentDate"
-        ] = getCurrentYearMonthDayString("-");
+
         // }
         console.log("Last survey that was found in history ", foundSurvey);
-        me.survey.data = {
-          ...foundSurvey["SurveyData"],
-          Program: foundSurvey["Program"],
-          Staff: foundSurvey["Staff"]
-        };
+        let foundSurveyData = foundSurvey["SurveyData"];
+
+        foundSurveyData["AssessmentDate"] = getCurrentYearMonthDayString("-");
+
+        // important that instead of doing this :
+        //        // me.survey.data = {
+        //   ...foundSurvey["SurveyData"],
+        // we do this instead :
+        sender.getAllQuestions().forEach(e => {
+          me.survey.setValue(e.name, foundSurveyData[e.name]);
+        });
+        // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
+        // from a previous submission when the current survey has no matching question or answer
+        me.survey.setValue("Program", foundSurvey["Program"]);
+        me.survey.setValue("Staff", foundSurvey["Staff"]);
+
+        // me.survey.data = {
+        //   ...foundSurvey["SurveyData"],
+        //   Program: foundSurvey["Program"],
+        //   Staff: foundSurvey["Staff"]
+        // };
         if (sName === "") {
           console.log(
             "SurvetName was blank (due to page reload) .. settting it to",
