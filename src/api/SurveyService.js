@@ -12,15 +12,15 @@ import {
 import { generateRowKey } from "@/helper-functions/survey-helpers";
 
 export default {
-  async getBySLK(slk) {
-    return await getClientDataByPartitionKey(slk);
+  async getBySLK(slk, userMode) {
+    return await getClientDataByPartitionKey(slk, userMode);
   },
 
-  async getByIDAndType(id, idType) {
-    return await getClientDataByClientID(id, idType);
+  async getByIDAndType(id, idType, userMode) {
+    return await getClientDataByClientID(id, idType, userMode);
   },
 
-  async createOrUpdateData(SLK, rowData) {
+  async createOrUpdateData(SLK, rowData, userMode) {
     const { SurveyName, Program } = rowData;
     rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[SurveyName], Program);
     rowData[PARTITION_KEY] = SLK;
@@ -31,6 +31,6 @@ export default {
     //   delete rowData["SurveyData"]["clientID"];
     //   delete rowData["SurveyData"]["idType"];
     // }
-    return await updateClientData(rowData);
+    return await updateClientData(rowData, userMode);
   }
 };

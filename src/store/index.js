@@ -5,6 +5,7 @@ import Vuex from "vuex";
 
 import actions from "./actions";
 import { mutations } from "./mutations";
+import { APPLICATION_MODE_NORMAL } from "@/common/constants";
 //import {DBSurveyObject} from "./survey/state";
 
 Vue.use(Vuex);
@@ -18,18 +19,22 @@ export default new Vuex.Store({
   state: {
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
     currentSurvey: {},
-    sideBarOpen: true,
+    sideBarOpen: false,
     surveyNameIDList: [],
     currentClientSLK: "",
     prefillIndex: 0,
     clientData: [],
     surveyName: "",
     surveyMode: "",
+    applicationMode: APPLICATION_MODE_NORMAL,
     currentPageTitle: "",
     clientLookupIDs: {},
     questionsStatus: {}
   },
   getters: {
+    getApplicationMode: state => {
+      return state.applicationMode;
+    },
     getClientLookupIDs: state => {
       return state.clientLookupIDs;
     },

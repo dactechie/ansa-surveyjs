@@ -135,6 +135,7 @@ export default {
       if (!this.$store.state.currentClientSLK) {
         if (!clientData || clientData.length === 0) {
           //no SLK found giving up
+          console.warn("SLK not found, giving up...");
           me.$router.push("/");
           return;
         }

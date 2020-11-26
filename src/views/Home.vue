@@ -93,9 +93,12 @@ export default {
       this.setSurveyMode("new");
       const sNameArray = surveyName.split(" ");
       const idx = sNameArray.findIndex(e => e.includes("rc")); // rc0.5 ABC.. (remove ReleaseCandidate descriptor)
-      const outSurveyName = sNameArray.slice(0, idx).join(" ");
-
-      this.setSurveyName(outSurveyName);
+      if (idx > 0) {
+        const outSurveyName = sNameArray.slice(0, idx).join(" ");
+        this.setSurveyName(outSurveyName);
+      } else {
+        this.setSurveyName(surveyName);
+      }
     },
     updateMode({ mode, text, data }) {
       this.mode = mode;

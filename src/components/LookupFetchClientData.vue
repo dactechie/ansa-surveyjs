@@ -211,6 +211,7 @@ export default {
 
     async fetchClientDataByLookupValues() {
       let result = {};
+      sessionStorage.removeItem("ClientData");
 
       if (this.picked_type === "by_name" || this.idType === "slk") {
         // doing this allows us to show the "Create New Survey"

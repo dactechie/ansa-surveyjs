@@ -1,3 +1,6 @@
+export const APPLICATION_MODE_NORMAL = 0;
+export const APPLICATION_MODE_ADMIN = 1;
+
 export const PARTITION_KEY = "PartitionKey";
 export const ROW_KEY = "RowKey";
 
@@ -9,7 +12,7 @@ export const DB_ANSA = "ANSA";
 
 export const SLK_LENGTH = 14;
 export const PREFILL_EXPIRY_DAYS =
-  process.env.VUE_APP_PREFILL_EXPIRY_DAYS || 90;
+  process.env.VUE_APP_PREFILL_EXPIRY_DAYS || 365;
 
 export const DB_IDTYPE_CCARE = "CCARE";
 //export const DB_IDTYPE_TED = "TED";

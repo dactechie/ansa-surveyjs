@@ -16,22 +16,25 @@ export default {
       console.log("error ", error);
     }
   },
-  GET_CLIENT_DATA_BYSLK: async function({ commit }, slk) {
+  GET_CLIENT_DATA_BYSLK: async function({ state, commit }, slk) {
     try {
-      const result = await SurveyService.getBySLK(slk);
-      if (result && result.length > 0) {
-        commit("setClientData", await result);
-        commit("setClientSLK", await result[0][PARTITION_KEY]);
+      const result = await SurveyService.getBySLK(slk, state.applicationMode);
+      if ((await result) && result.length > 0) {
+        commit("setClientData", result);
+        commit("setClientSLK", result[0][PARTITION_KEY]);
       }
-
       return await result;
     } catch (error) {
       console.log("error ", error);
     }
   },
-  GET_CLIENT_DATA_BYID: async function({ commit }, id, idType) {
+  GET_CLIENT_DATA_BYID: async function({ state, commit }, id, idType) {
     try {
-      const result = await SurveyService.getByIDAndType(id, idType);
+      const result = await SurveyService.getByIDAndType(
+        id,
+        idType,
+        state.applicationMode
+      );
       if (result && result.length > 0) {
         commit("setClientData", await result);
         commit("setClientSLK", await result[0][PARTITION_KEY]);
@@ -68,9 +71,14 @@ export default {
         SurveyID: surveyId,
         Status: status,
         SurveyData: JSON.stringify(data),
-        SurveyName: state.surveyName
+        SurveyName: state.surveyName,
+        IsActive: 1
       };
-      const response = await SurveyService.createOrUpdateData(SLK, dbObj);
+      const response = await SurveyService.createOrUpdateData(
+        SLK,
+        dbObj,
+        state.applicationMode
+      );
       console.log(response);
     } catch (error) {
       console.log("error ", error);
