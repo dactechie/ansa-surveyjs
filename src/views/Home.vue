@@ -42,6 +42,9 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import { gapInDays } from "@/common/utils";
+import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
+
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory.vue";
 
@@ -59,7 +62,7 @@ export default {
   },
   data() {
     return {
-      clientData: {},
+      clientData: [],
       mode: MODE_EMPTY_CLIENT_DATA, // TODO : remove, redundant -> same as clientData == undefined
       searchResultText: "",
       picked_type: "lookup"
@@ -67,7 +70,28 @@ export default {
   },
   computed: {
     surveys: function() {
-      return this.$store.state["surveyNameIDList"];
+      if (this.clientData && this.clientData.length > 0) {
+        const lastSurveyDone = this.clientData[this.clientData.length - 1];
+        const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
+        const gapDays = gapInDays(lastSurveyDate);
+        console.log(
+          ` Age of last survey ${Math.round(
+            gapDays
+          )} days. expiry ${PREFILL_EXPIRY_DAYS}`
+        );
+        if (gapDays < PREFILL_EXPIRY_DAYS) {
+          console.log("Show ITSP");
+          return this.$store.state["surveyNameIDList"].filter(s =>
+            s.name.startsWith("ANSA ITSP")
+          );
+        }
+      }
+      //if no surveys were ever done (or more than a year ago), only show initial assessment
+      return this.$store.state["surveyNameIDList"].filter(s =>
+        s.name.startsWith("ANSA Initial")
+      );
+
+      //return this.$store.state["surveyNameIDList"];
     },
     ...mapGetters(["getCurrenClientSLK"])
   },

@@ -62,7 +62,7 @@ function gapInDays(yyyy_mm_dd) {
 
   const currentTime = new Date().getTime();
 
-  return (passedInTime - currentTime) / (24 * 60 * 60 * 1000);
+  return (currentTime - passedInTime) / (24 * 60 * 60 * 1000);
 }
 
 export {

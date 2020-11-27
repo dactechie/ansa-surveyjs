@@ -171,7 +171,7 @@ export default {
           alert(
             `Last Survey is too old (by ${Math.round(
               gapDays
-            )} days) from which to prefill.`
+            )} days) from which to prefill. Please do an inital assessment.`
           );
         } else {
           foundSurveyData["AssessmentDate"] = getCurrentYearMonthDayString("-");
