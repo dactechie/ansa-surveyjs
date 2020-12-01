@@ -1,23 +1,26 @@
 <template>
   <!-- <div class="home"> -->
-  <div class="container mx-auto h-full">
-    <div class="flex flex-wrap">
+  <div class="container mx-auto">
+    <div class="flex flex-wrap ">
       <LeftsideNavbar
         :mode="mode"
         @mode-updated="updateMode"
         @survey-data-received="updateClientData"
       />
-      <div class="w-full bg-gray-100 pl-0 lg:pl-64 " id="main-content">
-        <span class="p-4 block shadow font-bold text-red-900" v-if="mode === 0">
+      <div class=" sm:w-3/5 lg:w-3/4 bg-gray-100 pl-2 pt-20" id="main-content">
+        <span
+          class="p-4 shadow font-bold text-red-900"
+          v-if="searchResultText && mode === 0"
+        >
           {{ searchResultText }}</span
         >
-        <div v-if="getCurrenClientSLK === ''">
+        <!-- <div v-if="getCurrenClientSLK === ''">
           <p class=" text-gray-200">
             no current SLK
           </p>
-        </div>
+        </div> -->
         <div v-if="getCurrenClientSLK !== ''">
-          <div flex v-for="survey in surveys" :key="survey.id">
+          <div class="py-6" v-for="survey in surveys" :key="survey.id">
             <router-link
               class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
               @click.native="handleClickNewSurvey(survey.name)"
@@ -43,10 +46,10 @@
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
 import { gapInDays } from "@/common/utils";
-import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
+import { APP_ENVIRONMENT, PREFILL_EXPIRY_DAYS } from "@/common/constants";
 
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
-import ClientSurveyHistory from "@/components/ClientSurveyHistory.vue";
+import ClientSurveyHistory from "@/components/ClientSurveyHistory";
 
 import {
   MODE_CLIENT_DATA_SET,
@@ -81,15 +84,33 @@ export default {
         );
         if (gapDays < PREFILL_EXPIRY_DAYS) {
           console.log("Show ITSP");
-          return this.$store.state["surveyNameIDList"].filter(s =>
-            s.name.startsWith("ANSA ITSP")
-          );
+          if (APP_ENVIRONMENT === "test") {
+            this.$store.state["surveyNameIDList"].forEach(s => {
+              if (!s.name.startsWith("ANSA ITSP")) {
+                s.name = s.name + "(hidden in production)";
+              }
+            });
+            return this.$store.state["surveyNameIDList"];
+          } else {
+            return this.$store.state["surveyNameIDList"].filter(s =>
+              s.name.startsWith("ANSA ITSP")
+            );
+          }
         }
       }
       //if no surveys were ever done (or more than a year ago), only show initial assessment
-      return this.$store.state["surveyNameIDList"].filter(s =>
-        s.name.startsWith("ANSA Initial")
-      );
+      if (APP_ENVIRONMENT === "test") {
+        this.$store.state["surveyNameIDList"].forEach(s => {
+          if (!s.name.startsWith("ANSA Initial")) {
+            s.name = s.name + "(hidden in production)";
+          }
+        });
+        return this.$store.state["surveyNameIDList"];
+      } else {
+        return this.$store.state["surveyNameIDList"].filter(s =>
+          s.name.startsWith("ANSA Initial")
+        );
+      }
 
       //return this.$store.state["surveyNameIDList"];
     },

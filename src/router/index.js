@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import CompletedPage from "../views/Completed.vue";
 // eslint-disable-next-line no-use-before-define
 import SurveyView from "../views/SurveyView.vue";
 
@@ -11,6 +12,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home
+  },
+  {
+    path: "/completed",
+    name: "CompletedPage",
+    component: CompletedPage
   },
   {
     path: "/about",
