@@ -1,4 +1,4 @@
-# ansa-js-vue2
+# ansa-questionnaire
 
 ## Project setup
 ```
