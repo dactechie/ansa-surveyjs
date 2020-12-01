@@ -45,8 +45,8 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
-import { gapInDays } from "@/common/utils";
-import { APP_ENVIRONMENT, PREFILL_EXPIRY_DAYS } from "@/common/constants";
+//import { gapInDays } from "@/common/utils";
+//import { APP_ENVIRONMENT, PREFILL_EXPIRY_DAYS } from "@/common/constants";
 
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory";
@@ -73,44 +73,48 @@ export default {
   },
   computed: {
     surveys: function() {
-      if (this.clientData && this.clientData.length > 0) {
-        const lastSurveyDone = this.clientData[this.clientData.length - 1];
-        const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
-        const gapDays = gapInDays(lastSurveyDate);
-        console.log(
-          ` Age of last survey ${Math.round(
-            gapDays
-          )} days. expiry ${PREFILL_EXPIRY_DAYS}`
-        );
-        if (gapDays < PREFILL_EXPIRY_DAYS) {
-          console.log("Show ITSP");
-          if (APP_ENVIRONMENT === "test") {
-            this.$store.state["surveyNameIDList"].forEach(s => {
-              if (!s.name.startsWith("ANSA ITSP")) {
-                s.name = s.name + "(hidden in production)";
-              }
-            });
-            return this.$store.state["surveyNameIDList"];
-          } else {
-            return this.$store.state["surveyNameIDList"].filter(s =>
-              s.name.startsWith("ANSA ITSP")
-            );
-          }
-        }
-      }
-      //if no surveys were ever done (or more than a year ago), only show initial assessment
-      if (APP_ENVIRONMENT === "test") {
-        this.$store.state["surveyNameIDList"].forEach(s => {
-          if (!s.name.startsWith("ANSA Initial")) {
-            s.name = s.name + "(hidden in production)";
-          }
-        });
-        return this.$store.state["surveyNameIDList"];
-      } else {
-        return this.$store.state["surveyNameIDList"].filter(s =>
-          s.name.startsWith("ANSA Initial")
-        );
-      }
+      return this.$store.state["surveyNameIDList"];
+      // if (this.clientData && this.clientData.length > 0) {
+      //   const lastSurveyDone = this.clientData[this.clientData.length - 1];
+      //   const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
+      //   const gapDays = gapInDays(lastSurveyDate);
+      //   console.log(
+      //     ` Age of last survey ${Math.round(
+      //       gapDays
+      //     )} days. expiry ${PREFILL_EXPIRY_DAYS}`
+      //   );
+
+      //   if (gapDays < PREFILL_EXPIRY_DAYS) {
+
+      //     console.log("Show ITSP");
+
+      // if (APP_ENVIRONMENT === "test") {
+      //   this.$store.state["surveyNameIDList"].forEach(s => {
+      //     if (!s.name.startsWith("ANSA ITSP")) {
+      //       s.name = s.name + "(hidden in production)";
+      //     }
+      //   });
+      //   return this.$store.state["surveyNameIDList"];
+      // } else {
+      //   return this.$store.state["surveyNameIDList"].filter(s =>
+      //     s.name.startsWith("ANSA ITSP")
+      //   );
+      // }
+      //   }
+      // }
+      // //if no surveys were ever done (or more than a year ago), only show initial assessment
+      // if (APP_ENVIRONMENT === "test") {
+      //   this.$store.state["surveyNameIDList"].forEach(s => {
+      //     if (!s.name.startsWith("ANSA Initial")) {
+      //       s.name = s.name + "(hidden in production)";
+      //     }
+      //   });
+      //   return this.$store.state["surveyNameIDList"];
+      // } else {
+      //   return this.$store.state["surveyNameIDList"].filter(s =>
+      //     s.name.startsWith("ANSA Initial")
+      //   );
+      // }
 
       //return this.$store.state["surveyNameIDList"];
     },

@@ -2,15 +2,15 @@
   <!-- give the sidebar z-50 class so its higher than the navbar if you want to see the logo -->
   <!-- you will need to add a little "X" button next to the logo in order to close it though -->
   <div
-    class="w-1/3 md:w-1/5 fixed md:top-0 md:left-0 h-screen lg:block bg-gray-100 border-r "
+    class=" sm:w-2/5 lg:w-1/4 md:top-0 md:left-0 h-screen sm:block bg-gray-100 border-r "
     :class="sideBarOpen ? '' : 'hidden'"
     id="main-nav"
   >
-    <!-- <div class="w-full h-20 border-b flex px-3 items-center mb-6">
+    <div class="w-full h-20 border-b flex px-3 items-center mb-6">
       <p class="font-semibold text-1xl text-blue-400 pl-4">
         Directions Health Services
       </p>
-    </div> -->
+    </div>
 
     <div class="mt-20 mb-4 px-3">
       <p

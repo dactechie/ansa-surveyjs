@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="py-5 font-bold text-red-500 align-middle">
+    <p class="py-5 pr-6 font-bold text-red-500 align-middle">
       Showing Results for {{ clientData[0].PartitionKey }}
     </p>
     <button
@@ -16,7 +16,7 @@
     ></ITSPCompareModal> -->
 
     <!-- https://tailwindcomponents.com/component/responsive-table -->
-    <table class="table-auto" v-if="clientData">
+    <table class=" pr-6" v-if="clientData">
       <thead>
         <!-- <th>SLK</th> -->
         <th>Last Modified</th>

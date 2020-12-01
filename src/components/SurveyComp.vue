@@ -23,8 +23,8 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-import { getCurrentYearMonthDayString, gapInDays } from "@/common/utils";
-import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
+import { getCurrentYearMonthDayString } from "@/common/utils"; //gapInDays
+// import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -117,12 +117,15 @@ export default {
           me.survey.setValue(k, v);
         }
       }
+      // this may be overridden if there is an incomplete survey
+      me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
 
       //if there is data to prefill for this type of survey, do that.
       let clientData = me.$store.state["clientData"];
       if (clientData.length === 0) {
         console.warn("Nothing in state, loading from sessionStorage");
         let ssClient = sessionStorage.getItem("ClientData");
+
         if (!ssClient) {
           //can't prefill
           // for Nav to work
@@ -165,29 +168,33 @@ export default {
         console.log("Last survey that was found in history ", foundSurvey);
         let foundSurveyData = foundSurvey["SurveyData"];
 
-        const gapDays = gapInDays(foundSurveyData["AssessmentDate"]);
-        console.log(` Age of lat survey ${Math.round(gapDays)} days`);
-        if (gapDays > PREFILL_EXPIRY_DAYS) {
-          alert(
-            `Last Survey is too old (by ${Math.round(
-              gapDays
-            )} days) from which to prefill. Please do an inital assessment.`
-          );
-        } else {
+        // const gapDays = gapInDays(foundSurveyData["AssessmentDate"]);
+        // console.log(` Age of lat survey ${Math.round(gapDays)} days`);
+        // if (gapDays > PREFILL_EXPIRY_DAYS) {
+        //   // unlikely to come here as Home.vue only shows the correct buttons
+        //   alert(
+        //     `Last Survey is too old (by ${Math.round(
+        //       gapDays
+        //     )} days) from which to prefill. Past data is considered stale and will not be loaded`
+        //   );
+        // } else {
+        // if Continuing partially completed assessment, keep the original date,
+        // otherwise override the completed survey's date with today.
+        if (foundSurvey["Status"] === "Complete") {
           foundSurveyData["AssessmentDate"] = getCurrentYearMonthDayString("-");
-
-          // important that instead of doing this :
-          //        // me.survey.data = {
-          //   ...foundSurvey["SurveyData"],
-          // we do this instead :
-          sender.getAllQuestions().forEach(e => {
-            me.survey.setValue(e.name, foundSurveyData[e.name]);
-          });
-          // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
-          // from a previous submission when the current survey has no matching question or answer
-          me.survey.setValue("Program", foundSurvey["Program"]);
-          me.survey.setValue("Staff", foundSurvey["Staff"]);
         }
+        // important that instead of doing this :
+        //        // me.survey.data = {
+        //   ...foundSurvey["SurveyData"],
+        // we do this instead :
+        sender.getAllQuestions().forEach(e => {
+          me.survey.setValue(e.name, foundSurveyData[e.name]);
+        });
+        // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
+        // from a previous submission when the current survey has no matching question or answer
+        me.survey.setValue("Program", foundSurvey["Program"]);
+        me.survey.setValue("Staff", foundSurvey["Staff"]);
+        // }
       }
       if (this.getCurrentSurveyName() === "") {
         // Reload page + if this client had no surveys done with this surveyID
@@ -282,6 +289,9 @@ export default {
     margin-right: 25%;
     margin-left: 25%;
   }
+}
+.sv-matrix__cell {
+  min-width: 1em;
 }
 /*h3 {
   margin: 40px 0 0;
