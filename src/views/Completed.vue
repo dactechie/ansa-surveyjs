@@ -26,15 +26,18 @@
 
 <script>
 // import ClientSurveyHistory from "@/components/ClientSurveyHistory";
+import { mapGetters } from "vuex";
 export default {
   name: "CompletedPage",
   // components: { ClientSurveyHistory },
   data() {
     return {
-      clientData: [],
       slk: "",
       staff: ""
     };
+  },
+  methods: {
+    ...mapGetters(["getCompletedDetails"])
   },
   // computed: {
   //   staff() {
@@ -46,22 +49,23 @@ export default {
   //   }
   // },
   created() {
-    const cData = sessionStorage.getItem("ClientData");
-    if (!cData) {
-      alert("No client data in session.");
-      return;
-    }
-    this.clientData = JSON.parse(cData);
-    if (!this.clientData || this.clientData.length < 1) {
-      alert("no client data");
-      return;
-    }
-    this.clientData["Timestamp"] = new Date(this.clientData["Timestamp"]);
-    // clientSurveyHstory expects a date :  c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
+    // const cData = sessionStorage.getItem("ClientData");
+    // if (!cData) {
+    //   alert("No client data in session.");
+    //   return;
+    // }
+    // this.clientData = JSON.parse(cData);
+    // if (!this.clientData || this.clientData.length < 1) {
+    //   alert("no client data");
+    //   return;
+    // }
+    // // this.clientData["Timestamp"] = new Date(this.clientData["Timestamp"]);
+    // // clientSurveyHstory expects a date :  c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
 
-    let lastClientRecord = this.clientData[this.clientData.length - 1];
-    this.slk = lastClientRecord["PartitionKey"];
-    this.staff = lastClientRecord["Staff"];
+    // let lastClientRecord = this.clientData[this.clientData.length - 1];
+    let { currentClientSLK, currentStaff } = this.getCompletedDetails();
+    this.slk = currentClientSLK;
+    this.staff = currentStaff;
   }
 };
 </script>

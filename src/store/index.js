@@ -22,6 +22,7 @@ export default new Vuex.Store({
     sideBarOpen: false,
     surveyNameIDList: [],
     currentClientSLK: "",
+    currentStaff: "",
     prefillIndex: 0,
     clientData: [],
     surveyName: "",
@@ -40,6 +41,12 @@ export default new Vuex.Store({
     },
     getCurrentPageTitle: state => {
       return state.currentPageTitle;
+    },
+    getCompletedDetails: state => {
+      return {
+        currentClientSLK: state.currentClientSLK,
+        currentStaff: state.currentStaff
+      };
     },
     totalQuestions: state => {
       return state.questionsStatus["total"];

@@ -69,6 +69,7 @@ export default {
       "setCurrentSurvey",
       "setCurrentPageTitle",
       "setClientSLK",
+      "setStaff",
       "setQuestionsStatus",
       "setSurveyName"
     ]),
@@ -81,6 +82,10 @@ export default {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
       this.survey.data["Status"] = "Incomplete";
+
+      console.log("staff ", this.survey.data["Staff"]);
+      this.setStaff(this.survey.data["Staff"]);
+
       this.saveSurvey("Incomplete");
     },
     saveSurvey(status) {
@@ -88,6 +93,11 @@ export default {
         console.error("Progarm not set . Unable to ssave");
         return;
       }
+
+      console.log("staff ", this.survey.data["Staff"]);
+
+      this.setStaff(this.survey.data["Staff"]);
+
       //this.survey.data["SurveyID"] = this.$route.params.surveyid;
       this.ADD_SURVEY_DATASERVER({
         SLK: this.$store.state.currentClientSLK,

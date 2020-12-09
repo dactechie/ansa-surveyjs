@@ -1,1111 +1,1163 @@
 {
   "definition": {
-    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-    "actions": {
-      "ClientType_Check": {
-        "actions": {
-          "Condition": {
-            "actions": {
-              "For_each_(loop_over_other_drugs)": {
-                "actions": {
-                  "ODC_Null_Filter": {
-                    "actions": {
-                      "Append_to_OtherDrugs_variable": {
-                        "inputs": {
-                          "name": "OtherDrugsArray",
-                          "value": {
-                            "Goals": "@items('For_each_(loop_over_other_drugs)')?['Goals']",
-                            "daysin28": "@items('For_each_(loop_over_other_drugs)')?['DaysInLast28']",
-                            "doc": "@items('For_each_(loop_over_other_drugs)')?['OtherSubstancesConcernGambling']",
-                            "howmuch": "@items('For_each_(loop_over_other_drugs)')?['HowMuchPerOccasion']",
-                            "method": "@items('For_each_(loop_over_other_drugs)')?['MethodOfUse']",
-                            "units": "@items('For_each_(loop_over_other_drugs)')?['Units']"
-                          }
-                        },
-                        "runAfter": {},
-                        "type": "AppendToArrayVariable"
-                      }
-                    },
-                    "expression": {
-                      "and": [
-                        {
-                          "not": {
-                            "equals": [
-                              "@items('For_each_(loop_over_other_drugs)')?['HowMuchPerOccasion']",
-                              "@null"
-                            ]
-                          }
-                        },
-                        {
-                          "not": {
-                            "equals": [
-                              "@items('For_each_(loop_over_other_drugs)')?['OtherSubstancesConcernGambling']",
-                              "@null"
-                            ]
-                          }
-                        }
-                      ]
-                    },
-                    "runAfter": {},
-                    "type": "If"
-                  }
-                },
-                "foreach": "@body('Parse_ODC_JSON')?['odc']",
-                "runAfter": {},
-                "type": "Foreach"
-              }
-            },
-            "expression": {
-              "and": [
-                {
-                  "not": {
-                    "equals": ["@body('Parse_ODC_JSON')?['odc']", "@null"]
-                  }
-                }
-              ]
-            },
-            "runAfter": {
-              "Parse_ODC_JSON": ["Succeeded"]
-            },
-            "type": "If"
-          },
-          "ParsePDC_SurveyData": {
-            "inputs": {
-              "content": "@body('Parse_EntityJSON')?['SurveyData']",
-              "schema": {
-                "properties": {
-                  "PDCAgeFirstUsed": {
-                    "type": "integer"
-                  },
-                  "PDCDaysInLast28": {
-                    "type": "string"
-                  },
-                  "PDCGoals": {
-                    "type": "string"
-                  },
-                  "PDCHowMuchPerOccasion": {
-                    "type": "string"
-                  },
-                  "PDCMethodOfUse": {
-                    "type": "string"
-                  },
-                  "PDCSubstanceOrGambling": {
-                    "type": "string"
-                  },
-                  "PDCUnits": {
-                    "type": "string"
-                  }
-                },
-                "type": "object"
-              }
-            },
-            "runAfter": {},
-            "type": "ParseJson"
-          },
-          "Parse_ODC_JSON": {
-            "inputs": {
-              "content": "@body('Parse_EntityJSON')?['SurveyData']",
-              "schema": {
-                "properties": {
-                  "odc": {
-                    "items": {
-                      "properties": {
-                        "AgeFirstUsed": {
-                          "type": "integer"
-                        },
-                        "AgeLastUsed": {
-                          "type": "integer"
-                        },
-                        "DaysInLast28": {
-                          "type": "string"
-                        },
-                        "Goals": {
-                          "type": "string"
-                        },
-                        "HowMuchPerOccasion": {
-                          "type": "string"
-                        },
-                        "MethodOfUse": {
-                          "type": "string"
-                        },
-                        "OtherSubstancesConcernGambling": {
-                          "type": "string"
-                        },
-                        "Units": {
-                          "type": "string"
-                        }
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "actions": {
+          "ANSA_JSFlattener_HttpTrigger_2": {
+              "inputs": {
+                  "body": {
+                      "Exclusions": [
+                          "FinalChecklist",
+                          "RiskAssessmentChecklist"
+                      ],
+                      "FullChecklists": {
+                          "FinalChecklist": [
+                              "Risk Assessments Completed (if indicated)",
+                              "Client Consent to Share Information - signed",
+                              "Client provided with Rights and Responsibilities",
+                              "Client provided with Feedback and Complaints process",
+                              "Feedback provided to referrer, if required"
+                          ],
+                          "RiskAssessmentChecklist": [
+                              "Any indication of mental health risks?",
+                              "Any indication of suicidal ideation?",
+                              "Any indication of domestic / family violence?",
+                              "Any potential risk of overdose?"
+                          ]
                       },
-                      "type": "object"
-                    },
-                    "type": "array"
-                  }
-                },
-                "type": "object"
-              }
-            },
-            "runAfter": {
-              "ParsePDC_SurveyData": ["Succeeded"]
-            },
-            "type": "ParseJson"
-          }
-        },
-        "expression": {
-          "and": [
-            {
-              "equals": [
-                "@body('Parse_ClientType_From_SurveyDataJSON')?['clienttype']",
-                "ownuse"
-              ]
-            }
-          ]
-        },
-        "runAfter": {
-          "Parse_ClientType_From_SurveyDataJSON": ["Succeeded"]
-        },
-        "type": "If"
-      },
-      "Create_Other_Drugs_HTML_table": {
-        "inputs": {
-          "format": "HTML",
-          "from": "@variables('OtherDrugsArray')"
-        },
-        "runAfter": {
-          "Parse_JsCode-2_JSON": ["Succeeded"]
-        },
-        "type": "Table"
-      },
-      "Execute_JavaScript_Code": {
-        "inputs": {
-          "code": "var body = workflowContext.actions.Parse_CommonJSON.outputs.body;\r\nvar risk_chklist = \"\"; if(body[\"RiskAssessmentCheck\"])\r\n  risk_chklist = Object.entries(body[\"RiskAssessmentCheck\"])\r\n  .map(e => {\r\n    if (e[1][\"Column 1\"]) return e[0];\r\n  }).filter(f => f).join(\", \");\r\nvar timeSpent = []; if (body[\"HowDoYouSpendTime\"])\r\ntimeSpent = Object.entries(body[\"HowDoYouSpendTime\"]).map(e => {\r\n  let a = {};\r\n  a[\"area\"] = e[0];\r\n  a[\"rank\"] = parseInt(e[1][\"Rank Importance to You (in terms of time spent)\"]);\r\n  return a;\r\n});\r\nvar sortedTimeSpent = timeSpent.sort((a, b) =>\r\n  a.rank > b.rank ? 1 : b.rank > a.rank ? -1 : 0);\r\nreturn { RiskAssessmentCheck: risk_chklist, sortedTimeSpent: sortedTimeSpent.map(e => `${e[\"area\"]}(${e[\"rank\"]})`).join(\",  \")};"
-        },
-        "runAfter": {
-          "Parse_CommonJSON2": ["Succeeded"]
-        },
-        "type": "JavaScriptCode"
-      },
-      "Execute_JavaScript_Code_2": {
-        "inputs": {
-          "code": "\r\nvar body = workflowContext.actions.Parse_CommonJSON.outputs.body;\r\nfunction chkList(list) { if(!list) return \"\";  return list.join(\", \");}\r\nvar otheractivities = \"\"; if(body['Past4WkEngagedInOtheractivities']) otheractivities = Object.entries(body['Past4WkEngagedInOtheractivities']).map(e => { if(e[1][\"No/Yes\"]) return e[0]; }).filter(e=> e).join(\",\");\r\nvar addictiveBehave = \"\"; if(body['OtherAddictiveBehaviours']) addictiveBehave = Object.entries(body['OtherAddictiveBehaviours']).map(e => `${e[0]}: ${e[1][\"Days\"]}/28 days`).join(\", \");\r\nreturn {\r\n    \"Past4WkEngagedInOtheractivities\": otheractivities,\"OtherAddictiveBehaviours\": addictiveBehave,\r\n      \"FinalChecklist\": chkList(body['FinalChecklist']),\"SupportTypeBestMatchesNeedsGoals\": chkList(body['SupportTypeBestMatchesNeedsGoals']),\r\n      \"PrimaryCaregiver\": chkList(body['PrimaryCaregiver']), \"MHRecentRiskIssues\": chkList(body['MHRecentRiskIssues']), \"MHHistoricalRiskIssues\":chkList(body['MHHistoricalRiskIssues'])}"
-        },
-        "runAfter": {
-          "Execute_JavaScript_Code": ["Succeeded"]
-        },
-        "type": "JavaScriptCode"
-      },
-      "InitialAssessment_Or_ITSPReview": {
-        "actions": {
-          "Populate_a_Microsoft_Word_template_2": {
-            "inputs": {
-              "body": {
-                "6256064": "@body('Parse_CommonJSON2')?['IsAODUseOutOfControl']",
-                "38253494": "@body('Parse_CommonJSON')?['Past4WkHowOftenMentalHealthCausedProblems']",
-                "59456480": "@body('Parse_JsCode-2_JSON')?['OtherAddictiveBehaviours']",
-                "68076753": "@body('Parse_CommonJSON')?['PhysicalHealthITSPIssues']",
-                "106783188": "@body('ParsePDC_SurveyData')?['PDCHowMuchPerOccasion']",
-                "205615903": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore']",
-                "309912648": "@body('Parse_CommonJSON')?['RelationshipsITSPIssues']",
-                "345987727": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns-Comment']",
-                "396561042": "@body('Parse_CommonJSON')?['Past4WkPhysicalHealth']",
-                "445896514": "@{body('Parse_CommonJSON')?['AreYouAccessingOtherServices']}",
-                "456995323": "@body('Parse_CommonJSON')?['MHRecentRiskIssues-Comment']",
-                "532537670": "@{body('Parse_CommonJSON')?['ExternalReferrals']}",
-                "534323263": "@body('Parse_CommonJSON')?['EverydayLivingITSPIssues']",
-                "615259406": "@body('Parse_CommonJSON2')?['DoYouWishToStop']",
-                "770977451": "@body('ParsePDC_SurveyData')?['PDCSubstanceOrGambling']",
-                "804822681": "@body('Parse_JSCode_JSON')?['RiskAssessmentCheck']",
-                "891388424": "@body('Parse_CommonJSON')?['MentalHealthITSPGoals']",
-                "932793510": "@body('Parse_CommonJSON')?['SubstanceUseITSPGoals']",
-                "937715984": "@body('Parse_CommonJSON')?['EverydayLivingITSPGoals']",
-                "996616515": "@body('Parse_CommonJSON')?['HousingSafetyITSPIssues']",
-                "1025911928": "@body('Parse_EntityJSON')?['Staff']",
-                "1126735331": "@body('Parse_CommonJSON')?['LegalITSPGoals']",
-                "1151565685": "@body('Parse_CommonJSON2')?['Past4WkNumInjectingDays']",
-                "1156194059": "@body('Parse_CommonJSON')?['legalITSPIssues']",
-                "1259955150": "@{body('ParsePDC_SurveyData')?['PDCAgeFirstUsed']}",
-                "1288317155": "@body('Parse_CommonJSON')?['Past4WkDifficultyFindingHousing']",
-                "1293788922": "@body('Parse_CommonJSON2')?['HowDifficultToStopOrGoWithout']",
-                "1312838492": "@body('Parse_CommonJSON')?['FirstName']",
-                "1346825936": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou-Comment']",
-                "1457217821": "@body('Parse_CommonJSON')?['DoYouFeelSafeWhereYouLive']",
-                "1612091630": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore-Comment']",
-                "1622261413": "@body('Parse_JsCode-2_JSON')?['MHHistoricalRiskIssues']",
-                "1640221018": "@{body('Parse_CommonJSON2')?['SDS_Score']}",
-                "1683393690": "@body('Parse_CommonJSON')?['YourCurrentHousing']",
-                "1723867020": "@body('Parse_CommonJSON')?['AssessmentDate']",
-                "1736819081": "@body('Parse_CommonJSON')?['SupportTypeBestMatchesNeedsGoals-Comment']",
-                "1751854583": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou']",
-                "1796786830": "@body('Parse_CommonJSON2')?['HowMuchDoYouWorryAboutAODUse']",
-                "1837950863": "@body('Parse_CommonJSON')?['RelationshipsITSPGoals']",
-                "1849281492": "@body('Parse_CommonJSON')?['SubjectToCourtOrdersOrPendingCharges']",
-                "1850212294": "@{body('Parse_CommonJSON')?['Past4WkAnyOtherAddictiveB']}",
-                "1851141063": "@body('Parse_JsCode-2_JSON')?['FinalChecklist']",
-                "1876659698": "@body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulencenotes']",
-                "2010095536": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis-Comment']",
-                "2037007272": "@body('Parse_CommonJSON2')?['HowLongSinceLastInjected']",
-                "2040471439": "@body('Parse_CommonJSON')?['ExternalReferrals-Comment']",
-                "2054876705": "@{body('Parse_CommonJSON2')?['HaveYouEverSharedEquipment']}",
-                "-1035571282": "@body('Parse_EntityJSON')?['Program']",
-                "-1131092073": "@{body('Parse_CommonJSON2')?['Past4WkAodRisks']}",
-                "-1163774633": "@{body('Parse_CommonJSON')?['EverDiagnosedMentalHealthIssue']}",
-                "-1198086222": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou-Comment']",
-                "-1265678633": "@body('Parse_CommonJSON')?['Past4WkDailyLivingImpacted']",
-                "-1314798429": "@{body('Parse_CommonJSON')?['HealthChecklist_STAFF']}",
-                "-1315716554": "@body('Parse_CommonJSON')?['Past4WkPhysicalHealth']",
-                "-1320497597": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou']",
-                "-1320814511": "@body('Parse_CommonJSON2')?['Past4WkAodRisks-Comment']",
-                "-1366817897": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns']",
-                "-1398279041": "@triggerBody()?['PartitionKey']",
-                "-1468194288": "@variables('OtherDrugsArray')",
-                "-1640945987": "@{body('Parse_CommonJSON')?['Past4WkHadCaregivingResponsibilities']}",
-                "-1641411615": "@{body('Parse_CommonJSON')?['NeedHelpWrkDevlpmntOrdrPayingOutstndngFines']}",
-                "-1697921975": "@body('Parse_CommonJSON')?['Past4WkUseLedToProblemsWithFamilyFriend']",
-                "-1728680006": "@body('Parse_CommonJSON')?['SubjectToCourtOrdersOrPendingCharges-Comment']",
-                "-1765374855": "@body('Parse_CommonJSON')?['RiskAssessmentNotes']",
-                "-1776399980": "@body('Parse_CommonJSON')?['Past4WkMentalHealth']",
-                "-1804539758": "@body('Parse_JsCode-2_JSON')?['Past4WkEngagedInOtheractivities']",
-                "-1873916793": " @{body('ParsePDC_SurveyData')?['PDCSubstanceOrGambling']}\n ",
-                "-1877765276": "@body('Parse_CommonJSON')?['HaveYouServedCustodialSentenceInPast-Comment']",
-                "-1898350936": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis']",
-                "-1899201441": "@body('Parse_CommonJSON')?['HaveAnySocialSupport-Comment']",
-                "-1902431370": "@{body('Parse_CommonJSON2')?['HaveYouEverInjected']}",
-                "-1977515267": "@body('ParsePDC_SurveyData')?['PDCDaysInLast28']",
-                "-2013134270": "@body('Parse_CommonJSON')?['ChildProtectionDetails']",
-                "-2023928766": "@body('Parse_JSCode_JSON')?['sortedTimeSpent']",
-                "-2045040186": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive']",
-                "-2049670359": "@body('Parse_CommonJSON')?['Past4WkHowOftenPhysicalHealthCausedProblems']",
-                "-2068404389": "@body('Parse_CommonJSON')?['CreatedDatetime']",
-                "-2088602565": "@body('Parse_JsCode-2_JSON')?['MHRecentRiskIssues']",
-                "-2136017307": "@body('Parse_CommonJSON')?['SupportFromWhichOtherServices-Comment']",
-                "-270163104": "@body('Parse_JsCode-2_JSON')?['PrimaryCaregiver']",
-                "-285743305": "@body('Parse_CommonJSON')?['PhysicalHealthITSPGoals']",
-                "-338462748": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive-Comment']",
-                "-35041945": "@body('Parse_CommonJSON')?['PrimaryCaregiver-Comment']",
-                "-385032425": "@body('Parse_CommonJSON')?['SubstanceUseITSPIssues']",
-                "-532112431": "@body('Parse_EntityJSON')?['Program']",
-                "-708334838": "@body('Parse_CommonJSON')?['MHHistoricalRiskIssues-Comment']",
-                "-732319510": "@body('Parse_CommonJSON')?['RelationshipsITSPIssues']",
-                "-75205338": "@body('Parse_CommonJSON')?['HaveAnySocialSupport']",
-                "-758285849": "@{body('Parse_CommonJSON')?['AreYouCurrentlyTakingMeds']}",
-                "-763310409": "@body('Parse_JsCode-2_JSON')?['SupportTypeBestMatchesNeedsGoals']",
-                "-813646467": "@body('Parse_CommonJSON')?['HousingSafetyITSPGoals']",
-                "-861361226": "@{body('Parse_CommonJSON')?['ChildProtectionConcerns']}",
-                "-867839974": "@{body('Parse_CommonJSON')?['Past4WkHadCaregivingResponsibilities']}",
-                "-872914909": "@{body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulence']}",
-                "-895972606": "@body('Parse_CommonJSON')?['HaveYouServedCustodialSentenceInPast']",
-                "-896666621": "@body('Parse_CommonJSON')?['Past4WkHowOftenIllegalActivities']",
-                "-907376112": "@body('Parse_CommonJSON2')?['DoesMissingFixMakeAnxious']",
-                "-916320379": "@body('ParsePDC_SurveyData')?['PDCMethodOfUse']",
-                "-975837373": "@{body('Parse_CommonJSON')?['SupportFromWhichOtherServices']}",
-                "-995571847": "@body('Parse_CommonJSON')?['Past4WkHowOftenPhysicalHealthCausedProblems']"
-              },
-              "host": {
-                "connection": {
-                  "name": "@parameters('$connections')['wordonlinebusiness']['connectionId']"
-                }
-              },
-              "method": "post",
-              "path": "/api/templates/getFile",
-              "queries": {
-                "drive": "b!TQEyQLwbT0-Z2YVgt8koSaI3_tjmJYpLlHwfJrThR2zyxCkjY3AESYjwhCrSdR6-",
-                "file": "01ZYEGLWABUWTHXTGWQ5EZR4HIHDVMTFT2",
-                "source": "sites/directionshealth.sharepoint.com,4032014d-1bbc-4f4f-99d9-8560b7c92849,d8fe37a2-25e6-4b8a-947c-1f26b4e1476c"
-              }
-            },
-            "metadata": {
-              "01ZYEGLWABUWTHXTGWQ5EZR4HIHDVMTFT2": "/ICT/ANSA/ANSAIATemplate.docx"
-            },
-            "runAfter": {},
-            "type": "ApiConnection"
-          },
-          "Send_an_email_from_a_shared_mailbox_(V2)": {
-            "inputs": {
-              "body": {
-                "Attachments": [
-                  {
-                    "ContentBytes": "@{base64(body('Populate_a_Microsoft_Word_template_2'))}",
-                    "Name": "IA.docx"
-                  }
-                ],
-                "Body": "<p><strong>Client Type:</strong> <br>\n<strong>PDC:</strong> @{body('Parse_JSCode_JSON')?['PDC']}<br>\n<strong>PDC Method: </strong>@{body('Parse_JSCode_JSON')?['PDCMethod']}<br>\n<br>\n<strong>Risk Checklist:</strong><br>\n@{body('Parse_JSCode_JSON')?['risk_chklist']}<br>\n<br>\n<br>\n<strong>Other Drugs table</strong><br>\n@{body('Create_Other_Drugs_HTML_table')}<br>\n<br>\n<strong>Recent Mental Health Risks</strong>: @{body('Parse_JsCode-2_JSON')?['mhrisksrecent']}<br>\n<br>\n<strong>Addictive Behaviours:</strong><br>\n@{body('Parse_JsCode-2_JSON')?['addictivebehaviours']}<br>\n<br>\n<strong>Time Spent :</strong><br>\n@{body('Parse_JSCode_JSON')?['sortedTimeSpent']}<br>\n<br>\n<strong>Other Activities: </strong>@{body('Parse_JsCode-2_JSON')?['otherActivitiesList']}<br>\n<strong>Health Checklist:</strong> @{body('Parse_JsCode-2_JSON')?['healthchecklist']}<br>\n<strong>Primary Caregiver:</strong> @{body('Parse_JsCode-2_JSON')?['primarycaregiver']}<br>\n<strong>Support Type:</strong> @{body('Parse_JsCode-2_JSON')?['supporttype']}<br>\n<strong><br>\nExternal Referrals:</strong> <br>\n<strong>Final Check:</strong> @{body('Parse_JsCode-2_JSON')?['final_chk']}</p>",
-                "Cc": "ansa@directionshealth.com",
-                "MailboxAddress": "directions.admin@directionshealth.com",
-                "Subject": "@{body('Parse_EntityJSON')?['SurveyName']} for Program: @{body('Parse_EntityJSON')?['Program']}; SLK@{triggerBody()?['PartitionKey']}",
-                "To": "@{body('Parse_EntityJSON')?['Staff']}@directionshealth.com"
-              },
-              "host": {
-                "connection": {
-                  "name": "@parameters('$connections')['office365']['connectionId']"
-                }
-              },
-              "method": "post",
-              "path": "/v2/SharedMailbox/Mail"
-            },
-            "runAfter": {
-              "Populate_a_Microsoft_Word_template_2": ["Succeeded"]
-            },
-            "type": "ApiConnection"
-          }
-        },
-        "else": {
-          "actions": {
-            "Populate_a_Microsoft_Word_template": {
-              "inputs": {
-                "host": {
-                  "connection": {
-                    "name": "@parameters('$connections')['wordonlinebusiness']['connectionId']"
-                  }
-                },
-                "method": "post",
-                "path": "/api/templates/getFile",
-                "queries": {
-                  "drive": "b!TQEyQLwbT0-Z2YVgt8koSaI3_tjmJYpLlHwfJrThR2zyxCkjY3AESYjwhCrSdR6-",
-                  "file": "01ZYEGLWBE2VL5OU6P2NDIDU4WBVYYGVOH",
-                  "source": "sites/directionshealth.sharepoint.com,4032014d-1bbc-4f4f-99d9-8560b7c92849,d8fe37a2-25e6-4b8a-947c-1f26b4e1476c"
-                }
-              },
-              "metadata": {
-                "01ZYEGLWBE2VL5OU6P2NDIDU4WBVYYGVOH": "/ICT/ANSA/ANSAITSPTemplate.docx"
-              },
-              "runAfter": {},
-              "type": "ApiConnection"
-            },
-            "Send_an_email_from_a_shared_mailbox_(V2)_2": {
-              "inputs": {
-                "body": {
-                  "Attachments": [
-                    {
-                      "ContentBytes": "@{base64(body('Populate_a_Microsoft_Word_template'))}",
-                      "Name": "ITSPReview.docx"
-                    }
-                  ],
-                  "Body": "<p>Other Drugs table<br>\n@{body('Create_Other_Drugs_HTML_table')}</p>",
-                  "Cc": "ansa@directionshealth.com",
-                  "MailboxAddress": "directions.admin@directionshealth.com",
-                  "Subject": "ITSP Review done; Program:@{body('Parse_EntityJSON')?['Program']}; SLK: @{triggerBody()?['PartitionKey']}",
-                  "To": "@{body('Parse_EntityJSON')?['Staff']}@directionshealth.com"
-                },
-                "host": {
-                  "connection": {
-                    "name": "@parameters('$connections')['office365']['connectionId']"
-                  }
-                },
-                "method": "post",
-                "path": "/v2/SharedMailbox/Mail"
+                      "SpreadUpAliasMap": {
+                          "OtherAddictiveBehaviours": "OBehave",
+                          "Past4WkEngagedInOtheractivities": "Engaged"
+                      },
+                      "SurveyData": "@body('Parse_EntityJSON')?['SurveyData']"
+                  },
+                  "function": {
+                      "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansajs/providers/Microsoft.Web/sites/ansa-jsflattener/functions/ANSA_JSFlattener_HttpTrigger"
+                  },
+                  "method": "POST"
               },
               "runAfter": {
-                "Populate_a_Microsoft_Word_template": ["Succeeded"]
+                  "Initialize_EngInOtherActivities_variable": [
+                      "Succeeded"
+                  ]
               },
-              "type": "ApiConnection"
-            }
-          }
-        },
-        "expression": {
-          "and": [
-            {
-              "contains": ["@triggerBody()?['RowKey']", "INAS"]
-            }
-          ]
-        },
-        "runAfter": {
-          "Create_Other_Drugs_HTML_table": ["Succeeded"]
-        },
-        "type": "If"
-      },
-      "Initialize_OtherDrugsArray_variable": {
-        "inputs": {
-          "variables": [
-            {
-              "name": "OtherDrugsArray",
-              "type": "array"
-            }
-          ]
-        },
-        "runAfter": {
-          "Parse_EntityJSON": ["Succeeded"]
-        },
-        "type": "InitializeVariable"
-      },
-      "Parse_ClientType_From_SurveyDataJSON": {
-        "inputs": {
-          "content": "@body('Parse_EntityJSON')?['SurveyData']",
-          "schema": {
-            "properties": {
-              "clienttype": {
-                "type": "string"
-              }
-            },
-            "type": "object"
-          }
-        },
-        "runAfter": {
-          "Initialize_OtherDrugsArray_variable": ["Succeeded"]
-        },
-        "type": "ParseJson"
-      },
-      "Parse_CommonJSON": {
-        "inputs": {
-          "content": "@body('Parse_EntityJSON')?['SurveyData']",
-          "schema": {
-            "properties": {
-              "AreYouAccessingOtherServices": {
-                "type": "boolean"
-              },
-              "AreYouCurrentlyTakingMeds": {
-                "type": "boolean"
-              },
-              "AssessmentDate": {
-                "type": "string"
-              },
-              "ChildProtectionConcerns": {
-                "type": "boolean"
-              },
-              "ChildProtectionDetails": {
-                "type": "string"
-              },
-              "CreatedDatetime": {
-                "type": "string"
-              },
-              "DoYouFeelSafeWhereYouLive": {
-                "type": "string"
-              },
-              "EverDiagnosedMentalHealthIssue": {
-                "type": "boolean"
-              },
-              "EverydayLivingITSPGoals": {
-                "type": "string"
-              },
-              "EverydayLivingITSPIssues": {
-                "type": "string"
-              },
-              "ExternalReferrals": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "ExternalReferrals-Comment": {
-                "type": "string"
-              },
-              "FinalChecklist": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "FirstName": {
-                "type": "string"
-              },
-              "HaveAnySocialSupport": {
-                "type": "string"
-              },
-              "HaveAnySocialSupport-Comment": {
-                "type": "string"
-              },
-              "HaveDVOrFamilySafetyConcerns": {
-                "type": "string"
-              },
-              "HaveDVOrFamilySafetyConcerns-Comment": {
-                "type": "string"
-              },
-              "HaveYouServedCustodialSentenceInPast": {
-                "type": "string"
-              },
-              "HaveYouServedCustodialSentenceInPast-Comment": {
-                "type": "string"
-              },
-              "HealthChecklist_STAFF": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "HousingSafetyITSPGoals": {
-                "type": "string"
-              },
-              "HousingSafetyITSPIssues": {
-                "type": "string"
-              },
-              "HowDoYouSpendTime": {
-                "properties": {
-                  "DrugsDrinking_SourcingUsing": {
-                    "properties": {
-                      "Rank Importance to You (in terms of time spent)": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "FamilyAndHome": {
-                    "properties": {
-                      "Rank Importance to You (in terms of time spent)": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "HobbiesSportsRecreation": {
-                    "properties": {
-                      "Rank Importance to You (in terms of time spent)": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "MeTime": {
-                    "properties": {
-                      "Rank Importance to You (in terms of time spent)": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "Other": {
-                    "properties": {
-                      "Rank Importance to You (in terms of time spent)": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "OtherAddictiveBehaviours_EG_GamingSocialMedia": {
-                    "properties": {
-                      "Rank Importance to You (in terms of time spent)": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "WorkOrStudy": {
-                    "properties": {
-                      "Rank Importance to You (in terms of time spent)": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  }
-                },
-                "type": "object"
-              },
-              "HowImportantIsChangeToYou": {
-                "type": "string"
-              },
-              "HowImportantIsChangeToYou-Comment": {
-                "type": "string"
-              },
-              "LastName": {
-                "type": "string"
-              },
-              "LegalITSPGoals": {
-                "type": "string"
-              },
-              "MHHistoricalRiskIssues": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "MHHistoricalRiskIssues-Comment": {
-                "type": "string"
-              },
-              "MHRecentRiskIssues": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "MHRecentRiskIssues-Comment": {
-                "type": "string"
-              },
-              "MentalHealthITSPGoals": {
-                "type": "string"
-              },
-              "NeedHelpWrkDevlpmntOrdrPayingOutstndngFines": {
-                "type": "boolean"
-              },
-              "OtherAddictiveBehaviours": {
-                "properties": {
-                  "Gambling": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "Gaming": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "Hoarding": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "InternetOrSocialMedia": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "Other": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "Sex": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      }
-                    },
-                    "type": "object"
-                  }
-                },
-                "type": "object"
-              },
-              "Past4WkAnyOtherAddictiveB": {
-                "type": "boolean"
-              },
-              "Past4WkBeenArrested": {
-                "type": "string"
-              },
-              "Past4WkBeenHospCallAmbulence": {
-                "type": "boolean"
-              },
-              "Past4WkBeenHospCallAmbulencenotes": {
-                "type": "string"
-              },
-              "Past4WkDailyLivingImpacted": {
-                "type": "string"
-              },
-              "Past4WkDifficultyFindingHousing": {
-                "type": "string"
-              },
-              "Past4WkEngagedInOtheractivities": {
-                "properties": {
-                  "LookingAfterChildren": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
+              "type": "Function"
+          },
+          "For_each_FinalChecklist": {
+              "actions": {
+                  "Append_to_array_variable_2": {
+                      "inputs": {
+                          "name": "FinalCheckList",
+                          "value": {
+                              "FinalChecklistItem": "@items('For_each_FinalChecklist')"
+                          }
                       },
-                      "No/Yes": {
-                        "type": "boolean"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "OtherCaregivingActivities": {
-                    "properties": {
-                      "Frequency": {
-                        "type": "integer"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "PaidWork": {
-                    "properties": {
-                      "No/Yes": {
-                        "type": "boolean"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "Study": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      },
-                      "Frequency": {
-                        "type": "integer"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "VoluntaryWork": {
-                    "properties": {
-                      "Days": {
-                        "type": "string"
-                      },
-                      "Frequency": {
-                        "type": "integer"
-                      },
-                      "No/Yes": {
-                        "type": "boolean"
-                      }
-                    },
-                    "type": "object"
+                      "runAfter": {},
+                      "type": "AppendToArrayVariable"
                   }
-                },
-                "type": "object"
               },
-              "Past4WkHadCaregivingResponsibilities": {
-                "type": "boolean"
+              "foreach": "@body('Parse_CommonJSON')?['FinalChecklist']",
+              "runAfter": {
+                  "Parse_CommonJSON": [
+                      "Succeeded"
+                  ]
               },
-              "Past4WkHaveYouViolenceAbusive": {
-                "type": "string"
-              },
-              "Past4WkHaveYouViolenceAbusive-Comment": {
-                "type": "string"
-              },
-              "Past4WkHowOftenIllegalActivities": {
-                "type": "string"
-              },
-              "Past4WkHowOftenMentalHealthCausedProblems": {
-                "type": "string"
-              },
-              "Past4WkHowOftenPhysicalHealthCausedProblems": {
-                "type": "string"
-              },
-              "Past4WkMentalHealth": {
-                "type": "string"
-              },
-              "Past4WkPhysicalHealth": {
-                "type": "string"
-              },
-              "Past4WkQualityOfLifeScore": {
-                "type": "string"
-              },
-              "Past4WkQualityOfLifeScore-Comment": {
-                "type": "string"
-              },
-              "Past4WkUseLedToProblemsWithFamilyFriend": {
-                "type": "string"
-              },
-              "PhysicalHealthITSPGoals": {
-                "type": "string"
-              },
-              "PhysicalHealthITSPIssues": {
-                "type": "string"
-              },
-              "PrimaryCaregiver": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "PrimaryCaregiver-Comment": {
-                "type": "string"
-              },
-              "RelationshipsITSPGoals": {
-                "type": "string"
-              },
-              "RelationshipsITSPIssues": {
-                "type": "string"
-              },
-              "RiskAssessmentCheck": {
-                "properties": {
-                  "IndicationOfDomesticFamViolence": {
-                    "properties": {
-                      "Column 1": {
-                        "type": "boolean"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "IndicationOfMHRisks": {
-                    "properties": {
-                      "Column 1": {
-                        "type": "boolean"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "IndicationOfSuicidalIdeation": {
-                    "properties": {
-                      "Column 1": {
-                        "type": "boolean"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "RiskOfOverdose": {
-                    "properties": {
-                      "Column 1": {
-                        "type": "boolean"
-                      }
-                    },
-                    "type": "object"
+              "type": "Foreach"
+          },
+          "For_each_RiskAssessChecklist": {
+              "actions": {
+                  "Append_to_array_variable_3": {
+                      "inputs": {
+                          "name": "RiskAssessChecklist",
+                          "value": {
+                              "RiskAssessCheckItem": "@items('For_each_RiskAssessChecklist')"
+                          }
+                      },
+                      "runAfter": {},
+                      "type": "AppendToArrayVariable"
                   }
-                },
-                "type": "object"
               },
-              "RiskAssessmentNotes": {
-                "type": "string"
+              "foreach": "@body('Parse_CommonJSON')?['RiskAssessmentChecklist']",
+              "runAfter": {
+                  "For_each_FinalChecklist": [
+                      "Succeeded"
+                  ]
               },
-              "SubjectToCourtOrdersOrPendingCharges": {
-                "type": "string"
+              "type": "Foreach"
+          },
+          "InitialAssessment_Or_ITSPReview": {
+              "actions": {
+                  "Check_ClientType": {
+                      "actions": {
+                          "ODC_list_is_not_null": {
+                              "actions": {
+                                  "For_each_(loop_over_other_drugs)": {
+                                      "actions": {
+                                          "ODC_Drug_IsNull": {
+                                              "actions": {
+                                                  "Append_to_array_variable": {
+                                                      "inputs": {
+                                                          "name": "OtherDrugsArray",
+                                                          "value": {
+                                                              "daysin28": "@items('For_each_(loop_over_other_drugs)')?['DaysInLast28']",
+                                                              "doc": "@items('For_each_(loop_over_other_drugs)')?['OtherSubstancesConcernGambling']",
+                                                              "first": "@items('For_each_(loop_over_other_drugs)')?['AgeFirstUsed']",
+                                                              "goals": "@items('For_each_(loop_over_other_drugs)')?['Goals']",
+                                                              "howmuch": "@items('For_each_(loop_over_other_drugs)')?['HowMuchPerOccasion']",
+                                                              "last": "@items('For_each_(loop_over_other_drugs)')?['AgeLastUsed']",
+                                                              "method": "@items('For_each_(loop_over_other_drugs)')?['MethodOfUse']",
+                                                              "units": "@items('For_each_(loop_over_other_drugs)')?['Units']"
+                                                          }
+                                                      },
+                                                      "runAfter": {},
+                                                      "type": "AppendToArrayVariable"
+                                                  }
+                                              },
+                                              "expression": {
+                                                  "and": [
+                                                      {
+                                                          "not": {
+                                                              "equals": [
+                                                                  "@items('For_each_(loop_over_other_drugs)')?['OtherSubstancesConcernGambling']",
+                                                                  "@null"
+                                                              ]
+                                                          }
+                                                      }
+                                                  ]
+                                              },
+                                              "runAfter": {},
+                                              "type": "If"
+                                          }
+                                      },
+                                      "foreach": "@body('Parse_ODC')?['ODC']",
+                                      "runAfter": {},
+                                      "type": "Foreach"
+                                  }
+                              },
+                              "expression": {
+                                  "and": [
+                                      {
+                                          "not": {
+                                              "equals": [
+                                                  "@body('Parse_ODC')?['ODC']",
+                                                  "@null"
+                                              ]
+                                          }
+                                      }
+                                  ]
+                              },
+                              "runAfter": {
+                                  "Parse_ODC": [
+                                      "Succeeded"
+                                  ]
+                              },
+                              "type": "If"
+                          },
+                          "Parse_ODC": {
+                              "inputs": {
+                                  "content": "@body('ANSA_JSFlattener_HttpTrigger_2')",
+                                  "schema": {
+                                      "properties": {
+                                          "ODC": {
+                                              "items": {
+                                                  "properties": {
+                                                      "AgeFirstUsed": {
+                                                          "type": "integer"
+                                                      },
+                                                      "AgeLastUsed": {
+                                                          "type": "integer"
+                                                      },
+                                                      "DaysInLast28": {
+                                                          "type": "string"
+                                                      },
+                                                      "Goals": {
+                                                          "type": "string"
+                                                      },
+                                                      "HowMuchPerOccasion": {
+                                                          "type": "string"
+                                                      },
+                                                      "MethodOfUse": {
+                                                          "type": "string"
+                                                      },
+                                                      "OtherSubstancesConcernGambling": {
+                                                          "type": "string"
+                                                      },
+                                                      "Units": {
+                                                          "type": "string"
+                                                      }
+                                                  },
+                                                  "type": "object"
+                                              },
+                                              "type": "array"
+                                          }
+                                      },
+                                      "type": "object"
+                                  }
+                              },
+                              "runAfter": {
+                                  "Parse_OwnUse": [
+                                      "Succeeded"
+                                  ]
+                              },
+                              "type": "ParseJson"
+                          },
+                          "Parse_OwnUse": {
+                              "inputs": {
+                                  "content": "@body('ANSA_JSFlattener_HttpTrigger_2')",
+                                  "schema": {
+                                      "properties": {
+                                          "HaveYouEverInjected": {
+                                              "type": "boolean"
+                                          },
+                                          "HaveYouEverSharedEquipment": {
+                                              "type": "boolean"
+                                          },
+                                          "NotesODC": {
+                                              "type": "string"
+                                          },
+                                          "OBehaveGamblingDays": {
+                                              "type": "string"
+                                          },
+                                          "OBehaveGamingDays": {
+                                              "type": "string"
+                                          },
+                                          "OBehaveHoardingDays": {
+                                              "type": "string"
+                                          },
+                                          "OBehaveInternetSocialMediaDays": {
+                                              "type": "string"
+                                          },
+                                          "OBehaveOtherDays": {
+                                              "type": "string"
+                                          },
+                                          "OBehaveSexDays": {
+                                              "type": "string"
+                                          },
+                                          "Past4WkAnyOtherAddictiveB": {
+                                              "type": "boolean"
+                                          },
+                                          "Past4WkAodRisks": {
+                                              "type": "string"
+                                          },
+                                          "Past4WkAodRisks-Comment": {
+                                              "type": "string"
+                                          },
+                                          "Past4WkNumInjectingDays": {
+                                              "type": "string"
+                                          },
+                                          "SDSDoYouWishToStop": {
+                                              "type": "string"
+                                          },
+                                          "SDSDoesMissingFixMakeAnxious": {
+                                              "type": "string"
+                                          },
+                                          "SDSHowDifficultToStopOrGoWithout": {
+                                              "type": "string"
+                                          },
+                                          "SDSHowLongSinceLastInjected": {
+                                              "type": "string"
+                                          },
+                                          "SDSHowMuchDoYouWorryAboutAODUse": {
+                                              "type": "string"
+                                          },
+                                          "SDSIsAODUseOutOfControl": {
+                                              "type": "string"
+                                          },
+                                          "SDS_Score": {
+                                              "type": "integer"
+                                          }
+                                      },
+                                      "type": "object"
+                                  }
+                              },
+                              "runAfter": {},
+                              "type": "ParseJson"
+                          },
+                          "Populate_a_Microsoft_Word_template_2": {
+                              "inputs": {
+                                  "body": {
+                                      "26997496": "@body('Parse_OwnUse')?['OBehaveGamingDays']",
+                                      "62071607": "@{body('Parse_CommonJSON')?['EverDiagnosedMentalHealthIssue']}",
+                                      "114871574": "@{body('Parse_OwnUse')?['HaveYouEverSharedEquipment']}",
+                                      "128751030": "@body('Parse_OwnUse')?['NotesODC']",
+                                      "201827725": "@body('Parse_OwnUse')?['OBehaveHoardingDays']",
+                                      "266972042": "@body('Parse_OwnUse')?['OBehaveInternetSocialMediaDays']",
+                                      "316618736": "@{body('Parse_CommonJSON')?['Past4WkBeenArrested']}",
+                                      "327866034": "@body('Parse_CommonJSON')?['SubstanceUseITSPGoals']",
+                                      "346451411": "@body('Parse_CommonJSON')?['YourCurrentHousing']",
+                                      "411663172": "@{body('Parse_CommonJSON')?['EngagedPaidWorkFrequency']}",
+                                      "542338601": "@body('Parse_OwnUse')?['SDSHowLongSinceLastInjected']",
+                                      "653029831": "@body('Parse_CommonJSON')?['EngagedStudycollegeDays']",
+                                      "666670811": "@{body('Parse_PDC_JSON')?['PDCAgeLastUsed']}",
+                                      "696205160": "@body('Parse_PDC_JSON')?['PDCMethodOfUse']",
+                                      "793094988": "@body('Parse_CommonJSON')?['EverydayLivingITSPIssues']",
+                                      "796569339": "@body('Parse_CommonJSON')?['LegalITSPGoals']",
+                                      "816926137": "@body('Parse_CommonJSON')?['Past4WkDailyLivingImpacted']",
+                                      "906960320": "@body('Parse_CommonJSON')?['HaveAnySocialSupport']",
+                                      "937094657": "@body('Parse_CommonJSON')?['LegalITSPIssues']",
+                                      "964079544": "@body('Parse_CommonJSON')?['MentalHealthITSPGoals']",
+                                      "983889952": "@body('Parse_CommonJSON')?['PhysicalHealthITSPIssues']",
+                                      "1023369850": "@body('Parse_CommonJSON')?['SupportTypeBestMatchesNeedsGoals']",
+                                      "1027136184": "@body('Parse_CommonJSON')?['Past4WkHowOftenMentalHealthCausedProblems']",
+                                      "1171911480": "@{body('Parse_CommonJSON')?['AreYouAccessingOtherServices']}",
+                                      "1245531911": "@body('Parse_CommonJSON')?['Past4WkUseLedToProblemsWithFamilyFriend']",
+                                      "1252932495": "@body('Parse_PDC_JSON')?['PDCHowMuchPerOccasion']",
+                                      "1311451641": "@body('Parse_CommonJSON')?['EngagedPaidWorkDays']",
+                                      "1404188695": "@body('Parse_OwnUse')?['SDSHowMuchDoYouWorryAboutAODUse']",
+                                      "1500857746": "@body('Parse_EntityJSON')?['Staff']",
+                                      "1512721385": "@{body('Parse_CommonJSON')?['EngagedLookingafterchildrenFrequency']}",
+                                      "1530985412": "@body('Parse_OwnUse')?['SDSHowDifficultToStopOrGoWithout']",
+                                      "1537921105": "@body('Parse_CommonJSON')?['MedicationsNotes']",
+                                      "1575171312": "@body('Parse_CommonJSON')?['RelationshipsITSPIssues']",
+                                      "1659965317": "@body('Parse_CommonJSON')?['Past4WkPhysicalHealth']",
+                                      "1662117811": "@variables('FinalCheckList')",
+                                      "1781839518": "@body('Parse_PDC_JSON')?['PDCDaysInLast28']",
+                                      "1878117061": "@{body('Parse_CommonJSON')?['EngagedVoluntaryWorkFrequency']}",
+                                      "1900629632": "@body('Parse_CommonJSON')?['ChildProtectionDetails']",
+                                      "1953972708": "@body('Parse_OwnUse')?['SDSDoesMissingFixMakeAnxious']",
+                                      "1966695205": "@body('Parse_CommonJSON')?['Past4WkHowOftenPhysicalHealthCausedProblems']",
+                                      "1978343750": "@{body('Parse_CommonJSON')?['AreYouCurrentlyTakingMeds']}",
+                                      "1990121010": "@body('Parse_CommonJSON')?['DoYouFeelSafeWhereYouLive']",
+                                      "2047559863": "@body('Parse_OwnUse')?['SDSIsAODUseOutOfControl']",
+                                      "2135980665": "@{body('Parse_CommonJSON')?['SubjectToCourtOrdersOrPendingCharges']}",
+                                      "2138217676": "@body('Parse_CommonJSON')?['HousingSafetyITSPGoals']",
+                                      "-1004672977": "@{body('Parse_CommonJSON')?['EngagedStudycollegeFrequency']}",
+                                      "-1010058312": "@body('Parse_CommonJSON')?['EverydayLivingITSPGoals']",
+                                      "-1038276622": "@body('Parse_CommonJSON')?['SubstanceUseITSPIssues']",
+                                      "-106733669": "@{body('Parse_CommonJSON')?['HaveYouServedCustodialSentenceInPast']}",
+                                      "-1279867960": "@body('Parse_CommonJSON')?['ExternalReferrals']",
+                                      "-1338850306": "@variables('RiskAssessChecklist')",
+                                      "-1354485397": "@body('Parse_OwnUse')?['SDSDoYouWishToStop']",
+                                      "-1496181211": "@{body('Parse_OwnUse')?['SDS_Score']}",
+                                      "-159392359": "@body('Parse_OwnUse')?['Past4WkNumInjectingDays']",
+                                      "-1598100073": "@body('Parse_CommonJSON')?['AssessmentDate']",
+                                      "-167262626": "@body('Parse_CommonJSON')?['EngagedVoluntaryWorkDays']",
+                                      "-1682510468": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore-Comment']",
+                                      "-1736537129": "@variables('OtherDrugsArray')",
+                                      "-1756510528": "@body('Parse_CommonJSON')?['MHRecentRiskIssues']",
+                                      "-176429660": "@body('Parse_PDC_JSON')?['PDCUnits']",
+                                      "-1818106127": "@body('Parse_CommonJSON')?['PhysicalHealthITSPGoals']",
+                                      "-1828812660": "@body('Parse_CommonJSON')?['Past4WkDifficultyFindingHousing']",
+                                      "-1847476322": "@body('Parse_PDC_JSON')?['PDCSubstanceOrGambling']",
+                                      "-1854180160": "@body('Parse_OwnUse')?['OBehaveGamblingDays']",
+                                      "-1885937971": "@body('Parse_CommonJSON')?['Past4WkMentalHealth']",
+                                      "-1917621831": "@body('Parse_CommonJSON')?['RelationshipsITSPGoals']",
+                                      "-1928953041": "@body('Parse_CommonJSON')?['ClientType']",
+                                      "-195469710": "@body('Parse_EntityJSON')?['SurveyName']",
+                                      "-1990476858": "@body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulenceNotes']",
+                                      "-2003271752": "@body('Parse_CommonJSON')?['MHHistoricalRiskIssues']",
+                                      "-2100089575": "@{body('Parse_PDC_JSON')?['PDCAgeFirstUsed']}",
+                                      "-2101782244": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore']",
+                                      "-2121142563": "@body('Parse_CommonJSON')?['SupportFromWhichOtherServices']",
+                                      "-223766317": "@body('Parse_PDC_JSON')?['PDCSubstanceOrGambling']",
+                                      "-256680379": "@{body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulence']}",
+                                      "-295680140": "@{body('Parse_CommonJSON')?['NeedHelpWrkDevlpmntOrdrPayingOutstndngFines']}",
+                                      "-295770225": "@body('Parse_CommonJSON')?['Past4WkHowOftenIllegalActivities']",
+                                      "-431899672": "@{body('Parse_CommonJSON')?['EngagedOthercaregivingactivitiesFrequency']}",
+                                      "-433441737": "@{body('Parse_CommonJSON')?['Past4WkHadCaregivingResponsibilities']}",
+                                      "-472064755": "@{body('Parse_OwnUse')?['Past4WkAodRisks']}",
+                                      "-496338364": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns']",
+                                      "-584386419": "@body('Parse_CommonJSON')?['HousingSafetyITSPIssues']",
+                                      "-657151792": "@{body('Parse_CommonJSON')?['ChildProtectionConcerns']}",
+                                      "-698153003": "@body('Parse_CommonJSON')?['MentalITSPIssues']",
+                                      "-737630564": "@body('Parse_CommonJSON')?['RiskAssessmentNotes']",
+                                      "-782496755": "@body('Parse_OwnUse')?['OBehaveSexDays']",
+                                      "-869373847": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive']",
+                                      "-874695542": "@body('Parse_EntityJSON')?['Program']",
+                                      "-877159770": "@body('Parse_PDC_JSON')?['PDCGoals']",
+                                      "-883635932": "@body('Parse_CommonJSON')?['EngagedLookingafterchildrenDays']",
+                                      "-917859887": "@body('Parse_CommonJSON')?['EngagedOthercaregivingactivitiesDays']",
+                                      "-931044969": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou']",
+                                      "-983231251": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis']"
+                                  },
+                                  "host": {
+                                      "connection": {
+                                          "name": "@parameters('$connections')['wordonlinebusiness']['connectionId']"
+                                      }
+                                  },
+                                  "method": "post",
+                                  "path": "/api/templates/getFile",
+                                  "queries": {
+                                      "drive": "b!TQEyQLwbT0-Z2YVgt8koSaI3_tjmJYpLlHwfJrThR2zyxCkjY3AESYjwhCrSdR6-",
+                                      "file": "01ZYEGLWE37DDHSZXCHFA3JK4P35DQOQ65",
+                                      "source": "sites/directionshealth.sharepoint.com,4032014d-1bbc-4f4f-99d9-8560b7c92849,d8fe37a2-25e6-4b8a-947c-1f26b4e1476c"
+                                  }
+                              },
+                              "metadata": {
+                                  "01ZYEGLWE37DDHSZXCHFA3JK4P35DQOQ65": "/ICT/ANSA/ANSAIATemplate_OwnUse.docx"
+                              },
+                              "runAfter": {
+                                  "ODC_list_is_not_null": [
+                                      "Succeeded"
+                                  ]
+                              },
+                              "type": "ApiConnection"
+                          },
+                          "Send_an_email_(V2)_2": {
+                              "inputs": {
+                                  "body": {
+                                      "Attachments": [
+                                          {
+                                              "ContentBytes": "@{base64(body('Populate_a_Microsoft_Word_template_2'))}",
+                                              "Name": "InitialAssessment_@{triggerBody()?['PartitionKey']}_OwnUse.docx"
+                                          }
+                                      ],
+                                      "Body": "<p>Please ensure the attached summary is uploaded to the client file.<br>\n<br>\nSLK : @{triggerBody()?['PartitionKey']} &nbsp;Client ID: @{body('Parse_CommonJSON')?['ClientID']}<br>\nProgram: @{body('Parse_EntityJSON')?['Program']}<br>\nStatus: @{body('Parse_EntityJSON')?['Status']}<br>\n<br>\nPrincipal Drug: @{body('Parse_PDC_JSON')?['PDCSubstanceOrGambling']} <br>\n<br>\nSubmitted Date/Time: @{body('Parse_CommonJSON')?['CreatedDatetime']}</p>",
+                                      "Cc": "ansa@directionshealth.com",
+                                      "From": "directions.admin@directionshealth.com",
+                                      "Subject": "@{body('Parse_EntityJSON')?['SurveyName']} for SLK: @{triggerBody()?['PartitionKey']}",
+                                      "To": "@{body('Parse_EntityJSON')?['Staff']}@directionshealth.com"
+                                  },
+                                  "host": {
+                                      "connection": {
+                                          "name": "@parameters('$connections')['office365']['connectionId']"
+                                      }
+                                  },
+                                  "method": "post",
+                                  "path": "/v2/Mail"
+                              },
+                              "runAfter": {
+                                  "Populate_a_Microsoft_Word_template_2": [
+                                      "Succeeded"
+                                  ]
+                              },
+                              "type": "ApiConnection"
+                          }
+                      },
+                      "else": {
+                          "actions": {
+                              "Parse_OthersUse": {
+                                  "inputs": {
+                                      "content": "@body('ANSA_JSFlattener_HttpTrigger_2')",
+                                      "schema": {
+                                          "properties": {
+                                              "HowCloseToManagingImpactOfOthersUse": {
+                                                  "type": "string"
+                                              },
+                                              "LegalIssuesDueToOthersUse": {
+                                                  "type": "boolean"
+                                              },
+                                              "ManagingImpactOfOthersAODUse": {
+                                                  "type": "string"
+                                              },
+                                              "Notes-HowCloseToManagingImpactOfOthersUse": {
+                                                  "type": "string"
+                                              },
+                                              "Relationship": {
+                                                  "type": "string"
+                                              },
+                                              "SetBoundariesPrioritiseWellbeing": {
+                                                  "type": "string"
+                                              }
+                                          },
+                                          "type": "object"
+                                      }
+                                  },
+                                  "runAfter": {},
+                                  "type": "ParseJson"
+                              },
+                              "Populate_IA_OthersUse_Template": {
+                                  "inputs": {
+                                      "body": {
+                                          "62071607": "@{body('Parse_CommonJSON')?['EverDiagnosedMentalHealthIssue']}",
+                                          "316618736": "@{body('Parse_CommonJSON')?['Past4WkBeenArrested']}",
+                                          "346451411": "@body('Parse_CommonJSON')?['YourCurrentHousing']",
+                                          "666670811": "@{body('Parse_PDC_JSON')?['PDCAgeLastUsed']}",
+                                          "693959756": "@body('Parse_OthersUse')?['HowCloseToManagingImpactOfOthersUse']",
+                                          "696205160": "@body('Parse_PDC_JSON')?['PDCMethodOfUse']",
+                                          "793094988": "@body('Parse_CommonJSON')?['EverydayLivingITSPIssues']",
+                                          "796569339": "@body('Parse_CommonJSON')?['LegalITSPGoals']",
+                                          "816926137": "@body('Parse_CommonJSON')?['Past4WkDailyLivingImpacted']",
+                                          "906960320": "@body('Parse_CommonJSON')?['HaveAnySocialSupport']",
+                                          "937094657": "@body('Parse_CommonJSON')?['LegalITSPIssues']",
+                                          "964079544": "@body('Parse_CommonJSON')?['MentalHealthITSPGoals']",
+                                          "983889952": "@body('Parse_CommonJSON')?['PhysicalHealthITSPIssues']",
+                                          "1023369850": "@body('Parse_CommonJSON')?['SupportTypeBestMatchesNeedsGoals']",
+                                          "1027136184": "@body('Parse_CommonJSON')?['Past4WkHowOftenMentalHealthCausedProblems']",
+                                          "1171911480": "@{body('Parse_CommonJSON')?['AreYouAccessingOtherServices']}",
+                                          "1245531911": "@body('Parse_CommonJSON')?['Past4WkUseLedToProblemsWithFamilyFriend']",
+                                          "1252932495": "@body('Parse_PDC_JSON')?['PDCHowMuchPerOccasion']",
+                                          "1500857746": "@body('Parse_EntityJSON')?['Staff']",
+                                          "1537921105": "@body('Parse_CommonJSON')?['MedicationsNotes']",
+                                          "1575171312": "@body('Parse_CommonJSON')?['RelationshipsITSPIssues']",
+                                          "1659965317": "@body('Parse_CommonJSON')?['Past4WkPhysicalHealth']",
+                                          "1662117811": "@variables('FinalCheckList')",
+                                          "1664896857": "@{body('Parse_CommonJSON')?['ClientID']}",
+                                          "1705897813": "@body('Parse_OthersUse')?['ManagingImpactOfOthersAODUse']",
+                                          "1781839518": "@body('Parse_PDC_JSON')?['PDCDaysInLast28']",
+                                          "1900629632": "@body('Parse_CommonJSON')?['ChildProtectionDetails']",
+                                          "1966695205": "@body('Parse_CommonJSON')?['Past4WkHowOftenPhysicalHealthCausedProblems']",
+                                          "1978343750": "@{body('Parse_CommonJSON')?['AreYouCurrentlyTakingMeds']}",
+                                          "1985272862": "@body('Parse_OthersUse')?['Relationship']",
+                                          "1990121010": "@body('Parse_CommonJSON')?['DoYouFeelSafeWhereYouLive']",
+                                          "2135980665": "@{body('Parse_CommonJSON')?['SubjectToCourtOrdersOrPendingCharges']}",
+                                          "2138217676": "@body('Parse_CommonJSON')?['HousingSafetyITSPGoals']",
+                                          "-1010058312": "@body('Parse_CommonJSON')?['EverydayLivingITSPGoals']",
+                                          "-106733669": "@{body('Parse_CommonJSON')?['HaveYouServedCustodialSentenceInPast']}",
+                                          "-1255975963": "@body('Parse_OthersUse')?['Notes-HowCloseToManagingImpactOfOthersUse']",
+                                          "-1274246640": "@triggerBody()?['PartitionKey']",
+                                          "-1279867960": "@body('Parse_CommonJSON')?['ExternalReferrals']",
+                                          "-1338850306": "@variables('RiskAssessChecklist')",
+                                          "-1598100073": "@body('Parse_CommonJSON')?['AssessmentDate']",
+                                          "-1682510468": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore-Comment']",
+                                          "-1756510528": "@body('Parse_CommonJSON')?['MHRecentRiskIssues']",
+                                          "-176429660": "@body('Parse_PDC_JSON')?['PDCUnits']",
+                                          "-1818106127": "@body('Parse_CommonJSON')?['PhysicalHealthITSPGoals']",
+                                          "-1828812660": "@body('Parse_CommonJSON')?['Past4WkDifficultyFindingHousing']",
+                                          "-1885937971": "@body('Parse_CommonJSON')?['Past4WkMentalHealth']",
+                                          "-1917621831": "@body('Parse_CommonJSON')?['RelationshipsITSPGoals']",
+                                          "-1928953041": "@body('Parse_CommonJSON')?['ClientType']",
+                                          "-195469710": "@body('Parse_EntityJSON')?['SurveyName']",
+                                          "-1990476858": "@body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulenceNotes']",
+                                          "-2003271752": "@body('Parse_CommonJSON')?['MHHistoricalRiskIssues']",
+                                          "-2100089575": "@{body('Parse_PDC_JSON')?['PDCAgeFirstUsed']}",
+                                          "-2101782244": "@body('Parse_CommonJSON')?['Past4WkQualityOfLifeScore']",
+                                          "-2121142563": "@body('Parse_CommonJSON')?['SupportFromWhichOtherServices']",
+                                          "-223766317": "@body('Parse_PDC_JSON')?['PDCSubstanceOrGambling']",
+                                          "-256680379": "@{body('Parse_CommonJSON')?['Past4WkBeenHospCallAmbulence']}",
+                                          "-266549602": "@body('Parse_OthersUse')?['SetBoundariesPrioritiseWellbeing']",
+                                          "-295680140": "@{body('Parse_CommonJSON')?['NeedHelpWrkDevlpmntOrdrPayingOutstndngFines']}",
+                                          "-295770225": "@body('Parse_CommonJSON')?['Past4WkHowOftenIllegalActivities']",
+                                          "-303928978": "@variables('EngagedInOtherActivities')",
+                                          "-433441737": "@{body('Parse_CommonJSON')?['Past4WkHadCaregivingResponsibilities']}",
+                                          "-496338364": "@body('Parse_CommonJSON')?['HaveDVOrFamilySafetyConcerns']",
+                                          "-584386419": "@body('Parse_CommonJSON')?['HousingSafetyITSPIssues']",
+                                          "-657151792": "@{body('Parse_CommonJSON')?['ChildProtectionConcerns']}",
+                                          "-698153003": "@body('Parse_CommonJSON')?['MentalITSPIssues']",
+                                          "-737630564": "@body('Parse_CommonJSON')?['RiskAssessmentNotes']",
+                                          "-869373847": "@body('Parse_CommonJSON')?['Past4WkHaveYouViolenceAbusive']",
+                                          "-874695542": "@body('Parse_EntityJSON')?['Program']",
+                                          "-877159770": "@body('Parse_PDC_JSON')?['PDCGoals']",
+                                          "-931044969": "@body('Parse_CommonJSON')?['HowImportantIsChangeToYou']",
+                                          "-983231251": "@body('Parse_CommonJSON')?['WhenMentalHealthDiagnosis']"
+                                      },
+                                      "host": {
+                                          "connection": {
+                                              "name": "@parameters('$connections')['wordonlinebusiness']['connectionId']"
+                                          }
+                                      },
+                                      "method": "post",
+                                      "path": "/api/templates/getFile",
+                                      "queries": {
+                                          "drive": "b!TQEyQLwbT0-Z2YVgt8koSaI3_tjmJYpLlHwfJrThR2zyxCkjY3AESYjwhCrSdR6-",
+                                          "file": "01ZYEGLWFJCP64HR6OUBBIY5TNHGB3ULAJ",
+                                          "source": "sites/directionshealth.sharepoint.com,4032014d-1bbc-4f4f-99d9-8560b7c92849,d8fe37a2-25e6-4b8a-947c-1f26b4e1476c"
+                                      }
+                                  },
+                                  "metadata": {
+                                      "01ZYEGLWFJCP64HR6OUBBIY5TNHGB3ULAJ": "/ICT/ANSA/ANSAIATemplate_OthersUse.docx"
+                                  },
+                                  "runAfter": {
+                                      "Parse_OthersUse": [
+                                          "Succeeded"
+                                      ]
+                                  },
+                                  "type": "ApiConnection"
+                              },
+                              "Send_an_email_(V2)": {
+                                  "inputs": {
+                                      "body": {
+                                          "Attachments": [
+                                              {
+                                                  "ContentBytes": "@{base64(body('Populate_IA_OthersUse_Template'))}",
+                                                  "Name": "InitialAssessment_@{triggerBody()?['PartitionKey']}_OthersUse.docx"
+                                              }
+                                          ],
+                                          "Body": "<p>Please ensure the attached summary is uploaded to the client file.<br>\n<br>\nSLK : @{triggerBody()?['PartitionKey']} &nbsp;Client ID: @{body('Parse_CommonJSON')?['ClientID']}<br>\n<br>\nProgram: @{body('Parse_EntityJSON')?['Program']}<br>\nStatus: @{body('Parse_EntityJSON')?['Status']}<br>\n<br>\nPrincipal Drug: @{body('Parse_PDC_JSON')?['PDCSubstanceOrGambling']} <br>\n<br>\nSubmitted Date/Time: @{body('Parse_CommonJSON')?['CreatedDatetime']}</p>",
+                                          "Cc": "ansa@directionshealth.com",
+                                          "From": "directions.admin@directionshealth.com",
+                                          "Subject": "@{body('Parse_EntityJSON')?['SurveyName']} for SLK: @{triggerBody()?['PartitionKey']}",
+                                          "To": "@{body('Parse_EntityJSON')?['Staff']}@directionshealth.com"
+                                      },
+                                      "host": {
+                                          "connection": {
+                                              "name": "@parameters('$connections')['office365']['connectionId']"
+                                          }
+                                      },
+                                      "method": "post",
+                                      "path": "/v2/Mail"
+                                  },
+                                  "runAfter": {
+                                      "Populate_IA_OthersUse_Template": [
+                                          "Succeeded"
+                                      ]
+                                  },
+                                  "type": "ApiConnection"
+                              }
+                          }
+                      },
+                      "expression": {
+                          "and": [
+                              {
+                                  "equals": [
+                                      "@body('Parse_CommonJSON')?['ClientType']",
+                                      "ownuse"
+                                  ]
+                              }
+                          ]
+                      },
+                      "runAfter": {
+                          "Parse_PDC_JSON": [
+                              "Succeeded"
+                          ]
+                      },
+                      "type": "If"
+                  },
+                  "Parse_PDC_JSON": {
+                      "inputs": {
+                          "content": "@body('Parse_CommonJSON')",
+                          "schema": {
+                              "properties": {
+                                  "PDCAgeFirstUsed": {
+                                      "type": "integer"
+                                  },
+                                  "PDCAgeLastUsed": {
+                                      "type": "integer"
+                                  },
+                                  "PDCDaysInLast28": {
+                                      "type": "string"
+                                  },
+                                  "PDCGoals": {
+                                      "type": "string"
+                                  },
+                                  "PDCHowMuchPerOccasion": {
+                                      "type": "string"
+                                  },
+                                  "PDCMethodOfUse": {
+                                      "type": "string"
+                                  },
+                                  "PDCSubstanceOrGambling": {
+                                      "type": "string"
+                                  },
+                                  "PDCUnits": {
+                                      "type": "string"
+                                  }
+                              },
+                              "type": "object"
+                          }
+                      },
+                      "runAfter": {},
+                      "type": "ParseJson"
+                  }
               },
-              "SubjectToCourtOrdersOrPendingCharges-Comment": {
-                "type": "string"
+              "else": {
+                  "actions": {
+                      "Populate_a_Microsoft_Word_template": {
+                          "inputs": {
+                              "host": {
+                                  "connection": {
+                                      "name": "@parameters('$connections')['wordonlinebusiness']['connectionId']"
+                                  }
+                              },
+                              "method": "post",
+                              "path": "/api/templates/getFile",
+                              "queries": {
+                                  "drive": "b!TQEyQLwbT0-Z2YVgt8koSaI3_tjmJYpLlHwfJrThR2zyxCkjY3AESYjwhCrSdR6-",
+                                  "file": "01ZYEGLWBE2VL5OU6P2NDIDU4WBVYYGVOH",
+                                  "source": "sites/directionshealth.sharepoint.com,4032014d-1bbc-4f4f-99d9-8560b7c92849,d8fe37a2-25e6-4b8a-947c-1f26b4e1476c"
+                              }
+                          },
+                          "metadata": {
+                              "01ZYEGLWBE2VL5OU6P2NDIDU4WBVYYGVOH": "/ICT/ANSA/ANSAITSPTemplate.docx"
+                          },
+                          "runAfter": {},
+                          "type": "ApiConnection"
+                      },
+                      "Send_an_email_from_a_shared_mailbox_(V2)_2": {
+                          "inputs": {
+                              "body": {
+                                  "Attachments": [
+                                      {
+                                          "ContentBytes": "@{base64(body('Populate_a_Microsoft_Word_template'))}",
+                                          "Name": "ITSPReview.docx"
+                                      }
+                                  ],
+                                  "Body": "<p>Other Drugs table<br>\n</p>",
+                                  "Cc": "ansa@directionshealth.com",
+                                  "MailboxAddress": "directions.admin@directionshealth.com",
+                                  "Subject": "ITSP Review done; Program:@{body('Parse_EntityJSON')?['Program']}; SLK: @{triggerBody()?['PartitionKey']}",
+                                  "To": "@{body('Parse_EntityJSON')?['Staff']}@directionshealth.com"
+                              },
+                              "host": {
+                                  "connection": {
+                                      "name": "@parameters('$connections')['office365']['connectionId']"
+                                  }
+                              },
+                              "method": "post",
+                              "path": "/v2/SharedMailbox/Mail"
+                          },
+                          "runAfter": {
+                              "Populate_a_Microsoft_Word_template": [
+                                  "Succeeded"
+                              ]
+                          },
+                          "type": "ApiConnection"
+                      }
+                  }
               },
-              "SubstanceUseITSPGoals": {
-                "type": "string"
+              "expression": {
+                  "and": [
+                      {
+                          "contains": [
+                              "@triggerBody()?['RowKey']",
+                              "INAS"
+                          ]
+                      }
+                  ]
               },
-              "SubstanceUseITSPIssues": {
-                "type": "string"
+              "runAfter": {
+                  "For_each_RiskAssessChecklist": [
+                      "Succeeded"
+                  ]
               },
-              "SupportFromWhichOtherServices": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
+              "type": "If"
+          },
+          "Initialize_EngInOtherActivities_variable": {
+              "inputs": {
+                  "variables": [
+                      {
+                          "name": "EngagedInOtherActivities",
+                          "type": "array"
+                      }
+                  ]
               },
-              "SupportFromWhichOtherServices-Comment": {
-                "type": "string"
+              "runAfter": {
+                  "Initialize_OtherAddictiveBehaviours_variable": [
+                      "Succeeded"
+                  ]
               },
-              "SupportTypeBestMatchesNeedsGoals": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
+              "type": "InitializeVariable"
+          },
+          "Initialize_FinalChecklist_variable": {
+              "inputs": {
+                  "variables": [
+                      {
+                          "name": "FinalCheckList",
+                          "type": "array"
+                      }
+                  ]
               },
-              "SupportTypeBestMatchesNeedsGoals-Comment": {
-                "type": "string"
+              "runAfter": {
+                  "Initialize_OtherDrugsArray_variable": [
+                      "Succeeded"
+                  ]
               },
-              "WhenMentalHealthDiagnosis": {
-                "type": "string"
+              "type": "InitializeVariable"
+          },
+          "Initialize_OtherAddictiveBehaviours_variable": {
+              "inputs": {
+                  "variables": [
+                      {
+                          "name": "OtherAddictiveBehavioursArray",
+                          "type": "array"
+                      }
+                  ]
               },
-              "WhenMentalHealthDiagnosis-Comment": {
-                "type": "string"
+              "runAfter": {
+                  "Initialize_RiskAssessChecklist_variable": [
+                      "Succeeded"
+                  ]
               },
-              "YourCurrentHousing": {
-                "type": "string"
+              "type": "InitializeVariable"
+          },
+          "Initialize_OtherDrugsArray_variable": {
+              "inputs": {
+                  "variables": [
+                      {
+                          "name": "OtherDrugsArray",
+                          "type": "array"
+                      }
+                  ]
               },
-              "clientID": {
-                "type": "integer"
+              "runAfter": {
+                  "Parse_EntityJSON": [
+                      "Succeeded"
+                  ]
               },
-              "legalITSPIssues": {
-                "type": "string"
+              "type": "InitializeVariable"
+          },
+          "Initialize_RiskAssessChecklist_variable": {
+              "inputs": {
+                  "variables": [
+                      {
+                          "name": "RiskAssessChecklist",
+                          "type": "array"
+                      }
+                  ]
               },
-              "medicationsnotes": {
-                "type": "string"
+              "runAfter": {
+                  "Initialize_FinalChecklist_variable": [
+                      "Succeeded"
+                  ]
               },
-              "mentalITSPIssues": {
-                "type": "string"
-              }
-            },
-            "type": "object"
+              "type": "InitializeVariable"
+          },
+          "Parse_CommonJSON": {
+              "inputs": {
+                  "content": "@body('ANSA_JSFlattener_HttpTrigger_2')",
+                  "schema": {
+                      "properties": {
+                          "AreYouAccessingOtherServices": {
+                              "type": "boolean"
+                          },
+                          "AreYouCurrentlyTakingMeds": {
+                              "type": "boolean"
+                          },
+                          "AssessmentDate": {
+                              "type": "string"
+                          },
+                          "ChildProtectionConcerns": {
+                              "type": "boolean"
+                          },
+                          "ChildProtectionDetails": {
+                              "type": "string"
+                          },
+                          "ClientID": {
+                              "type": "integer"
+                          },
+                          "ClientType": {
+                              "type": "string"
+                          },
+                          "CreatedDatetime": {
+                              "type": "string"
+                          },
+                          "DoYouFeelSafeWhereYouLive": {
+                              "type": "string"
+                          },
+                          "EngagedLookingafterchildrenDays": {
+                              "type": "string"
+                          },
+                          "EngagedLookingafterchildrenFrequency": {
+                              "type": "integer"
+                          },
+                          "EngagedOthercaregivingactivitiesDays": {
+                              "type": "string"
+                          },
+                          "EngagedOthercaregivingactivitiesFrequency": {
+                              "type": "integer"
+                          },
+                          "EngagedPaidWorkDays": {
+                              "type": "string"
+                          },
+                          "EngagedPaidWorkFrequency": {
+                              "type": "integer"
+                          },
+                          "EngagedStudycollegeDays": {
+                              "type": "string"
+                          },
+                          "EngagedStudycollegeFrequency": {
+                              "type": "integer"
+                          },
+                          "EngagedVoluntaryWorkDays": {
+                              "type": "string"
+                          },
+                          "EngagedVoluntaryWorkFrequency": {
+                              "type": "integer"
+                          },
+                          "EverDiagnosedMentalHealthIssue": {
+                              "type": "boolean"
+                          },
+                          "EverydayLivingITSPGoals": {
+                              "type": "string"
+                          },
+                          "EverydayLivingITSPIssues": {
+                              "type": "string"
+                          },
+                          "ExternalReferrals": {
+                              "type": "string"
+                          },
+                          "ExternalReferrals-Comment": {
+                              "type": "string"
+                          },
+                          "FinalChecklist": {
+                              "items": {
+                                  "type": "string"
+                              },
+                              "type": "array"
+                          },
+                          "FirstName": {
+                              "type": "string"
+                          },
+                          "HaveAnySocialSupport": {
+                              "type": "string"
+                          },
+                          "HaveAnySocialSupport-Comment": {
+                              "type": "string"
+                          },
+                          "HaveDVOrFamilySafetyConcerns": {
+                              "type": "string"
+                          },
+                          "HaveDVOrFamilySafetyConcerns-Comment": {
+                              "type": "string"
+                          },
+                          "HaveYouServedCustodialSentenceInPast": {
+                              "type": "boolean"
+                          },
+                          "HaveYouServedCustodialSentenceInPast-Comment": {
+                              "type": "string"
+                          },
+                          "HealthChecklist_STAFF": {
+                              "type": "string"
+                          },
+                          "HousingSafetyITSPGoals": {
+                              "type": "string"
+                          },
+                          "HousingSafetyITSPIssues": {
+                              "type": "string"
+                          },
+                          "HowImportantIsChangeToYou": {
+                              "type": "string"
+                          },
+                          "HowImportantIsChangeToYou-Comment": {
+                              "type": "string"
+                          },
+                          "LastName": {
+                              "type": "string"
+                          },
+                          "LegalITSPGoals": {
+                              "type": "string"
+                          },
+                          "LegalITSPIssues": {
+                              "type": "string"
+                          },
+                          "MHHistoricalRiskIssues": {
+                              "type": "string"
+                          },
+                          "MHHistoricalRiskIssues-Comment": {
+                              "type": "string"
+                          },
+                          "MHRecentRiskIssues": {
+                              "type": "string"
+                          },
+                          "MHRecentRiskIssues-Comment": {
+                              "type": "string"
+                          },
+                          "MedicationsNotes": {
+                              "type": "string"
+                          },
+                          "MentalHealthITSPGoals": {
+                              "type": "string"
+                          },
+                          "MentalHealthITSPIssues": {
+                              "type": "string"
+                          },
+                          "MentalITSPIssues": {
+                              "type": "string"
+                          },
+                          "NeedHelpWrkDevlpmntOrdrPayingOutstndngFines": {
+                              "type": "boolean"
+                          },
+                          "Past4WkBeenArrested": {
+                              "type": "boolean"
+                          },
+                          "Past4WkBeenHospCallAmbulence": {
+                              "type": "boolean"
+                          },
+                          "Past4WkBeenHospCallAmbulenceNotes": {
+                              "type": "string"
+                          },
+                          "Past4WkDailyLivingImpacted": {
+                              "type": "string"
+                          },
+                          "Past4WkDifficultyFindingHousing": {
+                              "type": "string"
+                          },
+                          "Past4WkHadCaregivingResponsibilities": {
+                              "type": "boolean"
+                          },
+                          "Past4WkHaveYouViolenceAbusive": {
+                              "type": "string"
+                          },
+                          "Past4WkHaveYouViolenceAbusive-Comment": {
+                              "type": "string"
+                          },
+                          "Past4WkHowOftenIllegalActivities": {
+                              "type": "string"
+                          },
+                          "Past4WkHowOftenMentalHealthCausedProblems": {
+                              "type": "string"
+                          },
+                          "Past4WkHowOftenPhysicalHealthCausedProblems": {
+                              "type": "string"
+                          },
+                          "Past4WkMentalHealth": {
+                              "type": "string"
+                          },
+                          "Past4WkPhysicalHealth": {
+                              "type": "string"
+                          },
+                          "Past4WkQualityOfLifeScore": {
+                              "type": "string"
+                          },
+                          "Past4WkQualityOfLifeScore-Comment": {
+                              "type": "string"
+                          },
+                          "Past4WkUseLedToProblemsWithFamilyFriend": {
+                              "type": "string"
+                          },
+                          "PhysicalHealthITSPGoals": {
+                              "type": "string"
+                          },
+                          "PhysicalHealthITSPIssues": {
+                              "type": "string"
+                          },
+                          "PrimaryCaregiver": {
+                              "type": "string"
+                          },
+                          "PrimaryCaregiver-Comment": {
+                              "type": "string"
+                          },
+                          "RelationshipsITSPGoals": {
+                              "type": "string"
+                          },
+                          "RelationshipsITSPIssues": {
+                              "type": "string"
+                          },
+                          "RiskAssessmentChecklist": {
+                              "items": {
+                                  "type": "string"
+                              },
+                              "type": "array"
+                          },
+                          "RiskAssessmentNotes": {
+                              "type": "string"
+                          },
+                          "SubjectToCourtOrdersOrPendingCharges": {
+                              "type": "boolean"
+                          },
+                          "SubjectToCourtOrdersOrPendingCharges-Comment": {
+                              "type": "string"
+                          },
+                          "SubstanceUseITSPGoals": {
+                              "type": "string"
+                          },
+                          "SubstanceUseITSPIssues": {
+                              "type": "string"
+                          },
+                          "SupportFromWhichOtherServices": {
+                              "type": "string"
+                          },
+                          "SupportFromWhichOtherServices-Comment": {
+                              "type": "string"
+                          },
+                          "SupportTypeBestMatchesNeedsGoals": {
+                              "type": "string"
+                          },
+                          "SupportTypeBestMatchesNeedsGoals-Comment": {
+                              "type": "string"
+                          },
+                          "WhenMentalHealthDiagnosis": {
+                              "type": "string"
+                          },
+                          "WhenMentalHealthDiagnosis-Comment": {
+                              "type": "string"
+                          },
+                          "YourCurrentHousing": {
+                              "type": "string"
+                          }
+                      },
+                      "type": "object"
+                  }
+              },
+              "runAfter": {
+                  "ANSA_JSFlattener_HttpTrigger_2": [
+                      "Succeeded"
+                  ]
+              },
+              "type": "ParseJson"
+          },
+          "Parse_EntityJSON": {
+              "inputs": {
+                  "content": "@triggerBody()?['EntityJSON']",
+                  "schema": {
+                      "properties": {
+                          "Program": {
+                              "type": "string"
+                          },
+                          "Staff": {
+                              "type": "string"
+                          },
+                          "Status": {
+                              "type": "string"
+                          },
+                          "SurveyData": {
+                              "type": "string"
+                          },
+                          "SurveyID": {
+                              "type": "string"
+                          },
+                          "SurveyName": {
+                              "type": "string"
+                          }
+                      },
+                      "type": "object"
+                  }
+              },
+              "runAfter": {},
+              "type": "ParseJson"
+          },
+          "Response": {
+              "inputs": {
+                  "body": "ANSAEmailer",
+                  "statusCode": 200
+              },
+              "kind": "Http",
+              "runAfter": {
+                  "InitialAssessment_Or_ITSPReview": [
+                      "Succeeded"
+                  ]
+              },
+              "type": "Response"
           }
-        },
-        "runAfter": {
-          "ClientType_Check": ["Succeeded"]
-        },
-        "type": "ParseJson"
       },
-      "Parse_CommonJSON2": {
-        "inputs": {
-          "content": "@body('Parse_EntityJSON')?['SurveyData']",
-          "schema": {
-            "properties": {
-              "DoYouWishToStop": {
-                "type": "string"
-              },
-              "DoesMissingFixMakeAnxious": {
-                "type": "string"
-              },
-              "HaveYouEverInjected": {
-                "type": "boolean"
-              },
-              "HaveYouEverSharedEquipment": {
-                "type": "boolean"
-              },
-              "HowDifficultToStopOrGoWithout": {
-                "type": "string"
-              },
-              "HowLongSinceLastInjected": {
-                "type": "string"
-              },
-              "HowMuchDoYouWorryAboutAODUse": {
-                "type": "string"
-              },
-              "IsAODUseOutOfControl": {
-                "type": "string"
-              },
-              "Past4WkAodRisks": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "Past4WkAodRisks-Comment": {
-                "type": "string"
-              },
-              "Past4WkNumInjectingDays": {
-                "type": "string"
-              },
-              "SDS_Score": {
-                "type": "integer"
-              },
-              "notesodc": {
-                "type": "string"
-              }
-            },
-            "type": "object"
+      "contentVersion": "1.0.0.0",
+      "outputs": {},
+      "parameters": {
+          "$connections": {
+              "defaultValue": {},
+              "type": "Object"
           }
-        },
-        "runAfter": {
-          "Parse_CommonJSON": ["Succeeded"]
-        },
-        "type": "ParseJson"
       },
-      "Parse_EntityJSON": {
-        "inputs": {
-          "content": "@triggerBody()?['EntityJSON']",
-          "schema": {
-            "properties": {
-              "Program": {
-                "type": "string"
+      "triggers": {
+          "manual": {
+              "inputs": {
+                  "method": "POST",
+                  "schema": {
+                      "properties": {
+                          "Entity": {
+                              "type": "string"
+                          },
+                          "EntityJSON": {
+                              "type": "object"
+                          },
+                          "PartitionKey": {
+                              "type": "string"
+                          },
+                          "RowKey": {
+                              "type": "string"
+                          }
+                      },
+                      "type": "object"
+                  }
               },
-              "Staff": {
-                "type": "string"
-              },
-              "Status": {
-                "type": "string"
-              },
-              "SurveyData": {
-                "type": "string"
-              },
-              "SurveyID": {
-                "type": "string"
-              },
-              "SurveyName": {
-                "type": "string"
-              }
-            },
-            "type": "object"
+              "kind": "Http",
+              "type": "Request"
           }
-        },
-        "runAfter": {},
-        "type": "ParseJson"
-      },
-      "Parse_JSCode_JSON": {
-        "inputs": {
-          "content": "@outputs('Execute_JavaScript_Code')?['body']",
-          "schema": {
-            "properties": {
-              "RiskAssessmentCheck": {
-                "type": "string"
-              },
-              "sortedTimeSpent": {
-                "type": "string"
-              }
-            },
-            "type": "object"
-          }
-        },
-        "runAfter": {
-          "Execute_JavaScript_Code_2": ["Succeeded"]
-        },
-        "type": "ParseJson"
-      },
-      "Parse_JsCode-2_JSON": {
-        "inputs": {
-          "content": "@outputs('Execute_JavaScript_Code_2')?['body']",
-          "schema": {
-            "properties": {
-              "FinalChecklist": {
-                "type": "string"
-              },
-              "MHHistoricalRiskIssues": {
-                "type": "string"
-              },
-              "MHRecentRiskIssues": {
-                "type": "string"
-              },
-              "OtherAddictiveBehaviours": {
-                "type": "string"
-              },
-              "Past4WkEngagedInOtheractivities": {
-                "type": "string"
-              },
-              "PrimaryCaregiver": {
-                "type": "string"
-              },
-              "SupportTypeBestMatchesNeedsGoals": {
-                "type": "string"
-              }
-            },
-            "type": "object"
-          }
-        },
-        "runAfter": {
-          "Parse_JSCode_JSON": ["Succeeded"]
-        },
-        "type": "ParseJson"
-      },
-      "Response": {
-        "inputs": {
-          "body": "ANSAEmailer",
-          "statusCode": 200
-        },
-        "kind": "Http",
-        "runAfter": {
-          "InitialAssessment_Or_ITSPReview": ["Succeeded"]
-        },
-        "type": "Response"
       }
-    },
-    "contentVersion": "1.0.0.0",
-    "outputs": {},
-    "parameters": {
-      "$connections": {
-        "defaultValue": {},
-        "type": "Object"
-      }
-    },
-    "triggers": {
-      "manual": {
-        "inputs": {
-          "method": "POST",
-          "schema": {
-            "properties": {
-              "Entity": {
-                "type": "string"
-              },
-              "EntityJSON": {
-                "type": "object"
-              },
-              "PartitionKey": {
-                "type": "string"
-              },
-              "RowKey": {
-                "type": "string"
-              }
-            },
-            "type": "object"
-          }
-        },
-        "kind": "Http",
-        "type": "Request"
-      }
-    }
   },
   "parameters": {
-    "$connections": {
-      "value": {
-        "office365": {
-          "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/office365-4",
-          "connectionName": "office365-4",
-          "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/office365"
-        },
-        "wordonlinebusiness": {
-          "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/wordonlinebusiness-1",
-          "connectionName": "wordonlinebusiness-1",
-          "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/wordonlinebusiness"
-        }
+      "$connections": {
+          "value": {
+              "office365": {
+                  "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/office365-4",
+                  "connectionName": "office365-4",
+                  "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/office365"
+              },
+              "wordonlinebusiness": {
+                  "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/wordonlinebusiness-1",
+                  "connectionName": "wordonlinebusiness-1",
+                  "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/wordonlinebusiness"
+              }
+          }
       }
-    }
   }
 }

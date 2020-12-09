@@ -22,6 +22,9 @@ export const mutations = {
   setClientSLK(state, payload) {
     state.currentClientSLK = payload;
   },
+  setStaff(state, payload) {
+    state.currentStaff = payload;
+  },
   setSurveyName(state, payload) {
     state.surveyName = payload;
   },
