@@ -19,6 +19,7 @@
             no current SLK
           </p>
         </div> -->
+
         <div v-if="getCurrenClientSLK !== ''">
           <div
             class="py-6"
@@ -162,6 +163,7 @@ export default {
         this.setClientLookupIDData(data);
         this.unsetClientData();
         sessionStorage.removeItem("ClientData");
+        this.showSurveyLaunchButtons();
       }
     },
     showSurveyLaunchButtons() {

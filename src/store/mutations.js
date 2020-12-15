@@ -34,6 +34,7 @@ export const mutations = {
   },
   clearClientState(state) {
     state.currentClientSLK = "";
+    state.currentSurvey = {};
     state.prefillIndex = 0;
     state.clientData = [];
     //surveyName: "",// this in the route url this.$route.params.type

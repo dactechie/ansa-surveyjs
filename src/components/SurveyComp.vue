@@ -33,7 +33,7 @@ import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
 // eslint-disable-next-line
 const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
-SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp, false);
+SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp);
 //const fakeData = FakeEpisodes[0];
 
 export default {
@@ -92,6 +92,15 @@ export default {
         console.error("Progarm not set . Unable to ssave");
         return;
       }
+      let sdsQuestions = this.survey
+        .getAllQuestions()
+        .filter(e => e.name.startsWith("SDS"));
+      if (sdsQuestions && sdsQuestions.length > 2) {
+        const intList = sdsQuestions.map(e => parseInt(e.value));
+        const sds_score = sumUp(intList);
+        console.log("SAVE SURVEY -------  SDS SCORE .............", sds_score);
+        this.survey.data["SDS_Score"] = sds_score;
+      }
 
       console.log("staff ", this.survey.data["Staff"]);
 
@@ -109,20 +118,22 @@ export default {
     },
     getCurrentSurveyData(me) {
       let prefillSurvey = me.getCurrentSurvey();
-      if (JSON.stringify(prefillSurvey) !== JSON.stringify({})) {
+      if (JSON.stringify(prefillSurvey) !== "{}") {
         // from vuex, so nothing to do
         return prefillSurvey;
+      }
+      const cd = sessionStorage.getItem("ClientData");
+      if (!cd) {
+        console.log("no client data");
+        return undefined;
       }
       // page was reloaded , vuex lost its state.
       const gapInDaysSinceLastSurvey = parseInt(
         sessionStorage.getItem("GapInDaysSinceLastSurvey")
       );
-      const cd = sessionStorage.getItem("ClientData");
-      if (!cd || !gapInDaysSinceLastSurvey) {
-        console.error(
-          "no data to continue gp: ${gapInDaysSinceLastSurvey}, data:",
-          cd
-        );
+
+      if (!gapInDaysSinceLastSurvey) {
+        console.error(`no data to continue gp: undefined, data:`, cd);
         return;
       }
       const clientData = JSON.parse(cd);
@@ -161,6 +172,9 @@ export default {
 
     const me = this;
     this.survey.onLoadedSurveyFromService.add((sender, options) => {
+      // for nav and survey title to work
+      me.setSurveyName(me.survey.getSurvey().title);
+
       console.log("sender ", sender);
       console.log("options", options);
 
@@ -183,13 +197,9 @@ export default {
       if (prefillSurvey) {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
-
         sender.getAllQuestions().forEach(e => {
           me.survey.setValue(e.name, prefillSurveyData[e.name]);
         });
-
-        // for nav to work
-        me.setSurveyName(me.survey.getSurvey().title);
 
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
@@ -223,6 +233,8 @@ export default {
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
 
+      //let sds = getQuestionByName("SDSHowDifficultToStopOrGoWithout");
+      // if (getQuestionByName("SDSHowDifficultToStopOrGoWithout"))
       me.saveSurvey("Complete");
 
       // remove the button to save incomplete survey

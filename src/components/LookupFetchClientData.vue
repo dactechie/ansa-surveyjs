@@ -207,11 +207,12 @@ export default {
   },
   methods: {
     ...mapActions(["GET_CLIENT_DATA_BYSLK", "GET_CLIENT_DATA_BYID"]),
-    ...mapMutations(["setClientSLK"]),
+    ...mapMutations(["setClientSLK", "clearClientState"]),
 
     async fetchClientDataByLookupValues() {
       let result = {};
       sessionStorage.removeItem("ClientData");
+      this.clearClientState();
 
       if (this.picked_type === "by_name" || this.idType === "slk") {
         // doing this allows us to show the "Create New Survey"

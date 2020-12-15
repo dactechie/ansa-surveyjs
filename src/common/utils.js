@@ -68,8 +68,7 @@ function gapInDays(yyyy_mm_dd) {
   return (currentTime - passedInTime) / MILLIS_IN_DAY;
 }
 
-const reducer = (accumulator, currentValue) =>
-  accumulator + parseInt(currentValue);
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 function sumUp(list) {
   const result = list.reduce(reducer);
