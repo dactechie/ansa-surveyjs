@@ -20,10 +20,15 @@ export default {
     return await getClientDataByClientID(id, idType, userMode);
   },
 
-  async createOrUpdateData(SLK, rowData, userMode) {
+  async createData(SLK, rowData, keyDate, userMode) {
     const { SurveyName, Program } = rowData;
-    rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[SurveyName], Program);
+    rowData[ROW_KEY] = generateRowKey(
+      SURVEY_TYPE_MAP[SurveyName],
+      Program,
+      keyDate
+    );
     rowData[PARTITION_KEY] = SLK;
+    console.log(` in create data ${SLK}, ${rowData[ROW_KEY]}`);
 
     // if (rowData["SurveyData"]["DB_ID"]) {
     //   rowData["ClientID"] = rowData["SurveyData"]["clientID"];
@@ -31,6 +36,13 @@ export default {
     //   delete rowData["SurveyData"]["clientID"];
     //   delete rowData["SurveyData"]["idType"];
     // }
+    return await updateClientData(rowData, userMode);
+  },
+  async updateData(rowData, userMode) {
+    //const { SurveyName, Program } = rowData;
+    //rowData[ROW_KEY] = generateRowKey(SURVEY_TYPE_MAP[SurveyName], Program);
+    //rowData[PARTITION_KEY] = SLK;
+
     return await updateClientData(rowData, userMode);
   }
 };

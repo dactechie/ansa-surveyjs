@@ -1,3 +1,5 @@
+import { MILLIS_IN_DAY } from "@/common/constants";
+
 function checkAssign(objectToAssign, data, errors) {
   // could use reduce , but we're accuumulating in two objects here.
   for (const x of Object.keys(data)) {
@@ -56,13 +58,23 @@ function getCurrentYearMonthDayString(separator = "") {
 // if negative , newer, can use
 
 function gapInDays(yyyy_mm_dd) {
-  const [y, m, d] = yyyy_mm_dd.split("-");
+  //passed-in-date
 
+  const [y, m, d] = yyyy_mm_dd.split("-");
   const passedInTime = new Date(y, m - 1, d).getTime();
 
   const currentTime = new Date().getTime();
 
-  return (currentTime - passedInTime) / (24 * 60 * 60 * 1000);
+  return (currentTime - passedInTime) / MILLIS_IN_DAY;
+}
+
+const reducer = (accumulator, currentValue) =>
+  accumulator + parseInt(currentValue);
+
+function sumUp(list) {
+  const result = list.reduce(reducer);
+  console.log("SSDS SCORE ", result);
+  return result;
 }
 
 export {
@@ -72,5 +84,6 @@ export {
   getCurrentYearMonthDayString,
   getCurrentTimestamp,
   getFriendlyTimestampString,
-  gapInDays
+  gapInDays,
+  sumUp
 };

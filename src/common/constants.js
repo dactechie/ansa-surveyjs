@@ -16,6 +16,12 @@ export const SLK_LENGTH = 14;
 export const PREFILL_EXPIRY_DAYS =
   process.env.VUE_APP_PREFILL_EXPIRY_DAYS || 365;
 
+export const INCOMPLETE_CONTINUATION_EXPIRY_DAYS = 
+  process.env.INCOMPLETE_CONTINUATION_EXPIRY_DAYS || 21;
+
+export const MILLIS_IN_DAY = 86_400_000; // 24 * 60 * 60 * 1000
+export const MILLIS_IN_YEAR = 31_536_000_000; // 365 * MILLIS_IN_DAY
+
 export const DB_IDTYPE_CCARE = "CCARE";
 //export const DB_IDTYPE_TED = "TED";
 

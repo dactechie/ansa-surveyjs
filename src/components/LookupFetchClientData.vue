@@ -169,7 +169,7 @@ import { getCurrentYearMonthDay } from "@/common/utils";
 import { SLK_LENGTH, MODE_EMPTY_CLIENT_DATA } from "@/common/constants";
 export default {
   name: "LookupFetchClientData",
-  emits: ["survey-data-received", "mode-updated"],
+  emits: ["client-data-received", "mode-updated"],
   props: ["mode"],
   data() {
     const { year, month, day } = getCurrentYearMonthDay();
@@ -225,9 +225,9 @@ export default {
 
       if ((await result) && result.length > 0) {
         console.log(" vale ", result);
-        console.log("setting slk in store", result[0]["PartitionKey"]);
-        this.setClientSLK(result[0]["PartitionKey"]);
-        this.$emit("survey-data-received", result);
+        //console.log("setting slk in store", result[0]["PartitionKey"]);
+        //this.setClientSLK(result[0]["PartitionKey"]); // this happens in the capture of this emit Home-> updateClientData
+        this.$emit("client-data-received");
       } else {
         if (this.slk.length === SLK_LENGTH) {
           // get action may set it to ""

@@ -23,8 +23,8 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-import { getCurrentYearMonthDayString } from "@/common/utils"; //gapInDays
-// import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
+import { getCurrentYearMonthDayString, sumUp } from "@/common/utils"; //gapInDays
+import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -33,7 +33,7 @@ import { getCurrentYearMonthDayString } from "@/common/utils"; //gapInDays
 // eslint-disable-next-line
 const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
-
+SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp, false);
 //const fakeData = FakeEpisodes[0];
 
 export default {
@@ -74,6 +74,7 @@ export default {
       "setSurveyName"
     ]),
     ...mapGetters([
+      "getCurrentSurvey",
       "getCurrentSurveyName",
       "getClientLookupIDs"
       // "totalTillNow"
@@ -83,9 +84,7 @@ export default {
       console.log("survey data", this.survey.data);
       this.survey.data["Status"] = "Incomplete";
 
-      console.log("staff ", this.survey.data["Staff"]);
-      this.setStaff(this.survey.data["Staff"]);
-
+      //console.log("staff ", this.survey.data["Staff"]);
       this.saveSurvey("Incomplete");
     },
     saveSurvey(status) {
@@ -107,12 +106,59 @@ export default {
         status: status
       });
       this.dirtyData = false;
+    },
+    getCurrentSurveyData(me) {
+      let prefillSurvey = me.getCurrentSurvey();
+      if (JSON.stringify(prefillSurvey) !== JSON.stringify({})) {
+        // from vuex, so nothing to do
+        return prefillSurvey;
+      }
+      // page was reloaded , vuex lost its state.
+      const gapInDaysSinceLastSurvey = parseInt(
+        sessionStorage.getItem("GapInDaysSinceLastSurvey")
+      );
+      const cd = sessionStorage.getItem("ClientData");
+      if (!cd || !gapInDaysSinceLastSurvey) {
+        console.error(
+          "no data to continue gp: ${gapInDaysSinceLastSurvey}, data:",
+          cd
+        );
+        return;
+      }
+      const clientData = JSON.parse(cd);
+      this.setClientSLK(clientData["PartitionKey"]); // for when we save data to server
+      const lastSurveyDone = clientData[clientData.length - 1];
+      const lastSurveyStatus = lastSurveyDone["Status"];
+
+      if (lastSurveyStatus === "Complete") {
+        if (gapInDaysSinceLastSurvey <= PREFILL_EXPIRY_DAYS) {
+          lastSurveyDone["SurveyData"][
+            "AssessmentDate"
+          ] = getCurrentYearMonthDayString("-");
+          me.setCurrentSurvey(lastSurveyDone);
+        }
+        // nothign to prefill.. start fresh
+      } else if (lastSurveyStatus === "Incomplete") {
+        if (gapInDaysSinceLastSurvey > 21) {
+          // even if not continuing , prefill from last survey compelte/incomplete.
+          lastSurveyDone["SurveyData"][
+            "AssessmentDate"
+          ] = getCurrentYearMonthDayString("-");
+        }
+        // prefilling with expired data ?
+        me.setCurrentSurvey(lastSurveyDone);
+      } else {
+        console.error("unknown state for last survey ", lastSurveyStatus);
+      }
+
+      return me.getCurrentSurvey();
     }
   },
   created() {
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
+
     const me = this;
     this.survey.onLoadedSurveyFromService.add((sender, options) => {
       console.log("sender ", sender);
@@ -127,91 +173,30 @@ export default {
           me.survey.setValue(k, v);
         }
       }
+
       // this may be overridden if there is an incomplete survey
-      me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
+      //me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
 
       //if there is data to prefill for this type of survey, do that.
-      let clientData = me.$store.state["clientData"];
-      if (clientData.length === 0) {
-        console.warn("Nothing in state, loading from sessionStorage");
-        let ssClient = sessionStorage.getItem("ClientData");
+      let prefillSurvey = me.getCurrentSurveyData(me);
 
-        if (!ssClient) {
-          //can't prefill
-          // for Nav to work
-          me.setCurrentSurvey(me.survey);
-          return;
-        } else {
-          clientData = JSON.parse(ssClient);
-        }
-      }
-      if (!this.$store.state.currentClientSLK) {
-        if (!clientData || clientData.length === 0) {
-          //no SLK found giving up
-          console.warn("SLK not found, giving up...");
-          me.$router.push("/");
-          return;
-        }
-        console.log("setting slk.....");
-        me.setClientSLK(clientData[0]["PartitionKey"]);
-      }
-      console.log(
-        "Current client SLK >>>>>>> ",
-        this.$store.state.currentClientSLK
-      );
-      //in case prefill survey not found ,we still want ..
-      me.setCurrentSurvey(me.survey); // for Nav to work
+      if (prefillSurvey) {
+        console.log("Last survey that was found in history ", prefillSurvey);
+        let prefillSurveyData = prefillSurvey["SurveyData"];
 
-      // for prefill, get the last survey done
-      let foundSurvey = clientData[clientData.length - 1];
-
-      if (foundSurvey) {
-        // if (foundSurvey["Status"] !== "Complete") {
-        //   // Continuing partially completed assessment
-        //   // do you want to keep the original assessment date ?
-        //   me.modalContent =
-        //     "do you want to keep the original assessment date ?";
-        //   me.showModal = true;
-        // } else {
-
-        // }
-        console.log("Last survey that was found in history ", foundSurvey);
-        let foundSurveyData = foundSurvey["SurveyData"];
-
-        // const gapDays = gapInDays(foundSurveyData["AssessmentDate"]);
-        // console.log(` Age of lat survey ${Math.round(gapDays)} days`);
-        // if (gapDays > PREFILL_EXPIRY_DAYS) {
-        //   // unlikely to come here as Home.vue only shows the correct buttons
-        //   alert(
-        //     `Last Survey is too old (by ${Math.round(
-        //       gapDays
-        //     )} days) from which to prefill. Past data is considered stale and will not be loaded`
-        //   );
-        // } else {
-        // if Continuing partially completed assessment, keep the original date,
-        // otherwise override the completed survey's date with today.
-        if (foundSurvey["Status"] === "Complete") {
-          foundSurveyData["AssessmentDate"] = getCurrentYearMonthDayString("-");
-        }
-        // important that instead of doing this :
-        //        // me.survey.data = {
-        //   ...foundSurvey["SurveyData"],
-        // we do this instead :
         sender.getAllQuestions().forEach(e => {
-          me.survey.setValue(e.name, foundSurveyData[e.name]);
+          me.survey.setValue(e.name, prefillSurveyData[e.name]);
         });
+
+        // for nav to work
+        me.setSurveyName(me.survey.getSurvey().title);
+
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
-        me.survey.setValue("Program", foundSurvey["Program"]);
-        me.survey.setValue("Staff", foundSurvey["Staff"]);
+        me.survey.setValue("Program", prefillSurvey["Program"]);
+        me.survey.setValue("Staff", prefillSurvey["Staff"]);
+        me.setCurrentSurvey(me.survey);
         // }
-      }
-      if (this.getCurrentSurveyName() === "") {
-        // Reload page + if this client had no surveys done with this surveyID
-        console.warn(
-          "Unable to get survey name, setting it from the SuvrveyJS title"
-        );
-        me.setSurveyName(me.survey.title);
       }
     });
 
@@ -258,21 +243,6 @@ export default {
 
     // {
     //   surveyId: "9fe4d164-8c6c-4b0a-ac60-aabf803413b7"
-    // });
-
-    // this.survey.onLoadedSurveyFromService.add((sender, options) => {
-    //   this.survey.onCurrentPageChanged.add(function(surveyModel, pages) {
-    //     //page two processing
-    //     // ..  ().
-    //     //
-    //         if (me.clientSideDirtyData) {
-    //             console.log(`old data  ${me.currentSurvey}`);
-    //             sessionStorage.setItem('CurrentSurvey', JSON.stringify(this.survey.data));
-    //             console.log(`new data  ${me.currentSurvey}`);
-    //             me.clientSideDirtyData = false;
-    //         }
-    //         console.log(`old index ${pages.oldCurrentPage}  newIndex ${pages.newCurrentPage}`);
-    //     });
     // });
   },
   mounted() {

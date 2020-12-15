@@ -51,8 +51,8 @@ export default {
     try {
       let dbObj = {};
       const data = {};
-      // Meta Keys are common to all surveys.
-      // before uploading, unflatten the survey data and push it into "SurveyData" string
+      // Meta Keys are common to all surveys. they are the columns in the backend database
+      // before uploading, extract these values out of the surveyData to store them as individual fields for ease of lookup/reporting
       Object.entries(surveyData).forEach(([key, value]) => {
         if (DB_META_KEYS.indexOf(key) >= 0) dbObj[key] = value;
         else data[key] = value;
@@ -62,6 +62,7 @@ export default {
       if (!("Timestamp" in data)) {
         data["CreatedDatetime"] = getCurrentTimestamp();
       } else {
+        console.log("Pre save timestamp: ", data["TimeStamp"]);
         // data update (Put):
         // no need to try and override the Timestamp that was drawn from the server
         delete data["Timestamp"];
@@ -74,11 +75,22 @@ export default {
         SurveyName: state.surveyName,
         IsActive: 1
       };
-      const response = await SurveyService.createOrUpdateData(
-        SLK,
-        dbObj,
-        state.applicationMode
-      );
+      let response = {};
+      if (status === "Incomplete") {
+        response = await SurveyService.updateData(
+          //use the orginal row key which has the Created date.   (no separate rows)
+          dbObj, //partition key from db-meta-keys
+          state.applicationMode // if admin, can override in Completed survey, creates a new entry and makes the old one inactive.
+        );
+      } else {
+        response = await SurveyService.createData(
+          // may be a paritial save
+          SLK, //partition key
+          dbObj,
+          surveyData["AssessmentDate"].replaceAll("-", ""),
+          state.applicationMode // if admin, can override in Completed survey, creates a new entry and makes the old one inactive.
+        );
+      }
       console.log(response);
     } catch (error) {
       console.log("error ", error);
