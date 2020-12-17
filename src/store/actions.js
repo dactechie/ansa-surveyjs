@@ -35,7 +35,7 @@ export default {
         idType,
         state.applicationMode
       );
-      if (result && result.length > 0) {
+      if ((await result) && result.length > 0) {
         commit("setClientData", await result);
         commit("setClientSLK", await result[0][PARTITION_KEY]);
       }

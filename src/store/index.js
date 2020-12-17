@@ -19,6 +19,7 @@ export default new Vuex.Store({
   state: {
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
     currentSurvey: {},
+    currentSurveyData: {},
     sideBarOpen: false,
     // shouldPrefill: true,
     surveyNameIDList: [],
@@ -79,11 +80,14 @@ export default new Vuex.Store({
     getCurrentSurveyName: state => {
       return state.surveyName;
     },
-    getCurrenClientSLK: state => {
+    getCurrentClientSLK: state => {
       return state.currentClientSLK;
     },
     getCurrentSurvey: state => {
       return state.currentSurvey;
+    },
+    getCurrentSurveyData: state => {
+      return state.currentSurveyData;
     }
     // getSurveyIDForName: (state, surveyName) => {
     //   console.log("getting id for ", surveyName);

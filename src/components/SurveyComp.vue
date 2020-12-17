@@ -24,7 +24,10 @@
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 import { getCurrentYearMonthDayString, sumUp } from "@/common/utils"; //gapInDays
-import { PREFILL_EXPIRY_DAYS } from "@/common/constants";
+import {
+  PREFILL_EXPIRY_DAYS,
+  INCOMPLETE_CONTINUATION_EXPIRY_DAYS
+} from "@/common/constants";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -65,7 +68,7 @@ export default {
   methods: {
     ...mapActions(["ADD_SURVEY_DATASERVER", "UPDATE_SURVEY_DATASERVER"]),
     ...mapMutations([
-      "clearClientState",
+      "clearState",
       "setCurrentSurvey",
       "setCurrentPageTitle",
       "setClientSLK",
@@ -74,6 +77,7 @@ export default {
       "setSurveyName"
     ]),
     ...mapGetters([
+      "getCurrentSurveyData",
       "getCurrentSurvey",
       "getCurrentSurveyName",
       "getClientLookupIDs"
@@ -83,8 +87,6 @@ export default {
       // if the ROW-Key is not set  (program)
       console.log("survey data", this.survey.data);
       this.survey.data["Status"] = "Incomplete";
-
-      //console.log("staff ", this.survey.data["Staff"]);
       this.saveSurvey("Incomplete");
     },
     saveSurvey(status) {
@@ -99,11 +101,9 @@ export default {
         const intList = sdsQuestions.map(e => parseInt(e.value));
         const sds_score = sumUp(intList);
         console.log("SAVE SURVEY -------  SDS SCORE .............", sds_score);
-        this.survey.data["SDS_Score"] = sds_score;
+        this.survey.setValue("SDS_Score", sds_score);
       }
-
-      console.log("staff ", this.survey.data["Staff"]);
-
+      // for the thank you page.
       this.setStaff(this.survey.data["Staff"]);
 
       //this.survey.data["SurveyID"] = this.$route.params.surveyid;
@@ -116,26 +116,27 @@ export default {
       });
       this.dirtyData = false;
     },
-    getCurrentSurveyData(me) {
-      let prefillSurvey = me.getCurrentSurvey();
-      if (JSON.stringify(prefillSurvey) !== "{}") {
-        // from vuex, so nothing to do
+    getDataForSurvey(me) {
+      let prefillSurvey = me.getCurrentSurveyData();
+      if (prefillSurvey) {
         return prefillSurvey;
       }
+
       const cd = sessionStorage.getItem("ClientData");
       if (!cd) {
         console.log("no client data");
         return undefined;
       }
       // page was reloaded , vuex lost its state.
-      const gapInDaysSinceLastSurvey = parseInt(
-        sessionStorage.getItem("GapInDaysSinceLastSurvey")
+      let gapInDaysSinceLastSurvey = sessionStorage.getItem(
+        "GapInDaysSinceLastSurvey"
       );
 
       if (!gapInDaysSinceLastSurvey) {
         console.error(`no data to continue gp: undefined, data:`, cd);
-        return;
+        return undefined;
       }
+      gapInDaysSinceLastSurvey = parseInt(gapInDaysSinceLastSurvey);
       const clientData = JSON.parse(cd);
       this.setClientSLK(clientData["PartitionKey"]); // for when we save data to server
       const lastSurveyDone = clientData[clientData.length - 1];
@@ -146,23 +147,26 @@ export default {
           lastSurveyDone["SurveyData"][
             "AssessmentDate"
           ] = getCurrentYearMonthDayString("-");
-          me.setCurrentSurvey(lastSurveyDone);
+          me.setCurrentSurveyData(lastSurveyDone);
         }
         // nothign to prefill.. start fresh
       } else if (lastSurveyStatus === "Incomplete") {
-        if (gapInDaysSinceLastSurvey > 21) {
+        if (gapInDaysSinceLastSurvey > INCOMPLETE_CONTINUATION_EXPIRY_DAYS) {
           // even if not continuing , prefill from last survey compelte/incomplete.
           lastSurveyDone["SurveyData"][
             "AssessmentDate"
           ] = getCurrentYearMonthDayString("-");
+          me.setCurrentSurveyData(lastSurveyDone);
         }
-        // prefilling with expired data ?
-        me.setCurrentSurvey(lastSurveyDone);
+        console.log(
+          "INCOMPLETE_CONTINUATION_EXPIRY_DAYS>>> ",
+          INCOMPLETE_CONTINUATION_EXPIRY_DAYS
+        );
+        // DON't prefill with expired data ?
       } else {
         console.error("unknown state for last survey ", lastSurveyStatus);
       }
-
-      return me.getCurrentSurvey();
+      return me.getCurrentSurveyData();
     }
   },
   created() {
@@ -188,26 +192,23 @@ export default {
         }
       }
 
-      // this may be overridden if there is an incomplete survey
-      //me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
-
       //if there is data to prefill for this type of survey, do that.
-      let prefillSurvey = me.getCurrentSurveyData(me);
+      let prefillSurvey = me.getDataForSurvey(me);
 
-      if (prefillSurvey) {
+      if (prefillSurvey["PartitionKey"] !== undefined) {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
         sender.getAllQuestions().forEach(e => {
           me.survey.setValue(e.name, prefillSurveyData[e.name]);
         });
-
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
         me.survey.setValue("Program", prefillSurvey["Program"]);
         me.survey.setValue("Staff", prefillSurvey["Staff"]);
-        me.setCurrentSurvey(me.survey);
-        // }
+      } else {
+        me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
       }
+      me.setCurrentSurvey(me.survey); // for the nav to work
     });
 
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
@@ -232,11 +233,7 @@ export default {
     });
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
-
-      //let sds = getQuestionByName("SDSHowDifficultToStopOrGoWithout");
-      // if (getQuestionByName("SDSHowDifficultToStopOrGoWithout"))
       me.saveSurvey("Complete");
-
       // remove the button to save incomplete survey
     });
     // TODO : build search index from pages
@@ -262,7 +259,7 @@ export default {
   },
   beforeDestroy() {
     console.log("before destroy, clearing client sate");
-    this.clearClientState();
+    this.clearState();
   }
 };
 </script>

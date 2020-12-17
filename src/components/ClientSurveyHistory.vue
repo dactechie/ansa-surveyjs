@@ -1,8 +1,5 @@
 <template>
   <div>
-    <p class="py-5 pr-6 font-bold text-red-500 align-middle">
-      Showing Results for {{ clientData[0].PartitionKey }}
-    </p>
     <button
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-300 hover:border-red-400 hover:bg-red-300 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       @click="clearLookupResults"
@@ -16,7 +13,7 @@
     ></ITSPCompareModal> -->
 
     <!-- https://tailwindcomponents.com/component/responsive-table -->
-    <table class=" pr-6" v-if="clientData">
+    <table class=" pr-6">
       <thead>
         <!-- <th>SLK</th> -->
         <th>Last Modified</th>
@@ -53,14 +50,14 @@
     </table>
 
     <DetailsTable
-      v-if="clientData && selectedIndex >= 0"
+      v-if="myData && selectedIndex >= 0"
       :selectedIndex="selectedIndex"
     ></DetailsTable>
   </div>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 // eslint-disable-line no-unused-vars
 // import ITSPCompareModal from "@/components/DetailsModal/ITSPCompareModal";
 import DetailsTable from "@/components/DetailsModal/DetailsTable";
@@ -72,7 +69,7 @@ export default {
     //ITSPCompareModal
     DetailsTable
   },
-  props: ["clientData"],
+
   data() {
     return {
       showModal: false,
@@ -82,6 +79,9 @@ export default {
   computed: {
     // QUESTION: Why is this a computed property ???????
     myData() {
+      let data = this.getClientData();
+      if (!data || data.length < 1) return undefined;
+
       let colHeaders = [
         // "PartitionKey",
         "Timestamp",
@@ -93,7 +93,10 @@ export default {
       ];
 
       let tableVals = [];
-      this.clientData.forEach(function(c) {
+
+      console.log("client data in histry ", data);
+
+      data.forEach(function(c) {
         c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
         let td = colHeaders.map(h => c[h]);
         //td["Survey Type"] = c["SurveyName"];
@@ -107,6 +110,7 @@ export default {
     // setSurveyName(surveyName) {
     //   this.$store.state["surveyName"] = surveyName;
     // },
+    ...mapGetters(["getClientData"]),
     ...mapMutations(["setSurveyName"]),
 
     // cloneOrEditSurvey(cloneOrEdit, surveyName, selectedIndexToPrefillFrom) {

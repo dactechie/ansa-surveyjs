@@ -18,11 +18,7 @@
       >
         Look up Client
       </p>
-      <LookupFetchClientData
-        :mode="mode"
-        @mode-updated="updateMode"
-        @client-data-received="updateClientData"
-      />
+      <LookupFetchClientData :mode="mode" @mode-updated="updateMode" />
     </div>
   </div>
 </template>
@@ -46,9 +42,9 @@ export default {
         this.$emit("page-change", index);
       }
     },
-    updateClientData() {
-      this.$emit("client-data-received");
-    },
+    // updateClientData() {
+    //   this.$emit("client-data-received");
+    // },
     updateMode(data) {
       this.$emit("mode-updated", data);
     }

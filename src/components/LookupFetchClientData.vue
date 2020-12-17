@@ -166,10 +166,14 @@
 import { mapActions, mapMutations } from "vuex";
 import { getSLK } from "@/helper-functions/slk";
 import { getCurrentYearMonthDay } from "@/common/utils";
-import { SLK_LENGTH, MODE_EMPTY_CLIENT_DATA } from "@/common/constants";
+import {
+  SLK_LENGTH,
+  MODE_CLIENT_DATA_SET,
+  MODE_EMPTY_CLIENT_DATA
+} from "@/common/constants";
 export default {
   name: "LookupFetchClientData",
-  emits: ["client-data-received", "mode-updated"],
+  emits: ["mode-updated"],
   props: ["mode"],
   data() {
     const { year, month, day } = getCurrentYearMonthDay();
@@ -207,52 +211,56 @@ export default {
   },
   methods: {
     ...mapActions(["GET_CLIENT_DATA_BYSLK", "GET_CLIENT_DATA_BYID"]),
-    ...mapMutations(["setClientSLK", "clearClientState"]),
+    ...mapMutations(["setClientSLK", "clearState"]),
 
     async fetchClientDataByLookupValues() {
       let result = {};
       sessionStorage.removeItem("ClientData");
-      this.clearClientState();
-
+      this.clearState();
+      let unableToFindWithIds = "";
       if (this.picked_type === "by_name" || this.idType === "slk") {
         // doing this allows us to show the "Create New Survey"
         // buttons for a client that never existed in the DB.
         this.setClientSLK(this.slk);
 
         result = await this.GET_CLIENT_DATA_BYSLK(this.slk);
+        unableToFindWithIds = `SLK : ${this.slk}`;
       } else {
         result = await this.GET_CLIENT_DATA_BYID(this.idVal, this.idType);
+        unableToFindWithIds = `${this.idType}: ${this.idVal}`;
       }
 
-      if ((await result) && result.length > 0) {
-        console.log(" vale ", result);
-        //console.log("setting slk in store", result[0]["PartitionKey"]);
-        //this.setClientSLK(result[0]["PartitionKey"]); // this happens in the capture of this emit Home-> updateClientData
-        this.$emit("client-data-received");
-      } else {
-        if (this.slk.length === SLK_LENGTH) {
-          // get action may set it to ""
+      // if ((await result) && result.length > 0) {
+      //   console.log(" vale ", result);
+      //   //console.log("setting slk in store", result[0]["PartitionKey"]);
+      //   this.$emit("client-data-received");
+      // } else {
+      if (this.slk.length === SLK_LENGTH) {
+        // get action may set it to ""
 
-          this.setClientSLK(this.slk);
-          console.log("setting SLK ", this.$store.state.currentClientSLK);
+        this.setClientSLK(this.slk);
+        console.log("setting SLK ", this.$store.state.currentClientSLK);
+      }
+      //this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
+      this.$emit("mode-updated", {
+        mode:
+          (await result) && result.length > 0
+            ? MODE_CLIENT_DATA_SET
+            : MODE_EMPTY_CLIENT_DATA,
+        text: `Unable to find any results for client with ${unableToFindWithIds}`,
+        // WARNING : These keys need to be same as the SurveyJS field "Name"s
+        data: {
+          // FirstName: this.fname,
+          // LastName: this.lname,
+          // Sex: this.sex_type,
+          // DOB: this.dob,
+          SLK: this.slk,
+          IDType: this.idType,
+          ID: this.idVal
         }
-        //this.no_client_found = `Unable to find any results for client with ${this.idType}: ${this.idVal}`;
-        this.$emit("mode-updated", {
-          mode: MODE_EMPTY_CLIENT_DATA,
-          text: `Unable to find any results for client with ${this.idType}: ${this.idVal}`,
-          // WARNING : These keys need to be same as the SurveyJS field "Name"s
-          data: {
-            // FirstName: this.fname,
-            // LastName: this.lname,
-            // Sex: this.sex_type,
-            // DOB: this.dob,
-            SLK: this.slk,
-            IDType: this.idType,
-            ID: this.idVal
-          }
-        });
-      }
+      });
     }
+    // }
   }
 };
 </script>

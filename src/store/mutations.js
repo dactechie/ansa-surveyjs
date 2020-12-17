@@ -10,9 +10,13 @@ export const mutations = {
   },
   setClientData(state, payload) {
     state.clientData = payload;
+    sessionStorage.setItem("ClientData", JSON.stringify(payload));
   },
   setCurrentSurvey(state, payload) {
     state.currentSurvey = payload;
+  },
+  setCurrentSurveyData(state, payload) {
+    state.currentSurveyData = payload;
   },
   setSurveyMode(state, payload) {
     state.surveyMode = payload;
@@ -32,13 +36,15 @@ export const mutations = {
   unsetClientData(state) {
     state.clientData = [];
   },
-  clearClientState(state) {
+  clearState(state) {
     state.currentClientSLK = "";
+    state.currentSurveyData = {};
     state.currentSurvey = {};
     state.prefillIndex = 0;
     state.clientData = [];
-    //surveyName: "",// this in the route url this.$route.params.type
-    state.surveyMode = "";
+    state.currentStaff = "";
+    (state.surveyName = ""), (state.surveyMode = "");
+    state.currentPageTitle = "";
   },
   toggleSidebar(state) {
     state.sideBarOpen = !state.sideBarOpen;
