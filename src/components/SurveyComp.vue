@@ -37,7 +37,6 @@ import {
 const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
 SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp);
-
 //const fakeData = FakeEpisodes[0];
 
 export default {
@@ -172,10 +171,10 @@ export default {
   },
   created() {
     var myCss = {
-          question: {
-              description: "mj-description"
-          },
-      };
+      question: {
+        description: "mj-description"
+      }
+    };
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
@@ -273,11 +272,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
 .sv-question__title {
   font-size: 1em;
 }
-
 .sv-page__title {
   font-size: 1.5em;
 }
@@ -291,7 +288,6 @@ export default {
 .sv-matrix__cell {
   min-width: 1em;
 }
-
 /*h3 {
   margin: 40px 0 0;
 }

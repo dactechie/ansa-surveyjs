@@ -20,7 +20,7 @@ export default new Vuex.Store({
     //config: JSON.parse(localStorage.getItem("config")) || setAndReturn(drugs)
     currentSurvey: {},
     currentSurveyData: {},
-    sideBarOpen: false,
+    sideBarOpen: true,
     // shouldPrefill: true,
     surveyNameIDList: [],
     currentClientSLK: "",

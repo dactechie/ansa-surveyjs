@@ -2,17 +2,21 @@
   <!-- <div class="home"> 
     https://dev.to/fayaz/making-a-navigation-drawer-sliding-sidebar-with-tailwindcss-blueprint-581l
     -->
-  <div class="leading-normal tracking-normal" id="main-body">
+  <div
+    class="leading-normal tracking-normal text-xs md:text-sm "
+    id="main-body"
+  >
     <Navbar />
     <div class="flex flex-wrap justify-center">
       <LeftsideNavbar class="flex-auto" @page-change="visitPage" />
-      <div class="lg:w-full bg-gray-100 px-10  min-h-screen" id="main-content">
+      <div
+        class="lg:w-full lg:ml-40 md:ml-20 bg-gray-100 pl-10  min-h-screen"
+        id="main-content"
+      >
         <div class="p-10 bg-gray-100 mb-20">
-          <SurveyComp
-            @click.native="sideBarOpen ? 'ove' : ''"
-            @search-index-built="onSearchReady"
-            :currentPage="currentPage"
-          />
+          <!-- @click.native="sideBarOpen ? 'ove' : ''"
+            @search-index-built="onSearchReady" -->
+          <SurveyComp :currentPage="currentPage" />
         </div>
       </div>
     </div>
@@ -84,6 +88,11 @@ export default {
     },
     toggleSidebar() {
       this.$store.dispatch("toggleSidebar");
+      // if (this.sideBarOpen)
+      //   document.getElementsByClassName("sv-body")[0].style.marginLeft =
+      //     "150px";
+      // else
+      //   document.getElementsByClassName("sv-body")[0].style.marginLeft = "0px";
     }
   }
 };
