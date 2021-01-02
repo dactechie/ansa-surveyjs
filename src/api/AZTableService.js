@@ -2,7 +2,7 @@ import { doPostAction } from "./RESTClient";
 import {
   PARTITION_KEY,
   ROW_KEY,
-  DB_ANSA,
+  DB_ENTITY_NAME,
   DB_IDTYPE_CCARE,
   APPLICATION_MODE_NORMAL
 } from "@/common/constants";
@@ -17,7 +17,7 @@ const UPSERT_URL = process.env.VUE_APP_UPSERT_TABLESTORE_LOGAPP;
 function updateClientData(
   rowData,
   userMode = APPLICATION_MODE_NORMAL,
-  entity = DB_ANSA
+  entity = DB_ENTITY_NAME
 ) {
   //const azTableJSON = toAZDataStructure(rowData);
   let data = {
@@ -34,7 +34,7 @@ function updateClientData(
 async function getClientDataByPartitionKey(
   partitionKey,
   userMode = APPLICATION_MODE_NORMAL,
-  entity = DB_ANSA
+  entity = DB_ENTITY_NAME
 ) {
   let data = {
     Entity: entity,
@@ -51,7 +51,7 @@ async function getClientDataByClientID(
   clientID,
   idType = DB_IDTYPE_CCARE,
   userMode = APPLICATION_MODE_NORMAL,
-  entity = DB_ANSA
+  entity = DB_ENTITY_NAME
 ) {
   let data = {
     Entity: entity,
