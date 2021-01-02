@@ -10,7 +10,7 @@ export const MODE_EMPTY_CLIENT_DATA = 0;
 export const MODE_CLIENT_DATA_SET = 1; // show client survey history
 
 export const DB_EPISODE = "Episode";
-export const DB_ANSA = "ANSA";
+export const DB_ENTITY_NAME = "ATOM";
 
 export const SLK_LENGTH = 14;
 export const PREFILL_EXPIRY_DAYS =
@@ -27,8 +27,8 @@ export const DB_IDTYPE_CCARE = "CCARE";
 
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
-  "ANSA Initial Assessment": "INAS",
-  "ANSA ITSP Review Assessment": "ITSP",
+  "ATOM Initial Assessment": "INAS",
+  "ATOM ITSP Review Assessment": "ITSP",
   TestSurvey: "TEST"
 };
 

@@ -124,8 +124,7 @@
 
         <div class="px-2"></div>
         <img
-          src="@/assets/images/DirectionsLogo.png"
-          class="w-12 h-12 rounded-full shadow-lg"
+          src="@/assets/images/ATOMLogoSmall.png"
           @click="dropDownOpen = !dropDownOpen"
         />
       </div>

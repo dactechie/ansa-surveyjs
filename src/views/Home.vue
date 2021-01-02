@@ -143,7 +143,7 @@ export default {
       // 0. if brand new client , show CREATE new IA
       this.clientData = this.getClientData();
       if (!this.clientData || this.clientData.length === 0) {
-        this.surveyListForClient = this.filterButtonType("ANSA Initial");
+        this.surveyListForClient = this.filterButtonType("ATOM Initial");
         return;
       }
       const lastSurveyDone = this.clientData[this.clientData.length - 1];
@@ -167,13 +167,13 @@ export default {
 
       if (lastSurveyStatus === "Complete") {
         if (gapInDaysSinceLastSurvey > PREFILL_EXPIRY_DAYS) {
-          this.surveyListForClient = this.filterButtonType("ANSA Initial");
+          this.surveyListForClient = this.filterButtonType("ATOM Initial");
           return;
         }
         lastSurveyDone["SurveyData"][
           "AssessmentDate"
         ] = getCurrentYearMonthDayString("-");
-        this.surveyListForClient = this.filterButtonType("ANSA ITSP", false);
+        this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
       } else if (lastSurveyStatus === "Incomplete") {
         if (gapInDaysSinceLastSurvey < INCOMPLETE_CONTINUATION_EXPIRY_DAYS) {
           this.surveyListForClient = this.filterButtonType(
