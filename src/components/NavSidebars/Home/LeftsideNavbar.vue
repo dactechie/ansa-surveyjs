@@ -10,9 +10,10 @@
       <p class="font-semibold text-1xl text-blue-400 pl-4">
         Directions Health Services
       </p>
+      <img src="@/assets/images/ATOMLogo.png" alt="ATOM Logo" />
     </div>
 
-    <div class="mt-20 mb-4 px-3">
+    <div class="mt-10 mb-4 px-3">
       <p
         class="mb-3 lg:mb-2 uppercase tracking-wide font-bold text-sm lg:text-xs text-gray-500"
       >

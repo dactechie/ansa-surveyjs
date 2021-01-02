@@ -35,7 +35,7 @@
             @click="gotoLink(index)"
           >
             <span
-              class="rounded absolute inset-0 bg-teal-200 "
+              class="mx-1 mr-2 rounded absolute inset-0 bg-teal-200 "
               :class="[nPage.isActive ? 'opacity-25' : 'opacity-0']"
             ></span
             ><span class="relative">{{ nPage.title }}</span></a
