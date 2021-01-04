@@ -170,15 +170,9 @@ export default {
     }
   },
   created() {
-    var myCss = {
-      question: {
-        description: "mj-description"
-      }
-    };
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
-    this.survey.css = myCss;
 
     const me = this;
     this.survey.onLoadedSurveyFromService.add((sender, options) => {

@@ -29,7 +29,6 @@
       >
       <br />
     </div>
-    <p></p>
 
     <div class="sv-table__cell" id="by_id" v-show="picked_type === 'by_id'">
       <input
@@ -70,7 +69,7 @@
       <label class="sv-table__cell" for="mcare_id">MCARE ID</label> -->
       <br />
       <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="shadow appearance-none border rounded w-full py-2 px-3 font-bold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="id_val"
         v-model="idVal"
@@ -78,10 +77,10 @@
       />
     </div>
 
-    <div class="sv-table__cell" id="by_name" v-show="picked_type === 'by_name'">
+    <div id="by_name" v-show="picked_type === 'by_name'">
       <!-- <label class="sv-table__cell" for="fname">First Name</label> -->
       <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="shadow appearance-none border rounded w-full py-2 px-3 font-semibold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="fname"
         placeholder="first name"
@@ -90,16 +89,16 @@
       <br />
       <!-- <label class="sv-table__cell" for="lname">Last Name</label> -->
       <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="shadow appearance-none border rounded w-full mt-1 py-2 px-3 font-semibold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="lname"
         placeholder="last name"
         v-model="lname"
       />
-      <p></p>
-      <label class="text-sm pl-2 font-semibold " for="dob">DOB</label>
+
+      <label class="text-sm pl-2 mt-10 font-semibold " for="dob">DOB</label>
       <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="shadow appearance-none border rounded w-full py-2 px-3 font-semibold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="date"
         id="dob"
         name="DOB"
