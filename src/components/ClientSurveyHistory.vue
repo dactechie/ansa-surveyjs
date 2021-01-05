@@ -13,19 +13,17 @@
     ></ITSPCompareModal> -->
 
     <!-- https://tailwindcomponents.com/component/responsive-table -->
-    <table class=" pr-6">
+    <table class="mt-0 mx-5">
       <thead>
         <!-- <th>SLK</th> -->
-        <th>Last Modified</th>
-        <th>Team</th>
-        <th>Staff</th>
-
-        <!-- <th class="sv-table__cell sv-table__cell--header">
-          Principal Drug Of Concern
-        </th> -->
-        <th>Status</th>
+        <th class="bg-teal-100 text-gray-700 border border-gray-300">
+          Last Modified
+        </th>
+        <th class="bg-teal-100 text-gray-700 border border-gray-300">Team</th>
+        <th class="bg-teal-100 text-gray-700 border border-gray-300">Staff</th>
+        <th class="bg-teal-100 text-gray-700 border border-gray-300">Status</th>
         <th
-          class="p-3 font-bold  bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
+          class="text-center font-bold bg-teal-100 text-gray-700 border border-gray-300 hidden lg:table-cell"
         >
           Survey Name
         </th>
@@ -48,26 +46,24 @@
         </tr>
       </tbody>
     </table>
-
-    <DetailsTable
+    <SurveyResponsesModal
       v-if="myData && selectedIndex >= 0"
       :selectedIndex="selectedIndex"
-    ></DetailsTable>
+      :show="showModal"
+      @close="showModal = false"
+    ></SurveyResponsesModal>
   </div>
 </template>
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-// eslint-disable-line no-unused-vars
-// import ITSPCompareModal from "@/components/DetailsModal/ITSPCompareModal";
-import DetailsTable from "@/components/DetailsModal/DetailsTable";
+import SurveyResponsesModal from "@/components/SurveyResponsesModal";
 import { getFriendlyTimestampString } from "@/common/utils";
 
 export default {
   name: "ClientSurveyHistory",
   components: {
-    //ITSPCompareModal
-    DetailsTable
+    SurveyResponsesModal
   },
 
   data() {
@@ -144,15 +140,12 @@ export default {
 /* https://css-tricks.com/complete-guide-table-element/ */
 
 th {
-  background: #00cccc;
+  background: #35b6b6;
   color: #fff;
-  text-transform: uppercase;
-  font-size: 12px;
 }
 
 tr:hover td {
-  /* th:hover also if you wish */
-  background: rgb(230, 227, 217);
+  background: rgb(228, 226, 219);
 }
 tbody tr:nth-child(odd) {
   background: #eee;

@@ -2,13 +2,13 @@
   <div>
     <table class="text-xs">
       <thead>
-        <th class="p-3" v-for="cTitle in colTitles" :key="cTitle">
+        <th class="p-2 bg-teal-200" v-for="cTitle in colTitles" :key="cTitle">
           {{ cTitle }}
         </th>
       </thead>
       <tbody>
         <tr v-for="(obj, index) in Object.values(this.tableData)" :key="index">
-          <td v-for="cTitle in colTitles" :key="cTitle">
+          <td class="pl-2" v-for="cTitle in colTitles" :key="cTitle">
             {{ obj[cTitle] }}
           </td>
         </tr>
@@ -35,12 +35,12 @@ export default {
 <style scoped>
 /* https://css-tricks.com/complete-guide-table-element/ */
 
-th {
+/* th {
   background: #00cccc;
   color: #fff;
   text-transform: uppercase;
   font-size: 12px;
-}
+} */
 
 tr:hover td {
   /* th:hover also if you wish */

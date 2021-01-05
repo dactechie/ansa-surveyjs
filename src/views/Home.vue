@@ -5,6 +5,31 @@
       class="w-full h-20 border-b flex px-20 items-center justify-between bg-gray-100"
     >
       <img src="@/assets/images/ATOMLogo.png" alt="ATOM Logo" />
+      <!-- <ul class="flex flex-row font-semibold text-indigo-700"> -->
+      <div class="invisible md:visible">
+        <a
+          href=""
+          class="m-2 font-semibold no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          target="_blank"
+        >
+          Documentation</a
+        >
+
+        <a
+          class="m-2 font-semibold  no-underline hover:bg-gray-300 hover:text-indigo-800  shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          href="mailto:ict@directionshealth.com"
+          target="_blank"
+          >Support (E-Mail)</a
+        >
+
+        <a
+          class="m-2 font-semibold  no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          href="https://github.com/dactechie/ansa-surveyjs/issues"
+          target="_blank"
+          >Open Issues</a
+        >
+      </div>
+      <!-- </ul> -->
       <img
         src="@/assets/images/DirectionsLogoFull.jpg"
         height="200"
@@ -23,7 +48,7 @@
       />
       <div class="sm:w-3/5 lg:w-3/4 bg-gray-100 pl-2" id="main-content">
         <span
-          class="p-3 shadow font-bold text-red-900"
+          class="p-3 font-bold text-red-900"
           v-if="searchResultText && mode === 0 && clientData.length === 0"
         >
           {{ searchResultText }}</span
@@ -33,86 +58,82 @@
             no current SLK
           </p>
         </div> -->
-        <div class="invisible md:visible  m-4 grid grid-cols-2 gap-3 text-sm">
-          <div class=" shadow-md rounded-lg p-2 rounded-bl-3xl bg-green-100 ">
-            <span class="mt-5 py-3 font-semibold">ATOM Assessments</span>
-            <ul class="px-5 mx-5 list-disc  text-xs font-semibold mb-3">
-              <li class="mb-2">
-                When a client commences engagement with our service, an ATOM
-                Initial Assessment should be undertaken, to identify their
-                particular circumstances and service goals at commencement of
-                service, enabling the practitioner to match these with the most
-                appropriate type of Directions / Pathways service support. ATOM
-                assessment should be repeated <u>every 4-6 weeks.</u>
-              </li>
-              <li>
-                <span class="underline"
-                  >ITSP (Individual Treatment Support Plan) Review</span
-                ><br />
-                Progress towards client goals are to be reviewed and re-assessed
-                on a regular basis to assess any changed or evolving needs and
-                goals. ATOM ITSP Review Assessment will pre-fill with the
-                responses from the previous assessment. Practitioners will need
-                to review each section with the client and clarify whether the
-                client has experienced any relevant changes since the previous
-                assessment was completed and update the informatation in the
-                (pre-filled) ATOM ITSP Review Assessment before submission.
-              </li>
-            </ul>
-
-            <span class="text-xs font-semibold">
-              The ATOM is divided into <b>7 assessment sections</b>, reflecting
-              the common life domains impacted by substance use
-              <ul class="px-5 list-disc align-center mx-5">
-                <li>Substance Use</li>
-                <li>Everyday Living</li>
-                <li>Housing & Safety</li>
-                <li>Physical Health & Wellbeing</li>
-                <li>Mental Health & Wellbeing</li>
-                <li>Relationships, Parenting & Social Wellbeing</li>
-                <li>Legal</li>
-              </ul>
-            </span>
-          </div>
-          <div class=" shadow-md rounded-lg p-2 rounded-bl-3xl bg-indigo-100 ">
-            <span class="mt-5 py-3 font-semibold">Features</span>
-            <ul class="px-5 mx-5 list-disc leading-5 text-xs font-semibold">
-              <li>
-                Navigation Menu to visit any section in the questionnaire.
-              </li>
-              <li>Pre-fill with entries from the last submission</li>
-              <li>
-                Instant E-mail with 2 attachments : A summary of the entire ATOM
-                Questionnaire (Q & A) and Treatment Summary Report with Client
-                Goals
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div v-if="getCurrentClientSLK !== ''">
+        <div class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm">
           <div
-            class="py-6"
-            v-for="survey in surveyListForClient"
-            :key="survey.id"
+            class="m-10 mb-5 invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-r from-green-300 to-blue-200 "
           >
-            <router-link
-              class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
-              @click.native="handleStartSurvey(survey.name)"
-              :to="{
-                name: 'SurveyView',
-                params: { type: 'new', surveyid: survey.surveyid }
-              }"
-            >
-              {{ survey.prefix }} {{ survey.name }}</router-link
-            >
+            <div class="m-10">
+              <span class="font-semibold">
+                Start by entering your client's details using the search
+                function on the left.</span
+              >
+              (See the animation on the right for instructions)
+            </div>
+
+            <div class="pl-5 mx-5 mb-5">
+              You'll be prompted to create a new ATOM , if the client doesn't
+              exist
+            </div>
+            <div class="pl-5 mx-5 mb-5">
+              If you have previously started/completed one/more ATOM(s) for a
+              client, a table of previous ATOMs will be shown below. Click on a
+              row to see the submission details.
+            </div>
+            <div v-if="getCurrentClientSLK !== ''">
+              <div
+                class="pl-10 py-6 relative inline-flex "
+                v-for="survey in surveyListForClient"
+                :key="survey.id"
+              >
+                <router-link
+                  class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+                  @click.native="handleStartSurvey(survey.name)"
+                  :to="{
+                    name: 'SurveyView',
+                    params: { type: 'new', surveyid: survey.surveyid }
+                  }"
+                >
+                  {{ survey.prefix }} {{ survey.name }}</router-link
+                >
+                <span class="flex absolute h-3 w-3 top-2 right-2 ">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"
+                  ></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mt-0 invisible md:visible  shadow-md  rounded-lg p-2 rounded-bl-3xl bg-indigo-100 "
+          >
+            <img src="@/assets/images/LookupAnimation.gif" />
           </div>
         </div>
+
         <ClientSurveyHistory
           v-if="mode === 1"
           @clear-lookup-results="mode = 0"
         />
       </div>
     </div>
+    <!-- <div v-if="getCurrentClientSLK !== ''">
+      <div class="py-6" v-for="survey in surveyListForClient" :key="survey.id">
+        <router-link
+          class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+          @click.native="handleStartSurvey(survey.name)"
+          :to="{
+            name: 'SurveyView',
+            params: { type: 'new', surveyid: survey.surveyid }
+          }"
+        >
+          {{ survey.prefix }} {{ survey.name }}</router-link
+        >
+      </div>
+    </div>
+    <ClientSurveyHistory v-if="mode === 1" @clear-lookup-results="mode = 0" /> -->
   </div>
 </template>
 

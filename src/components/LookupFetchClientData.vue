@@ -1,6 +1,6 @@
 <template>
   <div id="sp_100">
-    <span class="text-md pl-1 font-semibold"
+    <span class="text-md pl-1 pt-5 font-semibold"
       >How do you want to lookup the client?</span
     >
     <div class="sv-table__cell" id="lookup_type">
@@ -54,7 +54,7 @@
         placeholder="ccare_id"
       />
       <label class="text-sm pl-2 font-semibold align-top" for="CCAREClientID"
-        >CCARE ID</label
+        >Communicare ID</label
       >
       <br />
       <!-- <input
@@ -153,7 +153,7 @@
       <button
         :disabled="!canFetch"
         @click.prevent="fetchClientDataByLookupValues"
-        class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+        class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6"
       >
         <span class="mx-auto">Fetch Client Data</span>
       </button>

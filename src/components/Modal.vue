@@ -43,31 +43,34 @@ export default {
 
 <style>
 .modal-mask {
-  position: fixed;
+  position: absolute;
   z-index: 9998;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: table;
+  overflow-y: initial !important;
   transition: opacity 0.3s ease;
 }
+/* display: table; */
 
 .modal-wrapper {
   display: table-cell;
-  vertical-align: middle;
+  /* vertical-align: middle; */
 }
 
 .modal-container {
-  width: 300px;
-  margin: 0px auto;
+  /* width: 300px; */
+  margin: 10px auto;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  /* overflow-y:scroll; */
+  overflow-x: auto;
 }
 
 .modal-header h3 {
@@ -76,7 +79,13 @@ export default {
 }
 
 .modal-body {
-  margin: 20px 0;
+  /* margin: 20px 0; */
+  height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  float: inline-end;
 }
 
 .modal-default-button {

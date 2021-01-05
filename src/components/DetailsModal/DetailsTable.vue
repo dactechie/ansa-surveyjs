@@ -3,17 +3,34 @@
     <!-- <div id="body"></div>    -->
     <table class="text-xs">
       <thead>
-        <th class="p-3">Key</th>
-        <th class="p-3">value</th>
+        <th
+          class="bg-teal-200 text-gray-800 text-center border border-gray-400"
+        >
+          Question (Code)
+        </th>
+        <th
+          class="bg-teal-200 text-gray-800 text-center border border-gray-400"
+        >
+          Response
+        </th>
       </thead>
       <tbody>
-        <tr v-for="title in Object.keys(selectedSurveyData)" :key="title">
-          <td>{{ title }}</td>
-          <td v-if="objectArrayTypeKeys.includes(title)">
+        <tr
+          class="p-2"
+          v-for="title in Object.keys(selectedSurveyData)"
+          :key="title"
+        >
+          <td class="text-center  font-semibold border border-gray-100">
+            {{ title }}
+          </td>
+          <td class="text-center " v-if="objectArrayTypeKeys.includes(title)">
             <DetailObjectListTable :tableData="selectedSurveyData[title]" />
             <!-- exmaple : AODHistory : [ {} , {}...]  -->
           </td>
-          <td v-else-if="objectOfObjectTypeKeys.includes(title)">
+          <td
+            class="text-center  border border-gray-400"
+            v-else-if="objectOfObjectTypeKeys.includes(title)"
+          >
             <DetailObjectofObjectsTable
               :tableData="selectedSurveyData[title]"
             />
@@ -32,7 +49,7 @@
             />
           </td>
 
-          <td v-else>
+          <td class="pl-2" v-else>
             {{ selectedSurveyData[title] }}
           </td>
         </tr>
@@ -122,12 +139,12 @@ export default {
 <style scoped>
 /* https://css-tricks.com/complete-guide-table-element/ */
 
-th {
+/* th {
   background: #00cccc;
   color: #fff;
   text-transform: uppercase;
   font-size: 12px;
-}
+} */
 
 tr:hover td {
   /* th:hover also if you wish */

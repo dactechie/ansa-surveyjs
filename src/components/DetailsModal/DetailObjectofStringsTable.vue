@@ -2,14 +2,22 @@
   <div>
     <table class="text-xs">
       <thead>
-        <th class="p-3" v-for="cTitle in colTitles" :key="cTitle">
+        <th
+          class="p-1 text-center bg-teal-200 text-gray-800 border border-gray-400"
+          v-for="cTitle in colTitles"
+          :key="cTitle"
+        >
           <!-- yesNo   | Days |  -->
           {{ cTitle }}
         </th>
       </thead>
       <tbody>
         <tr>
-          <td class="align-center" v-for="cTitle in colTitles" :key="cTitle">
+          <td
+            class="text-center  border border-gray-400"
+            v-for="cTitle in colTitles"
+            :key="cTitle"
+          >
             {{ tableData[cTitle] }}
           </td>
         </tr>
@@ -39,12 +47,12 @@ export default {
 <style scoped>
 /* https://css-tricks.com/complete-guide-table-element/ */
 
-th {
+/* th {
   background: #00cccc;
   color: #fff;
   text-transform: uppercase;
   font-size: 12px;
-}
+} */
 
 tr:hover td {
   /* th:hover also if you wish */

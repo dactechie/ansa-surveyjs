@@ -70,6 +70,7 @@ export default {
     ...mapMutations([
       "clearState",
       "setCurrentSurvey",
+      "setCurrentSurveyData",
       "setCurrentPageTitle",
       "setClientSLK",
       "setStaff",
@@ -118,7 +119,7 @@ export default {
     },
     getDataForSurvey(me) {
       let prefillSurvey = me.getCurrentSurveyData();
-      if (prefillSurvey) {
+      if (prefillSurvey && prefillSurvey["SurveyData"]) {
         return prefillSurvey;
       }
 
@@ -271,6 +272,9 @@ export default {
 }
 .sv-page__title {
   font-size: 1.5em;
+}
+.sv-root-modern .sv-description {
+  color: black;
 }
 
 @media only screen and (min-width: 600px) {
