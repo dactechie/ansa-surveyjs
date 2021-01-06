@@ -1,3 +1,5 @@
+import { isValidDate } from "@/common/utils";
+
 function reverseCleanString(str) {
   return str
     .split("-")
@@ -27,4 +29,11 @@ function getSLK(fname, lname, dob, sex) {
   return `${name_part}${d}${x}`;
 }
 
-export { getSLK };
+function isValidSLK(slkString) {
+  const matchedList = slkString.match(/^[A-Z]{5}(\d{2})(\d{2})(\d{4})[1,2,9]$/);
+  if (matchedList === null) return false;
+
+  return isValidDate(matchedList[1], matchedList[2], matchedList[3]);
+}
+
+export { getSLK, isValidSLK };

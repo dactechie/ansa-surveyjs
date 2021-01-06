@@ -20,7 +20,7 @@
       >
         Survey Pages Navigation
       </p>
-      <ul v-for="(nPage, index) in currentSurvey.visiblePages" :key="index">
+      <ul v-for="(nPage, index) in visiblePages" :key="index">
         <li
           class="mb-4  lg:mb-2"
           :class="[
@@ -47,17 +47,22 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "LeftsideNavbar",
   emits: ["page-change"],
   computed: {
-    ...mapState(["sideBarOpen", "currentSurvey"])
+    ...mapState(["sideBarOpen"]),
+
+    visiblePages: function() {
+      return this.getCurrentSurvey().visiblePages;
+    }
   },
   methods: {
+    ...mapGetters(["getCurrentSurvey"]),
     gotoLink(index) {
-      if (this.currentSurvey.pages[index]) {
+      if (this.getCurrentSurvey().pages[index]) {
         console.log("here", index);
         this.$emit("page-change", index);
       }

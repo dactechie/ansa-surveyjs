@@ -1,19 +1,19 @@
 <template>
   <div id="sp_100">
-    <span class="text-md pl-1 pt-5 font-semibold"
+    <span class="text-md pl-1 font-semibold"
       >How do you want to lookup the client?</span
     >
-    <div class="sv-table__cell" id="lookup_type">
+    <div class="pt-5 sv-table__cell" id="lookup_type">
       <input
         class="form-radio h-6 w-6"
         type="radio"
-        id="by_id"
+        id="by_slk"
         name="lookup_type"
-        value="by_id"
+        value="by_slk"
         v-model="picked_type"
       />
-      <label class="text-sm pl-2 font-semibold align-top" for="by_id"
-        >By ID</label
+      <label class="text-sm pl-2 font-semibold align-top" for="by_slk"
+        >By SLK</label
       >
       <br />
       <input
@@ -30,50 +30,14 @@
       <br />
     </div>
 
-    <div class="sv-table__cell" id="by_id" v-show="picked_type === 'by_id'">
-      <input
-        class="form-radio h-6 w-6"
-        type="radio"
-        id="slk"
-        value="slk"
-        name="lookup_id"
-        v-model="idType"
-        placeholder="slk_id"
-      />
-      <label class="text-sm pl-2 font-semibold align-top" for="slk_id"
-        >SLK</label
-      >
-      <br />
-      <input
-        class="form-radio h-6 w-6"
-        type="radio"
-        id="CCAREClientID"
-        name="lookup_id"
-        value="CCARE"
-        v-model="idType"
-        placeholder="ccare_id"
-      />
-      <label class="text-sm pl-2 font-semibold align-top" for="CCAREClientID"
-        >Communicare ID</label
-      >
-      <br />
-      <!-- <input
-        class="form-radio h-6 w-6"
-        type="radio"
-        id="MCARE"
-        name="lookup_id"
-        value="MCARE"
-        v-model="idType"
-        placeholder="mcare_id"
-      />
-      <label class="sv-table__cell" for="mcare_id">MCARE ID</label> -->
+    <div class="sv-table__cell" id="by_slk" v-show="picked_type === 'by_slk'">
       <br />
       <input
         class="shadow appearance-none border rounded w-full py-2 px-3 font-bold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="id_val"
         v-model="idVal"
-        placeholder="Enter an ID"
+        placeholder="Enter an SLK"
       />
     </div>
 
@@ -95,8 +59,9 @@
         placeholder="last name"
         v-model="lname"
       />
-
-      <label class="text-sm pl-2 mt-10 font-semibold " for="dob">DOB</label>
+      <div class="pt-3">
+        <label class="text-sm pl-2 font-semibold" for="dob">DOB</label>
+      </div>
       <input
         class="shadow appearance-none border rounded w-full py-2 px-3 font-semibold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="date"
@@ -163,7 +128,7 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-import { getSLK } from "@/helper-functions/slk";
+import { getSLK, isValidSLK } from "@/helper-functions/slk";
 import { getCurrentYearMonthDay } from "@/common/utils";
 import {
   SLK_LENGTH,
@@ -180,7 +145,7 @@ export default {
     return {
       picked_type: "",
       // no_client_found: "",
-      idType: "",
+
       idVal: "",
       sex_type: "",
       dob: "",
@@ -192,16 +157,13 @@ export default {
   },
   computed: {
     canFetch: function() {
-      if (this.picked_type === "by_id" && this.idType === "slk") {
-        return this.idVal.length === SLK_LENGTH;
-      } else if (this.picked_type === "by_name") {
-        return this.slk.length === SLK_LENGTH;
+      if (this.picked_type === "by_slk") {
+        return isValidSLK(this.idVal);
       }
-      this.setClientSLK("");
-      return this.idVal.length > 1;
+      return isValidSLK(this.slk);
     },
     slk: function() {
-      if (this.picked_type === "by_id") {
+      if (this.picked_type === "by_slk") {
         return this.idVal;
       }
       if (!this.fname || !this.lname || !this.dob || !this.sex_type) return "";
@@ -217,26 +179,16 @@ export default {
       sessionStorage.removeItem("ClientData");
       this.clearState();
       let unableToFindWithIds = "";
-      if (this.picked_type === "by_name" || this.idType === "slk") {
-        // doing this allows us to show the "Create New Survey"
-        // buttons for a client that never existed in the DB.
-        this.setClientSLK(this.slk);
 
-        result = await this.GET_CLIENT_DATA_BYSLK(this.slk);
-        unableToFindWithIds = `SLK : ${this.slk}`;
-      } else {
-        result = await this.GET_CLIENT_DATA_BYID(this.idVal, this.idType);
-        unableToFindWithIds = `${this.idType}: ${this.idVal}`;
-      }
+      // doing this allows us to show the "Create New Survey"
+      // buttons for a client that never existed in the DB.
+      this.setClientSLK(this.slk);
 
-      // if ((await result) && result.length > 0) {
-      //   console.log(" vale ", result);
-      //   //console.log("setting slk in store", result[0]["PartitionKey"]);
-      //   this.$emit("client-data-received");
-      // } else {
+      result = await this.GET_CLIENT_DATA_BYSLK(this.slk);
+      unableToFindWithIds = `SLK : ${this.slk}`;
+
       if (this.slk.length === SLK_LENGTH) {
         // get action may set it to ""
-
         this.setClientSLK(this.slk);
         console.log("setting SLK ", this.$store.state.currentClientSLK);
       }
@@ -254,7 +206,6 @@ export default {
           // Sex: this.sex_type,
           // DOB: this.dob,
           SLK: this.slk,
-          IDType: this.idType,
           ID: this.idVal
         }
       });

@@ -196,7 +196,10 @@ export default {
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getDataForSurvey(me);
 
-      if (prefillSurvey["PartitionKey"] !== undefined) {
+      if (
+        typeof prefillSurvey !== "undefined" &&
+        prefillSurvey["PartitionKey"] !== undefined
+      ) {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
         sender.getAllQuestions().forEach(e => {

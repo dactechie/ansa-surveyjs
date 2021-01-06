@@ -1,31 +1,5 @@
 import { MILLIS_IN_DAY } from "@/common/constants";
 
-function checkAssign(objectToAssign, data, errors) {
-  // could use reduce , but we're accuumulating in two objects here.
-  for (const x of Object.keys(data)) {
-    let sourceObj = data[x];
-    if (!sourceObj) {
-      errors[x] = `Missing ${x}`;
-    }
-    objectToAssign[x] = sourceObj;
-  }
-  if (Object.keys(errors).length > 0) {
-    return -1;
-  }
-  return 1;
-}
-
-async function promisify(object, fn, ...args) {
-  return new Promise((resolve, reject) => {
-    let promiseHandling = (err, result) => {
-      if (err) reject(err);
-      else resolve(result);
-    };
-    args.push(promiseHandling);
-    fn.apply(object, args);
-  });
-}
-
 function getFriendlyTimestampString(dateObj) {
   return `${dateObj.toLocaleDateString("en-au", {
     year: "numeric",
@@ -68,6 +42,24 @@ function gapInDays(yyyy_mm_dd) {
   return (currentTime - passedInTime) / MILLIS_IN_DAY;
 }
 
+const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+// Validates that the input string is a valid date formatted as "ddmmyyyy"
+function isValidDate(dayStr, monthStr, yearStr) {
+  const day = parseInt(dayStr);
+  const month = parseInt(monthStr);
+  const year = parseInt(yearStr);
+
+  // Check the ranges of month and year
+  if (year < 1000 || year > 3000 || month == 0 || month > 12) return false;
+
+  // Adjust for leap years
+  if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+    monthLength[1] = 29;
+
+  // Check the range of the day
+  return day > 0 && day <= monthLength[month - 1];
+}
+
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 function sumUp(list) {
@@ -77,12 +69,11 @@ function sumUp(list) {
 }
 
 export {
-  checkAssign,
-  promisify,
   getCurrentYearMonthDay,
   getCurrentYearMonthDayString,
   getCurrentTimestamp,
   getFriendlyTimestampString,
   gapInDays,
-  sumUp
+  sumUp,
+  isValidDate
 };

@@ -1,14 +1,12 @@
 <template>
   <!-- <div class="home"> -->
   <div class="container mx-auto font-sans">
-    <div
-      class="w-full h-20 border-b flex px-20 items-center justify-between bg-gray-100"
-    >
+    <div class="w-full h-24 border-b flex px-10 items-center justify-between">
       <img src="@/assets/images/ATOMLogo.png" alt="ATOM Logo" />
       <!-- <ul class="flex flex-row font-semibold text-indigo-700"> -->
       <div class="invisible md:visible">
         <a
-          href=""
+          href="https://directionshealth.sharepoint.com/:w:/r/Shared%20Documents/ICT/ANSA/Documentation/ATOM%20Practice%20Guide.docx?d=wba5a3fc9dab845ef91efda4a92ba53d5&csf=1&web=1&e=fbQhx3"
           class="m-2 font-semibold no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
           target="_blank"
         >
@@ -30,17 +28,13 @@
         >
       </div>
       <!-- </ul> -->
-      <img
-        src="@/assets/images/DirectionsLogoFull.jpg"
-        height="200"
-        alt="ATOM Logo"
-      />
+      <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />
       <!-- <p class="font-semibold text-1xl text-blue-400 pl-4">
         Directions Health Services
       </p>
        -->
     </div>
-    <div class="flex flex-wrap ">
+    <div class="md:mt-5 flex flex-wrap ">
       <LeftsideNavbar
         class="sm:w-2/5 lg:w-1/4"
         :mode="mode"
@@ -60,7 +54,7 @@
         </div> -->
         <div class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm">
           <div
-            class="m-10 mb-5 invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-r from-green-300 to-blue-200 "
+            class="m-10 mb-5 invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-b from-green-100 to-blue-100"
           >
             <div class="m-10">
               <span class="font-semibold">
@@ -95,7 +89,7 @@
                 >
                   {{ survey.prefix }} {{ survey.name }}</router-link
                 >
-                <span class="flex absolute h-3 w-3 top-2 right-2 ">
+                <span class="flex absolute h-3 w-3 top-2 right-2">
                   <span
                     class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"
                   ></span>
@@ -107,7 +101,7 @@
             </div>
           </div>
           <div
-            class="mt-0 invisible md:visible  shadow-md  rounded-lg p-2 rounded-bl-3xl bg-indigo-100 "
+            class="-mt-3 invisible md:visible shadow-md rounded-lg p-2 rounded-bl-3xl bg-indigo-100"
           >
             <img src="@/assets/images/LookupAnimation.gif" />
           </div>
