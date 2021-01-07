@@ -45,7 +45,11 @@
       />
       <div class=" sm:w-3/5 lg:w-3/4 bg-gray-100 pl-2 " id="main-content">
         <div v-if="showSpinner" class="absolute z-40 m-auto md:pl-40 md:py-40">
-          <atom-spinner :animation-duration="1000" :size="120" />
+          <atom-spinner
+            :animation-duration="1000"
+            :size="120"
+            color="#45b87f"
+          />
         </div>
         <div class="static">
           <!-- <div v-if="getCurrenClientSLK === ''">
