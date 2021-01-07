@@ -86,7 +86,7 @@
               <!-- </div> -->
             </div>
             <div
-              class="mt-6 invisible md:visible shadow-md rounded-lg p-2 rounded-bl-3xl bg-indigo-100"
+              class="mt-4 invisible md:visible shadow-md rounded-lg p-2 pl-3 rounded-bl-3xl bg-indigo-100"
             >
               <img src="@/assets/images/LookupAnimation.gif" />
             </div>
