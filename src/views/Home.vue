@@ -8,21 +8,21 @@
       <div class="invisible md:visible">
         <a
           href="https://directionshealth.sharepoint.com/:w:/r/Shared%20Documents/ICT/ANSA/Documentation/ATOM%20Practice%20Guide.docx?d=wba5a3fc9dab845ef91efda4a92ba53d5&csf=1&web=1&e=fbQhx3"
-          class=" font-semibold text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          class="font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
           target="_blank"
         >
           Documentation</a
         >
 
         <a
-          class="m-2 font-semibold text-sm no-underline hover:bg-gray-300 hover:text-indigo-800  shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          class="m-2 font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800  shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
           href="mailto:ict@directionshealth.com"
           target="_blank"
           >Support (E-Mail)</a
         >
 
         <a
-          class="m-2 font-semibold text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          class="m-2 font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
           href="https://github.com/dactechie/ansa-surveyjs/issues"
           target="_blank"
           >Open Issues</a
@@ -36,14 +36,14 @@
       </p>
        -->
     </div>
-    <div class="md:mt-5 flex flex-wrap ">
+    <div class="md:mt-1 flex flex-wrap">
       <LeftsideNavbar
-        class="mt-10 sm:w-2/5 lg:w-1/4"
+        class="mt-4 sm:w-2/5 lg:w-1/4"
         :mode="mode"
         @search-initiated="showSpinner = true"
         @mode-updated="updateMode"
       />
-      <div class=" sm:w-3/5 lg:w-3/4 bg-gray-100 pl-2 " id="main-content">
+      <div class="sm:w-3/5 lg:w-3/4 pl-2" id="main-content">
         <div v-if="showSpinner" class="absolute z-40 m-auto md:pl-40 md:py-40">
           <atom-spinner
             :animation-duration="1000"
@@ -59,7 +59,7 @@
         </div> -->
           <div
             v-if="showInstructions"
-            class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm"
+            class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm lg:text-md subpixel-antialiased"
             :class="{ activeClass: showSpinner }"
           >
             <div
@@ -138,21 +138,6 @@
         </div>
       </div>
     </div>
-    <!-- <div v-if="getCurrentClientSLK !== ''">
-      <div class="py-6" v-for="survey in surveyListForClient" :key="survey.id">
-        <router-link
-          class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
-          @click.native="handleStartSurvey(survey.name)"
-          :to="{
-            name: 'SurveyView',
-            params: { type: 'new', surveyid: survey.surveyid }
-          }"
-        >
-          {{ survey.prefix }} {{ survey.name }}</router-link
-        >
-      </div>
-    </div>
-    <ClientSurveyHistory v-if="mode === 1" @clear-lookup-results="mode = 0" /> -->
   </div>
 </template>
 

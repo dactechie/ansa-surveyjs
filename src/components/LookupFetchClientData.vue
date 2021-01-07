@@ -1,6 +1,6 @@
 <template>
   <div id="sp_100">
-    <span class="text-md pl-1 font-semibold"
+    <span class="pl-1 font-semibold"
       >How do you want to lookup the client?</span
     >
     <div class="pt-5 sv-table__cell" id="lookup_type">
@@ -72,49 +72,57 @@
         :max="maxDate"
         placeholder="Date of birth"
       />
-      <div class="sv-table__cell" id="sex_type">
-        <input
-          class="form-radio h-6 w-6"
-          type="radio"
-          id="male"
-          v-model="sex_type"
-          name="sex"
-          value="male"
-        />
-        <label class="text-sm pl-2 font-semibold align-top" for="male"
-          >Male</label
-        >
-        <br />
-        <input
-          class="form-radio h-6 w-6"
-          type="radio"
-          id="female"
-          v-model="sex_type"
-          name="sex"
-          value="female"
-        />
-        <label class="text-sm pl-2 font-semibold align-top" for="female"
-          >Female</label
-        >
-        <br />
-        <input
-          class="form-radio h-6 w-6"
-          type="radio"
-          id="other"
-          v-model="sex_type"
-          name="sex"
-          value="other"
-        />
-        <label class="text-sm pl-2 font-semibold align-top" for="other"
-          >Other</label
-        >
-        <br />
+      <div class="mt-4 md:pl-4 flex space-x-4" id="sex_type">
+        <div>
+          <input
+            class=" form-radio h-6 w-6"
+            type="radio"
+            id="male"
+            v-model="sex_type"
+            name="sex"
+            value="male"
+          />
+          <label class="text-sm pl-1 font-semibold align-top" for="male"
+            >Male</label
+          >
+        </div>
+        <div>
+          <input
+            class="pl-1 form-radio h-6 w-6 pl-2"
+            type="radio"
+            id="female"
+            v-model="sex_type"
+            name="sex"
+            value="female"
+          />
+          <label class="text-sm pl-1 font-semibold align-top" for="female"
+            >Female</label
+          >
+        </div>
+        <div>
+          <input
+            class="pl-1 form-radio h-6 w-6"
+            type="radio"
+            id="other"
+            v-model="sex_type"
+            name="sex"
+            value="other"
+          />
+          <label class="text-sm pl-1 font-semibold align-top" for="other"
+            >Other</label
+          >
+        </div>
       </div>
-      <label class="text-sm pl-2 font-semibold align-top"> SLK: </label>
-      <span class="text-md pl-1 font-mono align-top">{{ slk }}</span>
+      <div class="py-3 md:pl-10">
+        <label class="text-sm  font-semibold "> SLK: </label>
+        <span
+          class="text-lg pl-1 font-mono font-bold tracking-widest text-red-500 "
+          >{{ slk }}</span
+        >
+      </div>
     </div>
 
-    <div class="m-3">
+    <div class="pl-3 md:pl-10">
       <button
         :disabled="!canFetch"
         @click.prevent="fetchClientDataByLookupValues"
@@ -157,9 +165,6 @@ export default {
   },
   computed: {
     canFetch: function() {
-      if (this.picked_type === "by_slk") {
-        return isValidSLK(this.idVal);
-      }
       return isValidSLK(this.slk);
     },
     slk: function() {

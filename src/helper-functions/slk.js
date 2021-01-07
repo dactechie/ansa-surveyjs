@@ -30,7 +30,9 @@ function getSLK(fname, lname, dob, sex) {
 }
 
 function isValidSLK(slkString) {
-  const matchedList = slkString.match(/^[A-Z]{5}(\d{2})(\d{2})(\d{4})[1,2,9]$/);
+  const matchedList = slkString.match(
+    /^[A-Z9]{5}(\d{2})(\d{2})(\d{4})[1,2,9]$/
+  );
   if (matchedList === null) return false;
 
   return isValidDate(matchedList[1], matchedList[2], matchedList[3]);
