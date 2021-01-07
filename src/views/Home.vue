@@ -1,31 +1,33 @@
 <template>
   <!-- <div class="home"> -->
-  <div class="container mx-auto font-sans">
-    <div class="w-full h-24 border-b flex px-10 items-center justify-between">
+  <div class="container mx-auto">
+    <div class="w-full h-20 border-b flex px-10 items-center justify-between">
       <img src="@/assets/images/ATOMLogo.png" alt="ATOM Logo" />
       <!-- <ul class="flex flex-row font-semibold text-indigo-700"> -->
+
       <div class="invisible md:visible">
         <a
           href="https://directionshealth.sharepoint.com/:w:/r/Shared%20Documents/ICT/ANSA/Documentation/ATOM%20Practice%20Guide.docx?d=wba5a3fc9dab845ef91efda4a92ba53d5&csf=1&web=1&e=fbQhx3"
-          class="m-2 font-semibold no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          class=" font-semibold text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
           target="_blank"
         >
           Documentation</a
         >
 
         <a
-          class="m-2 font-semibold  no-underline hover:bg-gray-300 hover:text-indigo-800  shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          class="m-2 font-semibold text-sm no-underline hover:bg-gray-300 hover:text-indigo-800  shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
           href="mailto:ict@directionshealth.com"
           target="_blank"
           >Support (E-Mail)</a
         >
 
         <a
-          class="m-2 font-semibold  no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
+          class="m-2 font-semibold text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-4 py-2 rounded-bl-3xl"
           href="https://github.com/dactechie/ansa-surveyjs/issues"
           target="_blank"
           >Open Issues</a
         >
+        <span class="ml-6 text-xs text-gray-500"> v: 7-Jan-2021</span>
       </div>
       <!-- </ul> -->
       <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />
@@ -36,51 +38,76 @@
     </div>
     <div class="md:mt-5 flex flex-wrap ">
       <LeftsideNavbar
-        class="sm:w-2/5 lg:w-1/4"
+        class="mt-10 sm:w-2/5 lg:w-1/4"
         :mode="mode"
+        @search-initiated="showSpinner = true"
         @mode-updated="updateMode"
       />
-      <div class="sm:w-3/5 lg:w-3/4 bg-gray-100 pl-2" id="main-content">
-        <span
-          class="p-3 font-bold text-red-900"
-          v-if="searchResultText && mode === 0 && clientData.length === 0"
-        >
-          {{ searchResultText }}</span
-        >
-        <!-- <div v-if="getCurrenClientSLK === ''">
+      <div class=" sm:w-3/5 lg:w-3/4 bg-gray-100 pl-2 " id="main-content">
+        <div v-if="showSpinner" class="absolute z-40 m-auto md:pl-40 md:py-40">
+          <atom-spinner :animation-duration="1000" :size="120" />
+        </div>
+        <div class="static">
+          <!-- <div v-if="getCurrenClientSLK === ''">
           <p class=" text-gray-200">
             no current SLK
           </p>
         </div> -->
-        <div class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm">
           <div
-            class="m-10 mb-5 invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-b from-green-100 to-blue-100"
+            v-if="showInstructions"
+            class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm"
+            :class="{ activeClass: showSpinner }"
           >
-            <div class="m-10">
-              <span class="font-semibold">
-                Start by entering your client's details using the search
-                function on the left.</span
-              >
-              (See the animation on the right for instructions)
-            </div>
+            <div
+              class="m-10 mb-5 invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-b from-green-100 to-blue-100"
+            >
+              <!-- <div v-if="showInstructions"> -->
+              <div class="m-10">
+                <span class="font-semibold">
+                  Start by entering your client's details using the search
+                  function on the left.</span
+                >
+                (See the animation on the right for instructions)
+              </div>
 
-            <div class="pl-5 mx-5 mb-5">
-              You'll be prompted to create a new ATOM , if the client doesn't
-              exist
+              <div class="pl-5 mx-5 mb-5">
+                You'll be prompted to create a new ATOM, if the client doesn't
+                exist
+              </div>
+              <div class="pl-5 mx-5 mb-5">
+                If you have previously started/completed one/more ATOM(s) for a
+                client, a table of previous ATOMs will be shown below. Click on
+                a row to see the submission details.
+              </div>
+              <!-- </div> -->
             </div>
-            <div class="pl-5 mx-5 mb-5">
-              If you have previously started/completed one/more ATOM(s) for a
-              client, a table of previous ATOMs will be shown below. Click on a
-              row to see the submission details.
+            <div
+              class="mt-6 invisible md:visible shadow-md rounded-lg p-2 rounded-bl-3xl bg-indigo-100"
+            >
+              <img src="@/assets/images/LookupAnimation.gif" />
             </div>
-            <div v-if="getCurrentClientSLK !== ''">
+          </div>
+
+          <div v-else>
+            <div class="md:mt-10">
+              <span
+                class="pl-10 font-bold text-red-700"
+                v-if="
+                  searchResultText &&
+                    mode === 0 &&
+                    clientData.length === 0 &&
+                    !showSpinner
+                "
+              >
+                {{ searchResultText }}</span
+              ><br />
               <div
                 class="pl-10 py-6 relative inline-flex "
                 v-for="survey in surveyListForClient"
                 :key="survey.id"
               >
                 <router-link
-                  class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+                  class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-2 md:px-6 inline-flex items-center"
                   @click.native="handleStartSurvey(survey.name)"
                   :to="{
                     name: 'SurveyView',
@@ -100,17 +127,11 @@
               </div>
             </div>
           </div>
-          <div
-            class="-mt-3 invisible md:visible shadow-md rounded-lg p-2 rounded-bl-3xl bg-indigo-100"
-          >
-            <img src="@/assets/images/LookupAnimation.gif" />
-          </div>
+          <ClientSurveyHistory
+            v-if="mode === 1"
+            @clear-lookup-results="mode = 0"
+          />
         </div>
-
-        <ClientSurveyHistory
-          v-if="mode === 1"
-          @clear-lookup-results="mode = 0"
-        />
       </div>
     </div>
     <!-- <div v-if="getCurrentClientSLK !== ''">
@@ -133,8 +154,9 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
-import { getCurrentYearMonthDayString } from "../common/utils";
+import { AtomSpinner } from "epic-spinners";
 
+import { getCurrentYearMonthDayString } from "../common/utils";
 import { gapInDays } from "@/common/utils";
 import {
   // APP_ENVIRONMENT,
@@ -150,8 +172,8 @@ export default {
   name: "Home",
   components: {
     LeftsideNavbar,
-    ClientSurveyHistory
-    // NewClientStart
+    ClientSurveyHistory,
+    AtomSpinner
   },
   data() {
     return {
@@ -159,7 +181,9 @@ export default {
       mode: MODE_EMPTY_CLIENT_DATA, // TODO : remove, redundant -> same as clientData == undefined
       searchResultText: "",
       picked_type: "lookup",
-      surveyListForClient: []
+      surveyListForClient: [],
+      showSpinner: false,
+      showInstructions: true
     };
   },
 
@@ -180,6 +204,7 @@ export default {
       "setClientLookupIDData",
       "setCurrentSurveyData"
     ]),
+
     filterButtonType(buttonTypeName, shouldContinue) {
       // if (APP_ENVIRONMENT === "test") {
       //   let surveys = this.$store.state["surveyNameIDList"].forEach((s) => {
@@ -218,6 +243,8 @@ export default {
       }
     },
     updateMode({ mode, text, data }) {
+      this.showSpinner = false;
+      this.showInstructions = false;
       this.mode = mode;
       this.searchResultText = text;
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
@@ -289,3 +316,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.activeClass {
+  opacity: 0.1;
+}
+</style>

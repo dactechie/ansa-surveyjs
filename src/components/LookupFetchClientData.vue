@@ -137,7 +137,7 @@ import {
 } from "@/common/constants";
 export default {
   name: "LookupFetchClientData",
-  emits: ["mode-updated"],
+  emits: ["search-initiated", "mode-updated"],
   props: ["mode"],
   data() {
     const { year, month, day } = getCurrentYearMonthDay();
@@ -183,7 +183,7 @@ export default {
       // doing this allows us to show the "Create New Survey"
       // buttons for a client that never existed in the DB.
       this.setClientSLK(this.slk);
-
+      this.$emit("search-initiated");
       result = await this.GET_CLIENT_DATA_BYSLK(this.slk);
       unableToFindWithIds = `SLK : ${this.slk}`;
 

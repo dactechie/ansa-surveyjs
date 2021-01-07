@@ -20,26 +20,24 @@
       >
         Survey Pages Navigation
       </p>
-      <ul v-for="(nPage, index) in visiblePages" :key="index">
+      <ul>
         <li
+          v-for="(nPage, index) in visiblePages"
+          :key="index"
           class="mb-4  lg:mb-2"
           :class="[
             nPage.isActive
-              ? 'pl-1 text-teal-700 border-2 border-blue-300 border-opacity-50'
+              ? 'pl-1 text-teal-700 rounded border-2 border-blue-300 border-opacity-50 bg-teal-100 opacity-80'
               : 'text-gray-600'
           ]"
         >
-          <a
-            class="px-2 -mx-2 py-1 transition duration-200 ease-in-out relative block hover:translate-x-2px hover:text-gray-900  font-medium"
+          <button
+            class="mx-auto py-1 focus:outline-none transition duration-200 ease-in-out relative hover:translate-x-2px hover:text-gray-900  font-medium"
             href="#"
             @click="gotoLink(index)"
           >
-            <span
-              class="mx-1 mr-2 rounded absolute inset-0 bg-teal-200 "
-              :class="[nPage.isActive ? 'opacity-25' : 'opacity-0']"
-            ></span
-            ><span class="relative">{{ nPage.title }}</span></a
-          >
+            <span class="px-1">{{ nPage.title }}</span>
+          </button>
         </li>
       </ul>
     </div>
