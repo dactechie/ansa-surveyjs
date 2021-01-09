@@ -88,7 +88,7 @@
         </div>
         <div>
           <input
-            class="pl-1 form-radio h-6 w-6 pl-2"
+            class="pl-1 form-radio h-6 w-6"
             type="radio"
             id="female"
             v-model="sex_type"
