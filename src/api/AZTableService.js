@@ -26,7 +26,8 @@ function updateClientData(
     PartitionKey: rowData[PARTITION_KEY],
     RowKey: rowData[ROW_KEY],
     EntityJSON: rowData,
-    userMode: userMode
+    userMode: userMode,
+    Status: rowData["Status"]
   };
   return doPostAction(UPSERT_URL, data);
 }

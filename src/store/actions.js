@@ -76,21 +76,21 @@ export default {
         IsActive: 1
       };
       let response = {};
-      if (status === "Incomplete") {
-        response = await SurveyService.updateData(
-          //use the orginal row key which has the Created date.   (no separate rows)
-          dbObj, //partition key from db-meta-keys
-          state.applicationMode // if admin, can override in Completed survey, creates a new entry and makes the old one inactive.
-        );
-      } else {
-        response = await SurveyService.createData(
-          // may be a paritial save
-          SLK, //partition key
-          dbObj,
-          surveyData["AssessmentDate"].replaceAll("-", ""),
-          state.applicationMode // if admin, can override in Completed survey, creates a new entry and makes the old one inactive.
-        );
-      }
+      // if (status === "Incomplete") {
+      //   response = await SurveyService.updateData(
+      //     //use the orginal row key which has the Created date.   (no separate rows)
+      //     dbObj, //partition key from db-meta-keys
+      //     state.applicationMode // if admin, can override in Completed survey, creates a new entry and makes the old one inactive.
+      //   );
+      // } else {
+      response = await SurveyService.createData(
+        // may be a paritial save
+        SLK, //partition key
+        dbObj,
+        surveyData["AssessmentDate"].replaceAll("-", ""),
+        state.applicationMode // if admin, can override in Completed survey, creates a new entry and makes the old one inactive.
+      );
+      // }
       console.log(response);
     } catch (error) {
       console.log("error ", error);

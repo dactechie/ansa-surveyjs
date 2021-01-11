@@ -140,7 +140,7 @@ export default {
       }
       gapInDaysSinceLastSurvey = parseInt(gapInDaysSinceLastSurvey);
       const clientData = JSON.parse(cd);
-      this.setClientSLK(clientData["PartitionKey"]); // for when we save data to server
+      //this.setClientSLK(clientData["PartitionKey"]); // for when we save data to server
       const lastSurveyDone = clientData[clientData.length - 1];
       const lastSurveyStatus = lastSurveyDone["Status"];
 
@@ -216,7 +216,13 @@ export default {
 
         me.survey.setValue("Program", prefillSurvey["Program"]);
         me.survey.setValue("Staff", prefillSurvey["Staff"]);
+        me.setClientSLK(prefillSurvey["PartitionKey"]);
       } else {
+        if (!me.$store.state.currentClientSLK) {
+          console.log("missing slk. Lookup IDs: ", lookupIds);
+          me.$router.push("/");
+        }
+
         me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
       }
       me.setCurrentSurvey(me.survey); // for the nav to work

@@ -37,15 +37,25 @@
                       },
                       "SurveyData": "@body('Parse_EntityJSON')?['SurveyData']"
                   },
-                  "function": {
-                      "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansajs/providers/Microsoft.Web/sites/ansa-jsflattener/functions/ANSA_JSFlattener_HttpTrigger"
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['wordonlinebusiness']['connectionId']"
+                    }
                   },
-                  "method": "POST"
-              },
-              "runAfter": {
-                  "Initialize_EngInOtherActivities_variable": [
-                      "Succeeded"
-                  ]
+                  "method": "post",
+                  "path": "/api/templates/getFile",
+                  "queries": {
+                    "drive": "b!TQEyQLwbT0-Z2YVgt8koSaI3_tjmJYpLlHwfJrThR2zyxCkjY3AESYjwhCrSdR6-",
+                    "file": "01ZYEGLWABRNQ3USI4EVG37B4YAEOICYWO",
+                    "source": "sites/directionshealth.sharepoint.com,4032014d-1bbc-4f4f-99d9-8560b7c92849,d8fe37a2-25e6-4b8a-947c-1f26b4e1476c"
+                  }
+                },
+                "metadata": {
+                  "01ZYEGLWABRNQ3USI4EVG37B4YAEOICYWO": "/ICT/ANSA/InitialAssessment_OwnUse1.docx",
+                  "01ZYEGLWE37DDHSZXCHFA3JK4P35DQOQ65": "/ICT/ANSA/InitialAssessment_OwnUse.docx"
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
               },
               "type": "Function"
           },
@@ -721,6 +731,13 @@
                               },
                               "type": "object"
                           }
+                        ],
+                        "Body": "<p>Please ensure the attached summary is uploaded to the client file.<br>\n<br>\nSLK : @{triggerBody()?['PartitionKey']} &nbsp;Client ID: @{body('Parse_CommonJSON')?['ClientID']}<br>\n<br>\nProgram: @{body('Parse_EntityJSON')?['Program']}<br>\nStatus: @{body('Parse_EntityJSON')?['Status']}<br>\nClient Type: @{body('Parse_CommonJSON')?['ClientType']}<br>\n<br>\nSubmitted Date/Time: @{body('Parse_CommonJSON')?['CreatedDatetime']}</p>",
+                        "Cc": "atom@directionshealth.com",
+                        "From": "directions.admin@directionshealth.com",
+                        "Importance": "Normal",
+                        "Subject": "ITSP Review; Program:@{body('Parse_EntityJSON')?['Program']}; SLK: @{triggerBody()?['PartitionKey']}",
+                        "To": "ansa@directionshealth.com"
                       },
                       "runAfter": {},
                       "type": "ParseJson"
@@ -1122,6 +1139,7 @@
                           "type": "ApiConnection"
                       }
                   }
+                }
               },
               "expression": {
                   "and": [
@@ -1450,48 +1468,45 @@
                       },
                       "type": "object"
                   }
+                },
+                "type": "object"
               },
               "runAfter": {
                   "ANSA_JSFlattener_HttpTrigger": [
                       "Succeeded"
                   ]
               },
-              "type": "ParseJson"
-          },
-          "Parse_EntityJSON": {
-              "inputs": {
-                  "content": "@triggerBody()?['EntityJSON']",
-                  "schema": {
-                      "properties": {
-                          "Program": {
-                              "type": "string"
-                          },
-                          "Staff": {
-                              "type": "string"
-                          },
-                          "Status": {
-                              "type": "string"
-                          },
-                          "SurveyData": {
-                              "type": "string"
-                          },
-                          "SurveyID": {
-                              "type": "string"
-                          },
-                          "SurveyName": {
-                              "type": "string"
-                          }
-                      },
-                      "type": "object"
-                  }
+              "HaveAnySocialSupport": {
+                "type": "string"
               },
-              "runAfter": {},
-              "type": "ParseJson"
-          },
-          "Response": {
-              "inputs": {
-                  "body": "ANSAEmailer",
-                  "statusCode": 200
+              "HaveAnySocialSupport-Comment": {
+                "type": "string"
+              },
+              "HaveDVOrFamilySafetyConcerns": {
+                "type": "string"
+              },
+              "HaveDVOrFamilySafetyConcerns-Comment": {
+                "type": "string"
+              },
+              "HealthChecklist_STAFF": {
+                "properties": {
+                  "BBVScreening": {
+                    "type": "string"
+                  },
+                  "Dental": {
+                    "type": "string"
+                  },
+                  "SexualHealth": {
+                    "type": "string"
+                  },
+                  "Vaccinations": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "HousingSafetyITSPGoals": {
+                "type": "string"
               },
               "kind": "Http",
               "runAfter": {
@@ -1499,58 +1514,174 @@
                       "Succeeded"
                   ]
               },
-              "type": "Response"
-          }
-      },
-      "contentVersion": "1.0.0.0",
-      "outputs": {},
-      "parameters": {
-          "$connections": {
-              "defaultValue": {},
-              "type": "Object"
-          }
-      },
-      "triggers": {
-          "manual": {
-              "inputs": {
-                  "method": "POST",
-                  "schema": {
-                      "properties": {
-                          "Entity": {
-                              "type": "string"
-                          },
-                          "EntityJSON": {
-                              "type": "object"
-                          },
-                          "PartitionKey": {
-                              "type": "string"
-                          },
-                          "RowKey": {
-                              "type": "string"
-                          }
-                      },
-                      "type": "object"
-                  }
+              "Past4WkUseLedToProblemsWithFamilyFriend": {
+                "type": "string"
               },
-              "kind": "Http",
-              "type": "Request"
+              "PhysicalHealthITSPGoals": {
+                "type": "string"
+              },
+              "PhysicalHealthITSPIssues": {
+                "type": "string"
+              },
+              "PrimaryCaregiver": {
+                "type": "string"
+              },
+              "PrimaryCaregiver-Comment": {
+                "type": "string"
+              },
+              "RelationshipsITSPGoals": {
+                "type": "string"
+              },
+              "RelationshipsITSPIssues": {
+                "type": "string"
+              },
+              "RiskAssessmentChecklist": {
+                "properties": {
+                  "IndicationDV": {
+                    "type": "string"
+                  },
+                  "IndicationMHRisks": {
+                    "type": "string"
+                  },
+                  "IndicationSuicide": {
+                    "type": "string"
+                  },
+                  "PotentialOD": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "RiskAssessmentNotes": {
+                "type": "string"
+              },
+              "SubstanceUseITSPGoals": {
+                "type": "string"
+              },
+              "SubstanceUseITSPIssues": {
+                "type": "string"
+              },
+              "SupportFromWhichOtherServices": {
+                "type": "string"
+              },
+              "SupportFromWhichOtherServices-Comment": {
+                "type": "string"
+              },
+              "SupportTypeBestMatchesNeedsGoals": {
+                "type": "string"
+              },
+              "SupportTypeBestMatchesNeedsGoals-Comment": {
+                "type": "string"
+              },
+              "WhenMentalHealthDiagnosis": {
+                "type": "string"
+              },
+              "WhenMentalHealthDiagnosis-Comment": {
+                "type": "string"
+              },
+              "YourCurrentHousing": {
+                "type": "string"
+              }
+            },
+            "type": "object"
           }
+        },
+        "runAfter": {
+          "ANSA_JSFlattener_HttpTrigger": ["Succeeded"]
+        },
+        "type": "ParseJson"
+      },
+      "Parse_EntityJSON": {
+        "inputs": {
+          "content": "@triggerBody()?['EntityJSON']",
+          "schema": {
+            "properties": {
+              "Program": {
+                "type": "string"
+              },
+              "Staff": {
+                "type": "string"
+              },
+              "Status": {
+                "type": "string"
+              },
+              "SurveyData": {
+                "type": "string"
+              },
+              "SurveyID": {
+                "type": "string"
+              },
+              "SurveyName": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "runAfter": {},
+        "type": "ParseJson"
+      },
+      "Response": {
+        "inputs": {
+          "body": "ANSAEmailer",
+          "statusCode": 200
+        },
+        "kind": "Http",
+        "runAfter": {
+          "OwnUse_or_Other'sUse": ["Succeeded"]
+        },
+        "type": "Response"
       }
+    },
+    "contentVersion": "1.0.0.0",
+    "outputs": {},
+    "parameters": {
+      "$connections": {
+        "defaultValue": {},
+        "type": "Object"
+      }
+    },
+    "triggers": {
+      "manual": {
+        "inputs": {
+          "method": "POST",
+          "schema": {
+            "properties": {
+              "Entity": {
+                "type": "string"
+              },
+              "EntityJSON": {
+                "type": "object"
+              },
+              "PartitionKey": {
+                "type": "string"
+              },
+              "RowKey": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "kind": "Http",
+        "type": "Request"
+      }
+    }
   },
   "parameters": {
-      "$connections": {
-          "value": {
-              "office365": {
-                  "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/office365-4",
-                  "connectionName": "office365-4",
-                  "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/office365"
-              },
-              "wordonlinebusiness": {
-                  "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/wordonlinebusiness-1",
-                  "connectionName": "wordonlinebusiness-1",
-                  "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/wordonlinebusiness"
-              }
-          }
+    "$connections": {
+      "value": {
+        "office365": {
+          "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/office365-4",
+          "connectionName": "office365-4",
+          "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/office365"
+        },
+        "wordonlinebusiness": {
+          "connectionId": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Web/connections/wordonlinebusiness-1",
+          "connectionName": "wordonlinebusiness-1",
+          "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/providers/Microsoft.Web/locations/australiaeast/managedApis/wordonlinebusiness"
+        }
       }
+    }
   }
 }

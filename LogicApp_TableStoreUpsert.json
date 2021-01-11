@@ -2,27 +2,202 @@
   "definition": {
     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
     "actions": {
-      "ANSAEmailer": {
-        "inputs": {
-          "body": {
-            "Entity": "@triggerBody()?['Entity']",
-            "EntityJSON": "@triggerBody()?['EntityJSON']",
-            "PartitionKey": "@triggerBody()?['PartitionKey']",
-            "RowKey": "@triggerBody()?['RowKey']"
-          },
-          "host": {
-            "triggerName": "manual",
-            "workflow": {
-              "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Logic/workflows/ANSAEmailer"
+      "Condition": {
+        "actions": {
+          "Response": {
+            "inputs": {
+              "body": "ok1",
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "statusCode": 200
+            },
+            "kind": "Http",
+            "runAfter": {},
+            "type": "Response"
+          }
+        },
+        "else": {
+          "actions": {
+            "ANSAEmailDocumentCreator": {
+              "inputs": {
+                "body": {
+                  "Entity": "@triggerBody()?['Entity']",
+                  "EntityJSON": "@triggerBody()?['EntityJSON']",
+                  "PartitionKey": "@triggerBody()?['PartitionKey']",
+                  "RowKey": "@triggerBody()?['RowKey']"
+                },
+                "host": {
+                  "triggerName": "manual",
+                  "workflow": {
+                    "id": "/subscriptions/e1a42143-a624-4e4e-809d-d1271b8b0d29/resourceGroups/ansa/providers/Microsoft.Logic/workflows/ANSAEmailDocumentCreator"
+                  }
+                }
+              },
+              "runAfter": {},
+              "type": "Workflow"
+            },
+            "Execute_JavaScript_Code": {
+              "inputs": {
+                "code": "var body = workflowContext.actions.Parse_SurveyData.outputs.body;\r\nreturn {\r\n    PartitionKey: workflowContext.trigger.outputs.body.PartitionKey,\r\n    RowKey: workflowContext.trigger.outputs.body.RowKey,\r\nSDSDoYouWishToStop : parseInt(body[\"SDSDoYouWishToStop\"]),\r\nSDSDoesMissingFixMakeAnxious : parseInt(body[\"SDSDoesMissingFixMakeAnxious\"]),\r\nSDSHowDifficultToStopOrGoWithout: parseInt(body[\"SDSHowDifficultToStopOrGoWithout\"]),\r\nSDSHowMuchDoYouWorryAboutAODUse : parseInt(body[\"SDSHowMuchDoYouWorryAboutAODUse\"]),\r\nSDSIsAODUseOutOfControl : parseInt(body[\"SDSIsAODUseOutOfControl\"])\r\n} "
+              },
+              "runAfter": {
+                "Parse_SurveyData": ["Succeeded"]
+              },
+              "type": "JavaScriptCode"
+            },
+            "Insert_or_Replace_COMs": {
+              "inputs": {
+                "body": "@body('Parse_JSON_2')",
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['azuretables']['connectionId']"
+                  }
+                },
+                "method": "put",
+                "path": "/Tables/@{encodeURIComponent('COMS')}/entities(PartitionKey='@{encodeURIComponent(triggerBody()?['PartitionKey'])}',RowKey='@{encodeURIComponent(triggerBody()?['RowKey'])}')"
+              },
+              "runAfter": {
+                "Parse_JSON_2": ["Succeeded"]
+              },
+              "type": "ApiConnection"
+            },
+            "Parse_JSON": {
+              "inputs": {
+                "content": "@triggerBody()?['EntityJSON']",
+                "schema": {
+                  "properties": {
+                    "Program": {
+                      "type": "string"
+                    },
+                    "Staff": {
+                      "type": "string"
+                    },
+                    "Status": {
+                      "type": "string"
+                    },
+                    "SurveyData": {
+                      "type": "string"
+                    },
+                    "SurveyID": {
+                      "type": "string"
+                    },
+                    "SurveyName": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "runAfter": {
+                "ANSAEmailDocumentCreator": ["Succeeded"]
+              },
+              "type": "ParseJson"
+            },
+            "Parse_JSON_2": {
+              "inputs": {
+                "content": "@outputs('Execute_JavaScript_Code')?['body']",
+                "schema": {
+                  "properties": {
+                    "HaveAnySocialSupport": {
+                      "type": "string"
+                    },
+                    "HowCloseToManagingSubstanceUse": {
+                      "type": "integer"
+                    },
+                    "SDSDoYouWishToStop": {
+                      "type": "integer"
+                    },
+                    "SDSDoesMissingFixMakeAnxious": {
+                      "type": "integer"
+                    },
+                    "SDSHowDifficultToStopOrGoWithout": {
+                      "type": "integer"
+                    },
+                    "SDSHowMuchDoYouWorryAboutAODUse": {
+                      "type": "integer"
+                    },
+                    "SDSIsAODUseOutOfControl": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "runAfter": {
+                "Execute_JavaScript_Code": ["Succeeded"]
+              },
+              "type": "ParseJson"
+            },
+            "Parse_SurveyData": {
+              "inputs": {
+                "content": "@body('Parse_JSON')?['SurveyData']",
+                "schema": {
+                  "properties": {
+                    "HaveAnySocialSupport": {
+                      "type": "string"
+                    },
+                    "HowCloseToManagingSubstanceUse": {
+                      "type": "string"
+                    },
+                    "SDSDoYouWishToStop": {
+                      "type": "string"
+                    },
+                    "SDSDoesMissingFixMakeAnxious": {
+                      "type": "string"
+                    },
+                    "SDSHowDifficultToStopOrGoWithout": {
+                      "type": "string"
+                    },
+                    "SDSHowMuchDoYouWorryAboutAODUse": {
+                      "type": "string"
+                    },
+                    "SDSIsAODUseOutOfControl": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "runAfter": {
+                "Parse_JSON": ["Succeeded"]
+              },
+              "type": "ParseJson"
+            },
+            "Response_2": {
+              "inputs": {
+                "body": {
+                  "COMS": "@body('Insert_or_Replace_COMs')",
+                  "Status": "completed"
+                },
+                "headers": {
+                  "Content-Type": "application/json"
+                },
+                "statusCode": 200
+              },
+              "kind": "Http",
+              "runAfter": {
+                "Insert_or_Replace_COMs": ["Succeeded"]
+              },
+              "type": "Response"
             }
           }
         },
-        "runAfter": {
-          "Insert_or_Replace_Entity": ["Succeeded"]
+        "expression": {
+          "and": [
+            {
+              "not": {
+                "equals": ["@body('Parse_JSON_3')?['Status']", "Complete"]
+              }
+            }
+          ]
         },
-        "type": "Workflow"
+        "runAfter": {
+          "Parse_JSON_3": ["Succeeded"]
+        },
+        "type": "If"
       },
-      "Insert_or_Replace_Entity": {
+      "Insert_or_Replace_Survey_Entity": {
         "inputs": {
           "body": "@triggerBody()?['EntityJSON']",
           "host": {
@@ -36,19 +211,22 @@
         "runAfter": {},
         "type": "ApiConnection"
       },
-      "Response_2": {
+      "Parse_JSON_3": {
         "inputs": {
-          "body": "ok2",
-          "headers": {
-            "Content-Type": "application/json"
-          },
-          "statusCode": 200
+          "content": "@triggerBody()",
+          "schema": {
+            "properties": {
+              "Status": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
         },
-        "kind": "Http",
         "runAfter": {
-          "ANSAEmailer": ["Succeeded"]
+          "Insert_or_Replace_Survey_Entity": ["Succeeded"]
         },
-        "type": "Response"
+        "type": "ParseJson"
       }
     },
     "contentVersion": "1.0.0.0",
@@ -71,10 +249,16 @@
               "EntityJSON": {
                 "type": "object"
               },
+              "IsActive": {
+                "type": "integer"
+              },
               "PartitionKey": {
                 "type": "string"
               },
               "RowKey": {
+                "type": "string"
+              },
+              "Status": {
                 "type": "string"
               }
             },

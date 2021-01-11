@@ -77,12 +77,10 @@ async function doPostAction(url, data = {}) {
   }
 
   const response = await fetch(url, options);
-
-  if (!response.ok) {
-    const message = `${url} An error has occured: ${response.status}`;
-    throw new Error(message);
-  }
   let d = await response.json();
+  if (!response.ok) {
+    throw new Error(`An error has occured: ${response.status} : ${d.message}`);
+  }
 
   console.log(" response>>>>>", d);
   return d;
