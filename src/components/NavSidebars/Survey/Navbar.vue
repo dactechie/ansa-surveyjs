@@ -61,9 +61,9 @@
         <div class="font-bold text-1xl text-indigo-700 pl-4 pr-4">
           {{ surveyName }}
 
-          <div class="hidden lg:block  font-semibold text-xs text-red-300 ">
+          <!-- <div class="hidden lg:block  font-semibold text-xs text-red-300 ">
             Created: 10/10/2020 Modified: 11/10/2020
-          </div>
+          </div> -->
         </div>
         <!-- search bar -->
         <!-- <div class="relative text-gray-600">
@@ -111,16 +111,15 @@
         >
           Save Incomplete Survey
         </button> -->
-        <p class="hidden lg:flex font-semibold text-sm text-blue-700 pl-4">
+        <!-- <p class="hidden lg:flex font-semibold text-sm text-blue-700 pl-4">
           Total: {{ totalQuestions }}
         </p>
         <p class="hidden lg:flex font-semibold text-sm text-orange-400 pl-4">
           Answered: {{ answeredQuestions }}
         </p>
-        <!-- {{ totalTillNow }} -->
         <p class="hidden lg:flex font-semibold text-sm text-red-600 pl-4 pr-4">
           Mandatory: {{ reqAnsweredQuestions }}/{{ requiredQuestions }}
-        </p>
+        </p> -->
 
         <div class="px-2"></div>
         <img

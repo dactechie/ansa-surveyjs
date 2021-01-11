@@ -16,7 +16,7 @@
 
         <a
           class="m-2 font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800  shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
-          href="mailto:ict@directionshealth.com"
+          href="mailto:ict@directionshealth.com?Subject=ATOM User Request:__&Body=Add your request here..."
           target="_blank"
           >Support (E-Mail)</a
         >
@@ -27,7 +27,7 @@
           target="_blank"
           >Open Issues</a
         >
-        <span class="ml-6 text-xs text-gray-500"> v: 7-Jan-2021</span>
+        <span class="ml-6 text-xs text-gray-500"> v: 12-Jan-2021</span>
       </div>
       <!-- </ul> -->
       <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />

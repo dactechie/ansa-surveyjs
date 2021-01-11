@@ -27,7 +27,8 @@ import { getCurrentYearMonthDayString, sumUp } from "@/common/utils"; //gapInDay
 import {
   PREFILL_EXPIRY_DAYS,
   PREFILL_EXCLUSIONS,
-  INCOMPLETE_CONTINUATION_EXPIRY_DAYS
+  INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
+  MANDATORY_FIELDS
 } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
@@ -229,25 +230,69 @@ export default {
     });
 
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
+      //}, options) {
       window.scrollTo(0, 0);
       me.setCurrentPageTitle(surveyModel.currentPage.title);
-      let q = me.survey.getAllQuestions(true); //true=> visible
-      let answered = Object(q).filter(e => e.isAnswered);
+      // if (
+      //   !!options.oldCurrentPage &&
+      //   !!options.newCurrentPage &&
+      //   options.newCurrentPage.visibleIndex ===
+      //     options.oldCurrentPage.visibleIndex + 1
+      // ) {
+      //   // handle the progress bar when the user clicks on next page
+      //   me.isAutoNavigatingFromPreview = false;
+      // }
+      // let q = me.survey.getAllQuestions(true); //true=> visible
+      // let answered = Object(q).filter(e => e.isAnswered);
 
-      let required = Object(q).filter(e => e.isRequired);
-      let reqAnswered = Object(required).filter(e => e.isAnswered);
+      // let required = Object(q).filter(e => e.isRequired);
+      // let reqAnswered = Object(required).filter(e => e.isAnswered);
 
-      me.setQuestionsStatus({
-        answered: answered.length,
-        // totalTillNow: me.totalTillNow() +  me.survey.getCurrentPageQuestions().length,
-        total: q.length,
-        required: required.length,
-        reqAnswered: reqAnswered.length
-      });
+      // me.setQuestionsStatus({
+      //   answered: answered.length,
+      //   // totalTillNow: me.totalTillNow() +  me.survey.getCurrentPageQuestions().length,
+      //   total: q.length,
+      //   required: required.length,
+      //   reqAnswered: reqAnswered.length
+      // });
+
+      if (me.survey.isShowingPreview) {
+        //&& !me.isAutoNavigatingFromPreview
+        // mandatory list -> superset to all questionnaires  (Initial assess: own, other, ITSP review etc.)
+
+        const mandatoryFieldList = MANDATORY_FIELDS.split(",");
+
+        let missingMandatoryFields = [];
+        let answeredKeys = Object.keys(me.survey.getAllValues());
+        me.survey
+          .getAllQuestions(true) //true=> visible
+          .filter(
+            e =>
+              mandatoryFieldList.includes(e.name) &&
+              !answeredKeys.includes(e.name)
+          )
+          // get all mandatory & visible but not answered questions
+
+          .forEach(e => {
+            if (!me.survey.getValue(e.name)) {
+              missingMandatoryFields.push(e.name);
+            }
+          });
+        if (missingMandatoryFields.length > 0) {
+          alert("Missing mandatory fields " + missingMandatoryFields.join(","));
+          // me.isAutoNavigatingFromPreview = true;
+          me.survey.cancelPreview(); // 	Cancels preview and switches back to the "running" state.
+          me.survey.currentPage = me.survey.getQuestionByName(
+            missingMandatoryFields[0]
+          ).page.visibleIndex;
+          return;
+        }
+      }
     });
     this.survey.onValueChanged.add(() => {
       me.dirtyData = true;
     });
+
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
       me.saveSurvey("Complete");
