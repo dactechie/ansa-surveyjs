@@ -26,6 +26,7 @@ import * as SurveyVue from "survey-vue";
 import { getCurrentYearMonthDayString, sumUp } from "@/common/utils"; //gapInDays
 import {
   PREFILL_EXPIRY_DAYS,
+  PREFILL_EXCLUSIONS,
   INCOMPLETE_CONTINUATION_EXPIRY_DAYS
 } from "@/common/constants";
 // import Modal from "@/components/Modal";
@@ -202,11 +203,17 @@ export default {
       ) {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
-        sender.getAllQuestions().forEach(e => {
-          me.survey.setValue(e.name, prefillSurveyData[e.name]);
-        });
+        const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
+        sender
+          .getAllQuestions()
+          .filter(e => !prefillExclusionList.includes(e.name))
+          .forEach(e => {
+            me.survey.setValue(e.name, prefillSurveyData[e.name]);
+          });
+        // using sender.getAllQuestions() instead of  me.survey.data = prefilleSurveyData
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
+
         me.survey.setValue("Program", prefillSurvey["Program"]);
         me.survey.setValue("Staff", prefillSurvey["Staff"]);
       } else {

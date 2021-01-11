@@ -7,7 +7,7 @@
 
       <div class="invisible md:visible">
         <a
-          href="https://directionshealth.sharepoint.com/:w:/r/Shared%20Documents/ICT/ANSA/Documentation/ATOM%20Practice%20Guide.docx?d=wba5a3fc9dab845ef91efda4a92ba53d5&csf=1&web=1&e=fbQhx3"
+          href="https://directionshealth.sharepoint.com/:b:/g/EcdkvQWSdwpPkGFLPbM3l60BQIjE5Zm5ZM5boV4juKizKg?e=6GCSgZ"
           class="font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
           target="_blank"
         >
