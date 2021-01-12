@@ -10,13 +10,13 @@
 
     <survey :survey="survey"></survey>
     <!-- && (!survey || survey.state !== 'completed') -->
-    <button
+    <!-- <button
       v-if="dirtyData && isProgramSet && !survey.isCompleted"
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       @click.prevent="savePartialSurvey"
     >
       Save Incomplete Survey
-    </button>
+    </button> -->
   </div>
 </template>
 
@@ -44,7 +44,7 @@ SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp);
 export default {
   name: "SurveyComp",
   props: ["currentPage"],
-  //emits: ["search-index-built"],
+  emits: ["survey-is-ready"], //search-index-built"],
   data() {
     return {
       survey: {},
@@ -110,13 +110,14 @@ export default {
       this.setStaff(this.survey.data["Staff"]);
 
       //this.survey.data["SurveyID"] = this.$route.params.surveyid;
-      this.ADD_SURVEY_DATASERVER({
+      const response = this.ADD_SURVEY_DATASERVER({
         SLK: this.$store.state.currentClientSLK,
         surveyData: this.survey.data,
         surveyId: this.$route.params.surveyid,
         //surveyName: this.$store.state.surveyName,
         status: status
       });
+      console.log("save survey response :::: ", response);
       this.dirtyData = false;
     },
     getDataForSurvey(me) {
@@ -226,7 +227,9 @@ export default {
 
         me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
       }
+      this.dirtyData = false; // so we don't save to backend after the prefil/initial assessment date set
       me.setCurrentSurvey(me.survey); // for the nav to work
+      me.$emit("survey-is-ready");
     });
 
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
@@ -263,6 +266,7 @@ export default {
         const mandatoryFieldList = MANDATORY_FIELDS.split(",");
 
         let missingMandatoryFields = [];
+        let missingFieldPageQuestionNames = [];
         let answeredKeys = Object.keys(me.survey.getAllValues());
         me.survey
           .getAllQuestions(true) //true=> visible
@@ -276,17 +280,26 @@ export default {
           .forEach(e => {
             if (!me.survey.getValue(e.name)) {
               missingMandatoryFields.push(e.name);
+              missingFieldPageQuestionNames.push(`Question: ${e.title} \n`); // Page:${e.page.title} :
             }
           });
         if (missingMandatoryFields.length > 0) {
-          alert("Missing mandatory fields " + missingMandatoryFields.join(","));
+          // alert("Missing mandatory fields ", missingMandatoryFields);
+          alert(
+            "Missing mandatory fields " +
+              missingFieldPageQuestionNames.join(",")
+          );
           // me.isAutoNavigatingFromPreview = true;
           me.survey.cancelPreview(); // 	Cancels preview and switches back to the "running" state.
-          me.survey.currentPage = me.survey.getQuestionByName(
+          const firstMissingQuestion = me.survey.getQuestionByName(
             missingMandatoryFields[0]
-          ).page.visibleIndex;
+          );
+          me.survey.currentPage = firstMissingQuestion.page.visibleIndex;
+
           return;
         }
+      } else if (me.dirtyData && me.isProgramSet && !me.survey.isCompleted) {
+        me.savePartialSurvey();
       }
     });
     this.survey.onValueChanged.add(() => {

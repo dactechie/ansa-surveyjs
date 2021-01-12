@@ -16,9 +16,9 @@
 
         <a
           class="m-2 font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800  shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
-          href="mailto:ict@directionshealth.com?Subject=ATOM User Request:__&Body=Add your request here..."
+          href="mailto:atom.feedback@directionshealth.com?Subject=ATOM User Request: _____&Body=Add your request here..."
           target="_blank"
-          >Support (E-Mail)</a
+          >Feedback/Support (E-Mail)</a
         >
 
         <a
@@ -63,10 +63,10 @@
             :class="{ activeClass: showSpinner }"
           >
             <div
-              class="m-10 mb-5 invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-b from-green-100 to-blue-100"
+              class="m-10  invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-b from-green-100 to-blue-100"
             >
               <!-- <div v-if="showInstructions"> -->
-              <div class="m-10">
+              <div class="pl-5 my-5 mx-5 mb-5">
                 <span class="font-semibold">
                   Start by entering your client's details using the search
                   function on the left.</span
@@ -83,12 +83,26 @@
                 client, a table of previous ATOMs will be shown below. Click on
                 a row to see the submission details.
               </div>
-              <!-- </div> -->
+              <div class="pl-5 mx-5 mb-5">
+                <span class="font-semibold">Notes: </span>
+                <ul class="list-disc">
+                  <li>
+                    ATOM ITSP Review Assesments will
+                    <span class="font-semibold text-red-500">pre-fill</span>
+                    from the previous assessment.
+                  </li>
+                  <li>
+                    <span class="font-semibold">Issues and Goals</span> for each
+                    domain will not pre-fill. Please review with your client and
+                    updated accordingly.
+                  </li>
+                </ul>
+              </div>
             </div>
             <div
               class="mt-4 invisible md:visible shadow-md rounded-lg p-2 pl-3 rounded-bl-3xl bg-indigo-100"
             >
-              <img src="@/assets/images/LookupAnimation.gif" />
+              <img src="@/assets/images/LookupAnimation-oie.gif" />
             </div>
           </div>
 

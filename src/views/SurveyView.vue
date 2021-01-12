@@ -8,7 +8,11 @@
   >
     <Navbar />
     <div class="flex flex-wrap justify-center">
-      <LeftsideNavbar class="flex-auto" @page-change="visitPage" />
+      <LeftsideNavbar
+        v-if="sideBarOpen && surveyIsReady"
+        class="flex-auto"
+        @page-change="visitPage"
+      />
       <div
         class="lg:w-full lg:ml-40 md:ml-20 bg-gray-100 pl-10  min-h-screen"
         id="main-content"
@@ -16,7 +20,10 @@
         <div class="p-10 bg-gray-100 mb-20">
           <!-- @click.native="sideBarOpen ? 'ove' : ''"
             @search-index-built="onSearchReady" -->
-          <SurveyComp :currentPage="currentPage" />
+          <SurveyComp
+            :currentPage="currentPage"
+            @survey-is-ready="surveyIsReady = true"
+          />
         </div>
       </div>
     </div>
@@ -67,7 +74,8 @@ export default {
   data() {
     return {
       currentPage: 1,
-      searchIndexData: {}
+      surveyIsReady: false
+      // searchIndexData: {}
     };
   },
   components: {
@@ -82,18 +90,18 @@ export default {
   methods: {
     visitPage(page) {
       this.currentPage = page;
-    },
-    onSearchReady(searchIndexData) {
-      this.searchIndexData = searchIndexData;
-    },
-    toggleSidebar() {
-      this.$store.dispatch("toggleSidebar");
-      // if (this.sideBarOpen)
-      //   document.getElementsByClassName("sv-body")[0].style.marginLeft =
-      //     "150px";
-      // else
-      //   document.getElementsByClassName("sv-body")[0].style.marginLeft = "0px";
     }
+    // onSearchReady(searchIndexData) {
+    //   this.searchIndexData = searchIndexData;
+    // },
+    // toggleSidebar() {
+    //   this.$store.dispatch("toggleSidebar");
+    //   // if (this.sideBarOpen)
+    //   //   document.getElementsByClassName("sv-body")[0].style.marginLeft =
+    //   //     "150px";
+    //   // else
+    //   //   document.getElementsByClassName("sv-body")[0].style.marginLeft = "0px";
+    // }
   }
 };
 </script>
