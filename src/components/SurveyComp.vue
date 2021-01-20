@@ -205,13 +205,22 @@ export default {
       ) {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
-        const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
-        sender
-          .getAllQuestions()
-          .filter(e => !prefillExclusionList.includes(e.name))
-          .forEach(e => {
+        //
+        // if continuing a survey, we want to prefill everything.
+        //
+        if (prefillSurvey["Status"] !== "Incomplete") {
+          const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
+          sender
+            .getAllQuestions()
+            .filter(e => !prefillExclusionList.includes(e.name))
+            .forEach(e => {
+              me.survey.setValue(e.name, prefillSurveyData[e.name]);
+            });
+        } else {
+          sender.getAllQuestions().forEach(e => {
             me.survey.setValue(e.name, prefillSurveyData[e.name]);
           });
+        }
         // using sender.getAllQuestions() instead of  me.survey.data = prefilleSurveyData
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
@@ -227,9 +236,14 @@ export default {
 
         me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
       }
-      this.dirtyData = false; // so we don't save to backend after the prefil/initial assessment date set
+
+      me.dirtyData = false; // so we don't save to backend after the prefil/initial assessment date set
       me.setCurrentSurvey(me.survey); // for the nav to work
       me.$emit("survey-is-ready");
+
+      me.survey.onValueChanged.add(() => {
+        me.dirtyData = true;
+      });
     });
 
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
@@ -301,9 +315,6 @@ export default {
       } else if (me.dirtyData && me.isProgramSet && !me.survey.isCompleted) {
         me.savePartialSurvey();
       }
-    });
-    this.survey.onValueChanged.add(() => {
-      me.dirtyData = true;
     });
 
     this.survey.onComplete.add(function(survey, options) {
