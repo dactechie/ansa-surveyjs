@@ -1,11 +1,11 @@
 <template>
   <div>
-    <button
+    <!-- <button
       class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-300 hover:border-red-400 hover:bg-red-300 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
       @click="clearLookupResults"
     >
       Clear Results
-    </button>
+    </button> -->
     <!-- <ITSPCompareModal
       v-if="showModal"
       :selectedIndex="selectedIndex"
