@@ -169,7 +169,7 @@ export default {
     },
     slk: function() {
       if (this.picked_type === "by_slk") {
-        return this.idVal;
+        return this.idVal.trim();
       }
       if (!this.fname || !this.lname || !this.dob || !this.sex_type) return "";
       return getSLK(this.fname, this.lname, this.dob, this.sex_type);
