@@ -17,8 +17,12 @@
       <thead>
         <!-- <th>SLK</th> -->
         <th class="bg-teal-100 text-gray-700 border border-gray-300">
+          Assessment Date
+        </th>
+        <th class="bg-teal-100 text-gray-700 border border-gray-300">
           Last Modified
         </th>
+
         <th class="bg-teal-100 text-gray-700 border border-gray-300">Team</th>
         <th class="bg-teal-100 text-gray-700 border border-gray-300">Staff</th>
         <th class="bg-teal-100 text-gray-700 border border-gray-300">Status</th>
@@ -80,6 +84,7 @@ export default {
 
       let colHeaders = [
         // "PartitionKey",
+        // "AssessmentDate",
         "Timestamp",
         "Program",
         "Staff",
@@ -94,8 +99,15 @@ export default {
 
       data.forEach(function(c) {
         c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
+
         let td = colHeaders.map(h => c[h]);
-        //td["Survey Type"] = c["SurveyName"];
+
+        const assdate = getFriendlyTimestampString(
+          new Date(Date.parse(c["SurveyData"]["AssessmentDate"]))
+        );
+
+        td.unshift(assdate.substr(0, 10));
+
         tableVals.push(td);
       });
 
