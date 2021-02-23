@@ -12,12 +12,25 @@ import {
 import { generateRowKey } from "@/helper-functions/survey-helpers";
 
 export default {
+  sortByAssessmentDate(surveyDataObject) {
+    const result = surveyDataObject.sort((a, b) => {
+      let aDate = new Date(Date.parse(a["SurveyData"]["AssessmentDate"]));
+      let bDate = new Date(Date.parse(b["SurveyData"]["AssessmentDate"]));
+      if (aDate > bDate) return -1;
+      if (aDate < bDate) return 1;
+      return 0;
+    });
+    return result;
+  },
+
   async getBySLK(slk, userMode) {
-    return await getClientDataByPartitionKey(slk, userMode);
+    let result = await getClientDataByPartitionKey(slk, userMode);
+    return this.sortByAssessmentDate(result);
   },
 
   async getByIDAndType(id, idType, userMode) {
-    return await getClientDataByClientID(id, idType, userMode);
+    const result = await getClientDataByClientID(id, idType, userMode);
+    return this.sortByAssessmentDate(result);
   },
 
   async createData(SLK, rowData, keyDate, userMode) {

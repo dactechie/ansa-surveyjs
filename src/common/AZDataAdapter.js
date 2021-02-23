@@ -89,8 +89,5 @@ export function fromAZDataArray(data) {
     }
     cdata.push(cd);
   }
-  cdata.sort((a, b) => {
-    return a["Timestamp"] < b["Timestamp"] ? -1 : 1;
-  });
   return cdata;
 }

@@ -110,7 +110,9 @@ export default {
 
         tableVals.push(td);
       });
-
+      // tableVals.sort((a, b) => {
+      //   return a[0] < b[0] ? -1 : 1;
+      // });
       return tableVals;
     }
   },
