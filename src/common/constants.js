@@ -3,6 +3,8 @@ export const APPLICATION_MODE_ADMIN = 1;
 
 export const APP_ENVIRONMENT = process.env.VUE_APP_ENVIRONMENT || "prod";
 
+export const APP_AZSLOT = process.env.VUE_APP_AZSLOT || "prod";
+
 export const PARTITION_KEY = "PartitionKey";
 export const ROW_KEY = "RowKey";
 
