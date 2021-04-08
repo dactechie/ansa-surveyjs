@@ -1,5 +1,5 @@
 import { doGetAction } from "./RESTClient";
-import { APP_AZSLOT as PROD_STAGING } from "../common/constants";
+// import { APP_AZSLOT as PROD_STAGING } from "../common/constants";
 
 const QUESTION_URL = process.env.VUE_APP_LOAD_QUESTIONNAIRES_URL;
 
@@ -15,20 +15,32 @@ export default {
     //     surveyid: "ae192b2d-1793-471e-b937-e36ddb9badbf"
     //   }
     // ];
+    // Prod
+    const SurveyIds_INAS_ITSP = process.env.VUE_APP_SURVEYIDs_INAS_ITSP.split(
+      "_"
+    );
+    // ["8a434de3-a367-42ea-a5a2-21a95cb1d65c", "15ca1eb1-3ffa-4af4-81dc-d3a89c76002b"]
 
     const response = await doGetAction(QUESTION_URL);
-
     const finalList = await response
-      .filter(s => s["IsPublished"] !== false)
-      .filter(s => {
-        if (PROD_STAGING === "staging") {
-          return s["Name"].startsWith("Staging_");
-        }
-        return s;
-      })
+      .filter(
+        s => s["IsPublished"] !== false && SurveyIds_INAS_ITSP.includes(s["Id"])
+      )
       .map(s => {
         return { name: s["Name"].replace("Staging_", ""), surveyid: s["Id"] };
       });
+
+    // const finalList = await response
+    //   .filter(s => s["IsPublished"] !== false)
+    //   .filter(s => {
+    //     if (PROD_STAGING === "staging") {
+    //       return s["Name"].startsWith("Staging_");
+    //     }
+    //     return s;
+    //   })
+    //   .map(s => {
+    //     return { name: s["Name"].replace("Staging_", ""), surveyid: s["Id"] };
+    //   });
     console.log("surveys list", finalList);
     return await finalList;
   }
