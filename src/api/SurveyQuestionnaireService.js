@@ -2,6 +2,8 @@ import { doGetAction } from "./RESTClient";
 // import { APP_AZSLOT as PROD_STAGING } from "../common/constants";
 
 const QUESTION_URL = process.env.VUE_APP_LOAD_QUESTIONNAIRES_URL;
+const INAS_ITSP = process.env.VUE_APP_SURVEYIDS_INAS_ITSP;
+const SurveyIds_INAS_ITSP = INAS_ITSP.split("_");
 
 export default {
   async getSurveysNameID() {
@@ -16,9 +18,7 @@ export default {
     //   }
     // ];
     // Prod
-    const SurveyIds_INAS_ITSP = process.env.VUE_APP_SURVEYIDs_INAS_ITSP.split(
-      "_"
-    );
+
     // ["8a434de3-a367-42ea-a5a2-21a95cb1d65c", "15ca1eb1-3ffa-4af4-81dc-d3a89c76002b"]
 
     const response = await doGetAction(QUESTION_URL);
