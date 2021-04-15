@@ -5,6 +5,9 @@ export const APP_ENVIRONMENT = process.env.VUE_APP_ENVIRONMENT || "prod";
 
 export const APP_AZSLOT = process.env.VUE_APP_AZSLOT || "prod";
 
+export const SURVEY_IDS =
+  process.env.VUE_APP_SURVEYIDS_INAS_ITSP || "unknownids";
+
 export const PARTITION_KEY = "PartitionKey";
 export const ROW_KEY = "RowKey";
 
@@ -27,7 +30,6 @@ export const MILLIS_IN_DAY = 86_400_000; // 24 * 60 * 60 * 1000
 export const MILLIS_IN_YEAR = 31_536_000_000; // 365 * MILLIS_IN_DAY
 
 export const DB_IDTYPE_CCARE = "CCARE";
-//export const DB_IDTYPE_TED = "TED";
 
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
