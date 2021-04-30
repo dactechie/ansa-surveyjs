@@ -174,6 +174,11 @@ export default {
     }
   },
   created() {
+    window.onbeforeunload = function a() {
+      if (me.dirtyData) {
+        return "Please navigate to another page on the survey to save your changes. Are you sure you want to exit without saving the changes on this page ?";
+      }
+    };
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
