@@ -27,7 +27,7 @@
           target="_blank"
           >Open Issues</a
         >
-        <span class="ml-6 text-xs text-gray-500"> v: 18-Feb-2021</span>
+        <span class="ml-6 text-xs text-gray-500">v: 7-May-2021</span>
       </div>
       <!-- </ul> -->
       <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />
@@ -264,7 +264,7 @@ export default {
         this.surveyListForClient = this.filterButtonType("ATOM Initial");
         return;
       }
-      const lastSurveyDone = this.clientData[this.clientData.length - 1];
+      const lastSurveyDone = this.clientData[0];
       const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
       const lastSurveyStatus = lastSurveyDone["Status"];
 

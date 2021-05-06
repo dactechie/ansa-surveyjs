@@ -349,6 +349,15 @@ export default {
     console.log(" mounted -> survey data", this.survey.data);
   },
   beforeDestroy() {
+    if (this.dirtyData && !this.survey.isCompleted) {
+      let addnl = this.isProgramSet ? "" : "Please set the Program (team).";
+      if (
+        confirm(`You have unsaved changes. Do you want to save them? ${addnl}`)
+      ) {
+        this.savePartialSurvey();
+        console.log("Saved changes");
+      }
+    }
     console.log("before destroy, clearing client sate");
     this.clearState();
   }
