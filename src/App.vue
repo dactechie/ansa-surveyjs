@@ -1,6 +1,9 @@
 <template>
-  <div id="app">
-    <div class="font-semibold text-xs text-white" v-if="APP_AZSLOT === 'staging'">
+  <div id="app" :style="backgroundStyle">
+    <div
+      class="font-semibold text-xs text-white"
+      v-if="APP_AZSLOT === 'staging'"
+    >
       "Staging env" | | INCOMPLETE_CONTINUATION_EXPIRY_DAYS:
       {{ INCOMPLETE_CONTINUATION_EXPIRY_DAYS }} | | VUE_APP_PREFILL_EXPIRY_DAYS:
       {{ PREFILL_EXPIRY_DAYS }} | | SURVEY_IDS {{ SURVEY_IDS }}
@@ -26,17 +29,23 @@ export default {
       INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
       APP_AZSLOT
     };
+  },
+  computed: {
+    backgroundStyle: function() {
+      if (APP_AZSLOT === "staging") {
+        return { backgroundColor: "#e9e7f5" };
+      }
+      return "";
+    }
   }
 };
 </script>
 <style>
-#app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif;
+/* #app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-  background-color: mediumslateblue;
-  /* color: #2c3e50; */
-}
+  -moz-osx-font-smoothing: grayscale;
+} */
 /*
 #nav {
   padding: 30px;
