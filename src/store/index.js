@@ -32,7 +32,8 @@ export default new Vuex.Store({
     applicationMode: APPLICATION_MODE_NORMAL,
     currentPageTitle: "",
     clientLookupIDs: {},
-    questionsStatus: {}
+    questionsStatus: {},
+    missingMandatoryFields: []
   },
   getters: {
     getApplicationMode: state => {
@@ -77,9 +78,6 @@ export default new Vuex.Store({
     getClientData: state => {
       return state.clientData;
     },
-    getCurrentSurveyName: state => {
-      return state.surveyName;
-    },
     getCurrentClientSLK: state => {
       return state.currentClientSLK;
     },
@@ -88,6 +86,9 @@ export default new Vuex.Store({
     },
     getCurrentSurveyData: state => {
       return state.currentSurveyData;
+    },
+    getMissingMandatoryFields: state => {
+      return state.missingMandatoryFields;
     }
     // getSurveyIDForName: (state, surveyName) => {
     //   console.log("getting id for ", surveyName);

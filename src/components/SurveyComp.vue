@@ -32,20 +32,41 @@ import {
 } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
+//import simpleIAJSON from "../simpleIAJSON";
+// import FakeEpisodes from "@/FakeEpisodes";
+
+// eslint-disable-next-line
+// function completionMandatoryValidator(params) {
+//   // no access to vuex store jst to sessionStorage
+//   const hasReviewed = sessionStorage.getItem("hasReviewed");
+//   if (hasReviewed) {
+//     console.log(params);
+//     // const value = params[0];
+//   }
+//   return false;
+// }
+
+// const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
 SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp);
+// SurveyVue.FunctionFactory.Instance.register(
+//   "completionMandatoryValidator",
+//   completionMandatoryValidator
+// );
+
 //const fakeData = FakeEpisodes[0];
 
 export default {
   name: "SurveyComp",
   props: ["currentPage"],
-  emits: ["survey-is-ready"], //search-index-built"],
+  emits: ["survey-is-ready"], //search-index-built"],F
   data() {
     return {
       survey: {},
       dirtyData: false,
       showModal: false,
-      modalContent: ""
+      modalContent: "",
+      mandatoryFieldList: MANDATORY_FIELDS.split(",")
     };
   },
   // components: {
@@ -72,13 +93,17 @@ export default {
       "setClientSLK",
       "setStaff",
       "setQuestionsStatus",
-      "setSurveyName"
+      "setSurveyName",
+      "hideSideBar",
+      "setSidebarState",
+      "setMissingMandatoryFields"
     ]),
     ...mapGetters([
       "getCurrentSurveyData",
-      "getCurrentSurvey",
-      "getCurrentSurveyName",
-      "getClientLookupIDs"
+      // "getCurrentSurvey",
+      // "getCurrentSurveyName",
+      "getClientLookupIDs",
+      "sideBarOpen"
       // "totalTillNow"
     ]),
     savePartialSurvey() {
@@ -276,8 +301,8 @@ export default {
       if (me.survey.isShowingPreview) {
         //&& !me.isAutoNavigatingFromPreview
         // mandatory list -> superset to all questionnaires  (Initial assess: own, other, ITSP review etc.)
-
-        const mandatoryFieldList = MANDATORY_FIELDS.split(",");
+        const oldSidebarState = me.sideBarOpen();
+        me.hideSideBar();
 
         let missingMandatoryFields = [];
         let missingFieldPageQuestionNames = [];
@@ -286,7 +311,7 @@ export default {
           .getAllQuestions(true) //true=> visible
           .filter(
             e =>
-              mandatoryFieldList.includes(e.name) &&
+              me.mandatoryFieldList.includes(e.name) &&
               !answeredKeys.includes(e.name)
           )
           // get all mandatory & visible but not answered questions
@@ -298,6 +323,7 @@ export default {
             }
           });
         if (missingMandatoryFields.length > 0) {
+          me.setMissingMandatoryFields(missingMandatoryFields);
           // alert("Missing mandatory fields ", missingMandatoryFields);
           alert(
             "Missing mandatory fields " +
@@ -308,6 +334,8 @@ export default {
           const firstMissingQuestion = me.survey.getQuestionByName(
             missingMandatoryFields[0]
           );
+          // add this class to all missing mandatory questions :   sv-question__title--error
+          me.setSidebarState(oldSidebarState);
           me.survey.currentPage = firstMissingQuestion.page.visibleIndex;
 
           return;

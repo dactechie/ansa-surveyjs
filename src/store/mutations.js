@@ -48,5 +48,14 @@ export const mutations = {
   },
   toggleSidebar(state) {
     state.sideBarOpen = !state.sideBarOpen;
+  },
+  hideSideBar(state) {
+    state.sideBarOpen = false;
+  },
+  setSidebarState(state, payload) {
+    state.sideBarOpen = payload;
+  },
+  setMissingMandatoryFields(state, payload) {
+    state.missingMandatoryFields = payload;
   }
 };

@@ -23,6 +23,7 @@ import {
 
 export default {
   data() {
+    console.log("app slot : ", APP_AZSLOT);
     return {
       SURVEY_IDS,
       PREFILL_EXPIRY_DAYS,
