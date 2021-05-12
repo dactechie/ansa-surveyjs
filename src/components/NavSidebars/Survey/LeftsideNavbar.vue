@@ -25,11 +25,7 @@
           v-for="(nPage, index) in visiblePages"
           :key="index"
           class="mb-4  lg:mb-2"
-          :class="[
-            nPage.isActive
-              ? 'pl-1 text-teal-700 rounded border-2 border-blue-300 border-opacity-50 bg-teal-100 opacity-80'
-              : 'text-gray-600'
-          ]"
+          :class="getPageClass(nPage)"
         >
           <button
             class="mx-auto py-1 focus:outline-none transition duration-200 ease-in-out relative hover:translate-x-2px hover:text-gray-900  font-medium"
@@ -55,10 +51,32 @@ export default {
 
     visiblePages: function() {
       return this.getCurrentSurvey().visiblePages;
+    },
+    missingMandatoryFields: function() {
+      return this.getMissingMandatoryFields();
     }
   },
   methods: {
-    ...mapGetters(["getCurrentSurvey"]),
+    ...mapGetters(["getCurrentSurvey", "getMissingMandatoryFields"]),
+
+    getPageClass(page) {
+      const missingMandatoryQuestions = page.questions.filter(q =>
+        this.missingMandatoryFields.includes(q.name)
+      );
+      if (missingMandatoryQuestions.length > 0) {
+        return page.isActive
+          ? [
+              "pl-1 text-red-700 rounded border-2 border-yellow-500 border-opacity-50 bg-red-100 opacity-80"
+            ]
+          : ["text-red-400"];
+      } else {
+        return page.isActive
+          ? [
+              "pl-1 text-teal-700 rounded border-2 border-blue-300 border-opacity-50 bg-teal-100 opacity-80"
+            ]
+          : ["text-gray-600"];
+      }
+    },
     gotoLink(index) {
       if (this.getCurrentSurvey().pages[index]) {
         console.log("here", index);
