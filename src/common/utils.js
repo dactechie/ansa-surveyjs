@@ -8,10 +8,6 @@ function getFriendlyTimestampString(dateObj) {
   })} ${dateObj.toLocaleTimeString()}`;
 }
 
-function getCurrentTimestamp() {
-  return getFriendlyTimestampString(new Date());
-}
-
 function getCurrentYearMonthDay() {
   const now = new Date();
   return {
@@ -45,12 +41,14 @@ function gapInDays(yyyy_mm_dd) {
 const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 // Validates that the input string is a valid date formatted as "ddmmyyyy"
 function isValidDate(dayStr, monthStr, yearStr) {
-  const day = parseInt(dayStr);
-  const month = parseInt(monthStr);
-  const year = parseInt(yearStr);
+  const [day, month, year] = [
+    parseInt(dayStr),
+    parseInt(monthStr),
+    parseInt(yearStr)
+  ];
 
   // Check the ranges of month and year
-  if (year < 1000 || year > 3000 || month == 0 || month > 12) return false;
+  if (year < 1910 || year > 2050 || month == 0 || month > 12) return false;
 
   // Adjust for leap years
   if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
@@ -71,7 +69,6 @@ function sumUp(list) {
 export {
   getCurrentYearMonthDay,
   getCurrentYearMonthDayString,
-  getCurrentTimestamp,
   getFriendlyTimestampString,
   gapInDays,
   sumUp,

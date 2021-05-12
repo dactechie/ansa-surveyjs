@@ -1,7 +1,7 @@
 import SurveyService from "@/api/SurveyService";
 import QuestionnaireService from "@/api/SurveyQuestionnaireService";
 import { PARTITION_KEY, DB_META_KEYS } from "@/common/constants";
-import { getCurrentTimestamp } from "@/common/utils";
+import { getFriendlyTimestampString } from "@/common/utils";
 
 export default {
   toggleSidebar(context) {
@@ -60,7 +60,7 @@ export default {
       // if this is a brand new object to be stored, there won't be a 'Timestamp'
       // use this info to capture the created date time.
       if (!("Timestamp" in data)) {
-        data["CreatedDatetime"] = getCurrentTimestamp();
+        data["CreatedDatetime"] = getFriendlyTimestampString(new Date());
       } else {
         console.log("Pre save timestamp: ", data["TimeStamp"]);
         // data update (Put):

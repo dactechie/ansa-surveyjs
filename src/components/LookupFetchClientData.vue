@@ -160,7 +160,7 @@ export default {
       fname: "",
       lname: "",
       minDate: new Date(year - 90, month, day),
-      maxDate: new Date(year - 15, month, day)
+      maxDate: new Date(year - 12, month, day)
     };
   },
   computed: {

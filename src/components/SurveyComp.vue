@@ -32,11 +32,6 @@ import {
 } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
-//import simpleIAJSON from "../simpleIAJSON";
-// import FakeEpisodes from "@/FakeEpisodes";
-
-// eslint-disable-next-line
-const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
 SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp);
 //const fakeData = FakeEpisodes[0];
