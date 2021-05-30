@@ -66,7 +66,8 @@ export default {
       dirtyData: false,
       showModal: false,
       modalContent: "",
-      mandatoryFieldList: MANDATORY_FIELDS.split(",")
+      mandatoryFieldList: MANDATORY_FIELDS.split(","),
+      hasPreviewed: false
     };
   },
   // components: {
@@ -297,34 +298,36 @@ export default {
       //   required: required.length,
       //   reqAnswered: reqAnswered.length
       // });
+      let missingMandatoryFields = [];
+      let missingFieldPageQuestionNames = [];
+      let answeredKeys = Object.keys(me.survey.getAllValues());
+      me.survey
+        .getAllQuestions(true) //true=> visible
+        .filter(
+          e =>
+            me.mandatoryFieldList.includes(e.name) &&
+            !answeredKeys.includes(e.name)
+        )
+        // get all mandatory & visible but not answered questions
 
+        .forEach(e => {
+          if (!me.survey.getValue(e.name)) {
+            missingMandatoryFields.push(e.name);
+            missingFieldPageQuestionNames.push(`Question: ${e.title} \n`); // Page:${e.page.title} :
+          }
+        });
+      if (this.hasPreviewed && missingMandatoryFields.length > 0) {
+        me.setMissingMandatoryFields(missingMandatoryFields);
+      }
       if (me.survey.isShowingPreview) {
         //&& !me.isAutoNavigatingFromPreview
         // mandatory list -> superset to all questionnaires  (Initial assess: own, other, ITSP review etc.)
+        this.hasPreviewed = true;
         const oldSidebarState = me.sideBarOpen();
         me.hideSideBar();
 
-        let missingMandatoryFields = [];
-        let missingFieldPageQuestionNames = [];
-        let answeredKeys = Object.keys(me.survey.getAllValues());
-        me.survey
-          .getAllQuestions(true) //true=> visible
-          .filter(
-            e =>
-              me.mandatoryFieldList.includes(e.name) &&
-              !answeredKeys.includes(e.name)
-          )
-          // get all mandatory & visible but not answered questions
-
-          .forEach(e => {
-            if (!me.survey.getValue(e.name)) {
-              missingMandatoryFields.push(e.name);
-              missingFieldPageQuestionNames.push(`Question: ${e.title} \n`); // Page:${e.page.title} :
-            }
-          });
         if (missingMandatoryFields.length > 0) {
-          me.setMissingMandatoryFields(missingMandatoryFields);
-          // alert("Missing mandatory fields ", missingMandatoryFields);
+          // me.setMissingMandatoryFields(missingMandatoryFields);
           alert(
             "Missing mandatory fields " +
               missingFieldPageQuestionNames.join(",")

@@ -4,7 +4,7 @@
       class="font-semibold text-xs text-white"
       v-if="APP_AZSLOT === 'staging'"
     >
-      <div class="lg:w-full lg:ml-40 md:ml-20 pl-10">
+      <div class="lg:ml-40 md:ml-20 pl-10">
         "Staging env" | | INCOMPLETE_CONTINUATION_EXPIRY_DAYS:
         {{ INCOMPLETE_CONTINUATION_EXPIRY_DAYS }} | |
         VUE_APP_PREFILL_EXPIRY_DAYS: {{ PREFILL_EXPIRY_DAYS }} | | SURVEY_IDS
