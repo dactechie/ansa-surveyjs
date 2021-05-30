@@ -74,34 +74,34 @@
           "isRequired": true,
           "choices": [
             {
-              "value": "vic.may",
+              "value": "Vic.May",
               "text": "Vic",
               "visibleIf": "{Program} = 'EUROPATH'"
             },
             {
-              "value": "glenda.mccarthy",
+              "value": "Glenda.Mccarthy",
               "text": "Glenda",
               "visibleIf": "{Program} = 'EUROPATH'"
             },
             {
-              "value": "jacinta.hayward-ryan",
+              "value": "Jacinta.Ryan",
               "text": "Jacinta",
               "visibleIf": "{Program} = 'EUROPATH' or {Program} = 'MONPATH'"
             },
             {
-              "value": "tracy.sims",
+              "value": "Tracy.Sims",
               "text": "Tracy",
               "visibleIf": "{Program} = 'EUROPATH'"
             },
             {
-              "value": "belinda.pendergast",
+              "value": "Belinda.Pendergast",
               "text": "Belinda",
               "visibleIf": "{Program} = 'MONPATH'"
             },
             {
-              "value": "michelle.figares",
+              "value": "Michelle.Figares",
               "text": "Michelle",
-              "visibleIf": "{Program} = 'BEGAPATH'"
+              "visibleIf": "{Program} = 'TSS'"
             },
             {
               "value": "Tim.Ireson",
@@ -114,34 +114,24 @@
               "visibleIf": "{Program} = 'SAPPHIRE'"
             },
             {
-              "value": "canon.hanly",
-              "text": "Canon",
-              "visibleIf": "{Program} = 'TSS'"
-            },
-            {
-              "value": "charles.debaecker",
+              "value": "Charles.Debaecker",
               "text": "Charles",
               "visibleIf": "{Program} = 'GRIFHEAD' or {Program} = 'GRIFWIO'"
             },
             {
-              "value": "craig.maxwell",
+              "value": "Craig.Maxwell",
               "text": "Craig",
               "visibleIf": "{Program} = 'MURMICE'"
             },
             {
-              "value": "deanna.price-maxwell",
+              "value": "Deanna.Price-Maxwell",
               "text": "Deanna",
               "visibleIf": "{Program} = 'MURMICE'"
             },
             {
-              "value": "elizabeth.newcombe",
+              "value": "Elizabeth.Newcombe",
               "text": "Libby",
               "visibleIf": "{Program} = 'GOLBGNRL' or {Program} = 'GOLBICE'"
-            },
-            {
-              "value": "camila.kuss",
-              "text": "Camila",
-              "visibleIf": "{Program} = 'TSS'"
             },
             {
               "value": "Ronan.OConnor",
@@ -149,13 +139,63 @@
               "visibleIf": "{Program} = 'SAPPHIRE' or {Program} = 'BEGAPATH'"
             },
             {
-              "value": "Anne-Marie.ONeill",
-              "text": "Anne-Marie",
+              "value": "Anne-Maree.ONeill",
+              "text": "Anne-Maree",
               "visibleIf": "{Program} = 'SAPPHIRE'"
+            },
+            {
+              "value": "Mysh.Kirkwood",
+              "text": "Mysh",
+              "visibleIf": "{Program} = 'COCO'"
+            },
+            {
+              "value": "Sarah.Whitfield",
+              "text": "Sarah",
+              "visibleIf": "{Program} = 'COCO'"
+            },
+            {
+              "value": "Ainsley.Kelly",
+              "text": "Ainsley",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Camila.Kuss",
+              "text": "Camila",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Canon.Hanly",
+              "text": "Canon",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Catherine.Dooley",
+              "text": "Catherine",
+              "visibleIf": "{Program} = 'TSS'"
             },
             {
               "value": "Emiltus.Emmanuel",
               "text": "Emiltus",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Holly.Pither",
+              "text": "Holly",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Ian.Jannaway",
+              "text": "Ian",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Karen.Freedman",
+              "text": "Karen",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Krysia.Keefe",
+              "text": "Krysia",
               "visibleIf": "{Program} = 'TSS'"
             },
             {
@@ -169,14 +209,43 @@
               "visibleIf": "{Program} = 'TSS'"
             },
             {
-              "value": "Catherine.Dooley",
-              "text": "Catherine",
+              "value": "Maurice.Rickard",
+              "text": "Maurice",
               "visibleIf": "{Program} = 'TSS'"
             },
             {
-              "value": "Michelle.Oreskovic",
-              "text": "Michelle O",
+              "value": "Nurgul.Sawut",
+              "text": "Nurgul",
               "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Oliver.Lewis",
+              "text": "Ollie",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Robyn.Davis",
+              "text": "Robyn",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Tina.Dowse",
+              "text": "Tina",
+              "visibleIf": "{Program} = 'TSS'"
+            },
+            {
+              "value": "Liz.Scott",
+              "text": "Liz",
+              "visibleIf": "{Program} = 'BEGAPATH'"
+            },
+            {
+              "value": "Anne-Maree.ONeill",
+              "text": "Anne-Maree",
+              "visibleIf": "{Program} = 'SAPPHIRE'"
+            },
+            {
+              "value": "Kurt.Simpson",
+              "text": "Kurt"
             },
             {
               "value": "Simon.Grealy",
@@ -186,6 +255,11 @@
             {
               "value": "Ben.Laycock",
               "text": "Ben",
+              "visibleIf": "{Program} = 'SAPPHIRE'"
+            },
+            {
+              "value": "Mary-Anne.Gurr",
+              "text": "Mary-Anne",
               "visibleIf": "{Program} = 'SAPPHIRE'"
             },
             {
@@ -251,21 +325,202 @@
               "cellType": "dropdown",
               "isRequired": true,
               "choices": [
-                "Alcohol",
-                "Cannabinoids and related drugs",
-                "Amphetamines",
-                "MDMA / Ecstacy",
-                "Psychostimulants",
-                "Benzodiazepines",
-                "Pharmaceutical Opioids",
-                "Heroin",
-                "Methadone",
-                "Cocaine",
-                "Nicotine",
+                {
+                  "value": "Ethanol",
+                  "text": "Alcohol (Ethanol)"
+                },
+                "Amphetamines, n.f.d",
+                "Benzodiazepines, n.f.d.",
                 "Caffeine",
-                "Steroids and other anabolic agents",
+                "Cannabinoids and Related Drugs, n.f.d.",
+                "Cocaine",
                 "Gambling",
-                "Other"
+                "Heroin",
+                "MDMA/Ecstasy",
+                "Methadone",
+                "Methamphetamine",
+                "Nicotine",
+                "Pharmaceutical Opioids, n.f.d.",
+                "Psychostimulants, n.f.d.",
+                {
+                  "value": "Other Drugs of Concern",
+                  "text": "--- Other Drugs of Concern ---"
+                },
+                "1-(3-Trifluoromethylphenyl)-piperazine",
+                "1,4-butanediol",
+                "1-Benzylpiperazine",
+                "2C-B",
+                "Acetone ",
+                "Acetylsalicylic acid",
+                "Alcohols, n.e.c.",
+                "Aliphatic Hydrocarbons, n.e.c.",
+                "Alprazolam",
+                "Amisulpride",
+                "Amitriptyline",
+                "Amphetamine",
+                "Amphetamine analogues",
+                "Amphetamines, n.e.c.",
+                "Amyl nitrate",
+                "Amylobarbitone",
+                "Anabolic Androgenic Steroids, n.e.c.",
+                "Anaesthetics, n.e.c.",
+                "Antikaliuretics",
+                "Aripriprazole",
+                "Aromatic Hydrocarbons, n.e.c.",
+                "Atropinic alkaloids",
+                "Atypical Antipsychotics, n.e.c.",
+                "Barbiturates, n.e.c.",
+                "Benzodiazepines, n.e.c.",
+                "Beta2 Agonists, n.e.c.",
+                "Boldenone",
+                "Bromochlorodifluoromethane",
+                "Buprenorphine",
+                "Butane",
+                "Butyl nitrate",
+                "Butyrophenones",
+                "Cannabinoid agonists",
+                "Cannabinoids",
+                "Cannabinoids and Related Drugs, n.e.c.",
+                "Cathinone",
+                "Cathinone analogues",
+                "Cathinones, n.e.c.",
+                "Chlormethiazole",
+                "Chloroform",
+                "Chlorpromazine",
+                "Chorionic gonadotrophin",
+                "Citalopram",
+                "Clomipramine ",
+                "Clonazepam",
+                "Clozapine",
+                "Codeine",
+                "Corticotrophin",
+                "Dehydroepiandrosterone",
+                "Dexamphetamine",
+                "Diazepam",
+                "Diethyltryptamine",
+                "Dimethyltryptamine",
+                "Diuretics, n.e.c.",
+                "DOB",
+                "Docylamine",
+                "DOI",
+                "DOM",
+                "Dothiepin",
+                "Doxepin",
+                "Eformoterol",
+                "Ephedra Alkaloids, n.e.c.",
+                "Ephedrine",
+                "Erythropoietin",
+                "Ethyl acetate",
+                "Fenoterol",
+                "Fentanyl",
+                "Fentanyl analogues",
+                "Flunitrazepam",
+                "Fluoxetine",
+                "Fluoxymesterone",
+                "Flupenthixol",
+                "Fluphenazine",
+                "Gamma-butrolactone",
+                "Gamma-hydroxybutyrate",
+                "GHB type Drugs and Analogues, n.e.c.",
+                "Growth hormone",
+                "Halogenated Hydrocarbons, n.e.c.",
+                "Inadequately Described",
+                "Insulin",
+                "Kava lactones",
+                "Ketamine",
+                "Laxatives",
+                "Levomethadyl acetate hydrochloride",
+                "Lithium",
+                "Loop diuretics",
+                "Lorazepam",
+                "Lysergic acid diethylamide",
+                "MDA",
+                "MDEA",
+                "Meperidine analogues",
+                "Mescaline",
+                "Mesterolone",
+                "Methandriol",
+                "Methanol",
+                "Methcathinone",
+                "Methenolone",
+                "Methylphenidate",
+                "Methylphenobarbitone",
+                "Mianserin",
+                "Moclobemide",
+                "Monoamine Oxidase Inhibitors, n.e.c.",
+                "Morphine",
+                "Naloxone",
+                "Naltrexone",
+                "Nandrolone",
+                "Nitrazepam",
+                "Nitrous oxide",
+                "Non Opioid Analgesics, n.e.c.",
+                "Norephedrine",
+                "Nortriptyline",
+                "Not Stated",
+                "Olanzapine",
+                "Opioid Antagonists, n.e.c.",
+                "Organic Opiate Analgesics, n.e.c.",
+                "Other Anabolic Agents and Selected Hormones, n.e.c.",
+                "Other Antidepressants and Antipsychotics, n.e.c.",
+                "Other Stimulants and Hallucinogens, n.e.c.",
+                "Other Volatile Solvents, n.e.c.",
+                "Oxandrolone",
+                "Oxazepam",
+                "Oxycodone",
+                "Paracetamol",
+                "Paroxetine",
+                "Peptide Hormones, Mimetics and Analogues, n.e.c.",
+                "Pericyazine",
+                "Pethidine",
+                "Petroleum",
+                "Phencyclidine",
+                "Phenelzine",
+                "Phenethylamine analogues",
+                "Phenethylamines, n.e.c.",
+                "Phenobarbitone",
+                "Phenothiazines, n.e.c.",
+                "Phenylipiperazine analogues",
+                "Piperazines, n.e.c.",
+                "PMA",
+                "PMMA",
+                "Promethazine",
+                "Propane",
+                "Propofol",
+                "Pseudoephedrine",
+                "Psilocybin or Psilocin",
+                "Quetiapine",
+                "Risperidone",
+                "Salbutamol",
+                "Semisynthetic Opioid Analgesics, n.e.c.",
+                "Serotonin Reuptake Inhibitors, n.e.c.",
+                "Sertraline",
+                "Stanozolol",
+                "Sulfonylurea hypoglycaemic agents",
+                "Synthetic Opioid Analgesics, n.e.c.",
+                "Tamoxifen",
+                "Temazepam",
+                "Testosterone",
+                "Tetrachloroethylene",
+                "Thiazides",
+                "Thioridazine",
+                "Thiothixene",
+                "Thioxanthenes, n.e.c.",
+                "Thyroxine",
+                "TMA",
+                "Toluene",
+                "Tranylcypromine",
+                "Trichloroethane",
+                "Trichloroethylene",
+                "Tricyclic Antidepressants, n.e.c.",
+                "Trifluoperazin",
+                "Tryptamine anologues",
+                "Tryptamines, n.e.c.",
+                "Volatile Nitrates, n.e.c.",
+                "Xylene",
+                "Ziprasidone",
+                "Zolpidem",
+                "Zopiclone"
               ]
             },
             {
@@ -280,7 +535,8 @@
                 "Sniff (powder)",
                 "Inhale (vapour)",
                 "Transdermal",
-                "Sublingual"
+                "Sublingual",
+                "Other"
               ]
             },
             {
@@ -353,16 +609,16 @@
                 "8",
                 "9",
                 "10",
-                "10-15",
-                "15-20",
-                "20-30",
-                "30-40",
-                "40-50",
-                "50-60",
-                "60-70",
-                "70-80",
-                "80-100",
-                "100-150",
+                "10-14",
+                "15-19",
+                "20-29",
+                "30-39",
+                "40-49",
+                "50-59",
+                "60-69",
+                "70-79",
+                "80-99",
+                "100-149",
                 "150-200",
                 "Other"
               ]
@@ -408,8 +664,8 @@
                 "Reduce Use",
                 "Reduce Harms",
                 "Maintain Recovery",
-                "Not wanting to change substance use",
-                "No Goals - Ceased Use"
+                "Maintain Current Level of Use",
+                "Maintain Abstinence"
               ]
             }
           ],
@@ -457,64 +713,65 @@
               "cellType": "dropdown",
               "choices": [
                 {
-                  "value": "Alcohol",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Alcohol'"
+                  "value": "Ethanol",
+                  "text": "Alcohol (Ethanol)",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Ethanol'"
                 },
                 {
-                  "value": "Cannabinoids and related drugs",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Cannabinoids and related drugs'"
+                  "value": "Amphetamines, n.f.d.",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Amphetamines, n.f.d.'"
                 },
                 {
-                  "value": "Amphetamines",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Amphetamines'"
-                },
-                {
-                  "value": "MDMA / Ecstacy",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'MDMA / Ecstacy'"
-                },
-                {
-                  "value": "Psychostimulants",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Psychostimulants'"
-                },
-                {
-                  "value": "Benzodiazepines",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Benzodiazepines'"
-                },
-                {
-                  "value": "Pharmaceutical Opioids",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Pharmaceutical Opioids'"
-                },
-                {
-                  "value": "Heroin",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Heroin'"
-                },
-                {
-                  "value": "Methadone",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Methadone'"
-                },
-                {
-                  "value": "Cocaine",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Cocaine'"
-                },
-                {
-                  "value": "Nicotine",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Nicotine'"
+                  "value": "Benzodiazepines, n.f.d.",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Benzodiazepines, n.f.d.'"
                 },
                 {
                   "value": "Caffeine",
                   "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Caffeine'"
                 },
                 {
-                  "value": "Steroids and other anabolic agents",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Steroids and other anabolic agents'"
+                  "value": "Cannabinoids and Related Drugs, n.f.d.",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Cannabinoids and related drugs, n.f.d.'"
+                },
+                {
+                  "value": "Cocaine",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Cocaine'"
                 },
                 {
                   "value": "Gambling",
                   "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Gambling'"
                 },
                 {
-                  "value": "Other",
-                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Other'"
+                  "value": "Heroin",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Heroin'"
+                },
+                {
+                  "value": "MDMA/Ecstasy",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'MDMA/Ecstasy'"
+                },
+                {
+                  "value": "Methadone",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Methadone'"
+                },
+                {
+                  "value": "Methamphetamine",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Methamphetamine'"
+                },
+                {
+                  "value": "Nicotine",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Nicotine'"
+                },
+                {
+                  "value": "Pharmaceutical Opioids, n.f.d.",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Pharmaceutical Opioids, n.f.d.'"
+                },
+                {
+                  "value": "Psychostimulants, n.f.d.",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Psychostimulants, n.f.d.'"
+                },
+                {
+                  "value": "Other Drugs of Concern",
+                  "visibleIf": "{PDC[0].PDCSubstanceOrGambling} <> 'Other Drugs of Concern'"
                 }
               ]
             },
@@ -529,7 +786,8 @@
                 "Sniff (powder)",
                 "Inhale (vapour)",
                 "Transdermal",
-                "Sublingual"
+                "Sublingual",
+                "Other"
               ]
             },
             {
@@ -602,17 +860,17 @@
                 "8",
                 "9",
                 "10",
-                "10-15",
-                "16-20",
-                "21-30",
-                "31-40",
-                "41-50",
-                "51-60",
-                "61-70",
-                "71-80",
-                "81-100",
-                "101-150",
-                "151-200",
+                "10-14",
+                "15-19",
+                "20-29",
+                "30-39",
+                "40-49",
+                "50-59",
+                "60-69",
+                "70-79",
+                "80-99",
+                "100-149",
+                "150-200",
                 "Other"
               ]
             },
@@ -657,8 +915,8 @@
                 "Reduce Use",
                 "Reduce Harms",
                 "Not wanting to change substance use",
-                "No Goals - Ceased Use",
-                "Maintain Recovery"
+                "Maintain Current Level of Use",
+                "Maintain Abstinence"
               ]
             }
           ],
@@ -973,11 +1231,18 @@
           "columnMinWidth": "130px",
           "rows": [
             "Gambling",
+            "Porn",
             "Sex",
             "Internet / Social Media",
             "Gaming",
-            "Hoarding"
+            "Hoarding",
+            "Other (detail in notes below)"
           ]
+        },
+        {
+          "type": "comment",
+          "name": "question1",
+          "title": "Notes on Behaviours of Dependence"
         },
         {
           "type": "comment",
@@ -1010,7 +1275,7 @@
               "title": "Frequency",
               "cellType": "dropdown",
               "choices": [
-                "Daily",
+                "Daily or almost daily",
                 "Three or four times per week",
                 "Once or twice per week",
                 "Less than weekly",
@@ -1095,19 +1360,11 @@
           ]
         },
         {
-          "type": "matrix",
+          "type": "checkbox",
           "name": "HowDoYouSpendTime",
-          "width": "800px",
-          "minWidth": "800px",
-          "maxWidth": "800px",
           "title": "Meaningful Use of Time",
-          "description": "In the past 4 weeks, have you been happy with how much time you spend on the following?",
-          "columns": [
-            "Yes",
-            "Too Much Time",
-            "Too Little Time"
-          ],
-          "rows": [
+          "description": "Is there anything you would like to spend more time on?",
+          "choices": [
             {
               "value": "AODSourcingUsing",
               "text": "Drugs and/or Drinking (sourcing & using)"
@@ -1142,8 +1399,8 @@
           "choices": [
             "Not at all",
             "Less than weekly",
-            "Once or twice a week",
-            "Three or four times a week",
+            "Once or twice per week",
+            "Three or four times per week",
             "Daily or almost daily"
           ],
           "colCount": 5
@@ -1247,8 +1504,8 @@
           "choices": [
             "Yes - Completely safe",
             "Mostly safe. Sometimes feel threatened",
-            "Often feel unsafe. Occasionally experience violence",
-            "Never feel safe. Constantly exposed to violence"
+            "Often feel unsafe / Occasionally experience violence",
+            "Never feel safe / Constantly exposed to violence"
           ],
           "colCount": 2
         },
@@ -1398,12 +1655,14 @@
           "choices": [
             "Suicidal thoughts, ideation, planning, attempts (RISK ASSESSMENT)",
             "Mood or affect concerns, including profound, persistent hopelessness (RISK ASSESSMENT)",
+            "Emotional Abuse",
             "Recent Loss",
             "Suicide of significant other",
             "Extreme stress",
             "Self Injury",
             "Impulsive and/or aggressive tendencies",
             "Withdrawn",
+            "Recent emotional abuse",
             "Recent sexual abuse",
             "Recent physical abuse",
             "Prison / custody / legal problems",
@@ -1786,7 +2045,9 @@
             "Arcadia Residential Service - 12 week Day Program",
             "Althea GP",
             "Althea Nurse",
+            "Althea Mental Health Nurse",
             "Althea Psychologist",
+            "Althea Pharmacist",
             "Support, information and/or counselling as a family member or friend of a person with a substance use issues",
             "Supported home Detox",
             "Aboriginal Health Worker",
