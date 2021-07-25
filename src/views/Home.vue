@@ -27,7 +27,7 @@
           target="_blank"
           >Open Issues</a
         >
-        <span class="ml-6 text-xs text-gray-500">v: 7-May-2021</span>
+        <span class="ml-6 text-xs text-gray-500">v: 31-Jul-2021</span>
       </div>
       <!-- </ul> -->
       <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />
@@ -282,13 +282,14 @@ export default {
       // 1. if the last survey done was "completed"
       //    a. if was done more than 1 year ago, show "CREATE NEW IA" button
       //    b. otherwise show CREATE ITSP  (prefills from the last survey)
+      const prefillSurveyData = JSON.parse(JSON.stringify(lastSurveyDone)); // deep copy
 
       if (lastSurveyStatus === "Complete") {
         if (gapInDaysSinceLastSurvey > PREFILL_EXPIRY_DAYS) {
           this.surveyListForClient = this.filterButtonType("ATOM Initial");
           return;
         }
-        lastSurveyDone["SurveyData"][
+        prefillSurveyData["SurveyData"][
           "AssessmentDate"
         ] = getCurrentYearMonthDayString("-");
         this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
@@ -303,7 +304,7 @@ export default {
             lastSurveyDone["SurveyName"],
             false // should not continue
           );
-          lastSurveyDone["SurveyData"][
+          prefillSurveyData["SurveyData"][
             "AssessmentDate"
           ] = getCurrentYearMonthDayString("-");
         }
@@ -314,7 +315,7 @@ export default {
       } else {
         console.error("unknown state for last survey ", lastSurveyStatus);
       }
-      this.setCurrentSurveyData(lastSurveyDone);
+      this.setCurrentSurveyData(prefillSurveyData);
     }
   }
 };
