@@ -1,5 +1,5 @@
-export const APPLICATION_MODE_NORMAL = 0;
-export const APPLICATION_MODE_ADMIN = 1;
+export const APPLICATION_MODE_NORMAL = 1;
+export const APPLICATION_MODE_ADMIN = 0;
 
 export const APP_ENVIRONMENT = process.env.VUE_APP_ENVIRONMENT || "prod";
 
