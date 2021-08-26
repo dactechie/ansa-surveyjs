@@ -12,8 +12,8 @@ function getSLK(fname, lname, dob, sex) {
     s = lname.replace(/([^a-z-]+)/gi, ""),
     d = reverseCleanString(dob),
     x = sex;
-  f = f.toUpperCase().padEnd(3, "9");
-  s = s.toUpperCase().padEnd(5, "9");
+  f = f.toUpperCase().padEnd(3, "2");
+  s = s.toUpperCase().padEnd(5, "2");
   let name_part = `${s[1]}${s[2]}${s[4]}${f[1]}${f[2]}`;
 
   switch (x) {

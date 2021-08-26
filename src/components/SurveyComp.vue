@@ -24,12 +24,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
 import { getCurrentYearMonthDayString, sumUp } from "@/common/utils"; //gapInDays
-import {
-  PREFILL_EXPIRY_DAYS,
-  PREFILL_EXCLUSIONS,
-  INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
-  MANDATORY_FIELDS
-} from "@/common/constants";
+import { PREFILL_EXCLUSIONS, MANDATORY_FIELDS } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -127,6 +122,15 @@ export default {
         console.log("SAVE SURVEY -------  SDS SCORE .............", sds_score);
         this.survey.setValue("SDS_Score", sds_score);
       }
+      let k10Questions = this.survey
+        .getAllQuestions()
+        .filter(e => e.name.startsWith("K10"));
+      if (k10Questions && k10Questions.length > 2) {
+        const intList = k10Questions.map(e => parseInt(e.value));
+        const k10_score = sumUp(intList);
+        console.log("SAVE SURVEY -------  K10 SCORE .............", k10_score);
+        this.survey.setValue("K10_Score", k10_score);
+      }
       // for the thank you page.
       this.setStaff(this.survey.data["Staff"]);
 
@@ -140,58 +144,6 @@ export default {
       });
       console.log("save survey response :::: ", response);
       this.dirtyData = false;
-    },
-    getDataForSurvey(me) {
-      let prefillSurvey = me.getCurrentSurveyData();
-      if (prefillSurvey && prefillSurvey["SurveyData"]) {
-        return prefillSurvey;
-      }
-
-      const cd = sessionStorage.getItem("ClientData");
-      if (!cd) {
-        console.log("no client data");
-        return undefined;
-      }
-      // page was reloaded , vuex lost its state.
-      let gapInDaysSinceLastSurvey = sessionStorage.getItem(
-        "GapInDaysSinceLastSurvey"
-      );
-
-      if (!gapInDaysSinceLastSurvey) {
-        console.error(`no data to continue gp: undefined, data:`, cd);
-        return undefined;
-      }
-      gapInDaysSinceLastSurvey = parseInt(gapInDaysSinceLastSurvey);
-      const clientData = JSON.parse(cd);
-      //this.setClientSLK(clientData["PartitionKey"]); // for when we save data to server
-      const lastSurveyDone = clientData[clientData.length - 1];
-      const lastSurveyStatus = lastSurveyDone["Status"];
-
-      if (lastSurveyStatus === "Complete") {
-        if (gapInDaysSinceLastSurvey <= PREFILL_EXPIRY_DAYS) {
-          lastSurveyDone["SurveyData"][
-            "AssessmentDate"
-          ] = getCurrentYearMonthDayString("-");
-          me.setCurrentSurveyData(lastSurveyDone);
-        }
-        // nothign to prefill.. start fresh
-      } else if (lastSurveyStatus === "Incomplete") {
-        if (gapInDaysSinceLastSurvey > INCOMPLETE_CONTINUATION_EXPIRY_DAYS) {
-          // even if not continuing , prefill from last survey compelte/incomplete.
-          lastSurveyDone["SurveyData"][
-            "AssessmentDate"
-          ] = getCurrentYearMonthDayString("-");
-          me.setCurrentSurveyData(lastSurveyDone);
-        }
-        console.log(
-          "INCOMPLETE_CONTINUATION_EXPIRY_DAYS>>> ",
-          INCOMPLETE_CONTINUATION_EXPIRY_DAYS
-        );
-        // DON't prefill with expired data ?
-      } else {
-        console.error("unknown state for last survey ", lastSurveyStatus);
-      }
-      return me.getCurrentSurveyData();
     }
   },
   created() {
@@ -223,7 +175,7 @@ export default {
       }
 
       //if there is data to prefill for this type of survey, do that.
-      let prefillSurvey = me.getDataForSurvey(me);
+      let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
 
       if (
         typeof prefillSurvey !== "undefined" &&

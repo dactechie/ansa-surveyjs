@@ -6,9 +6,11 @@
     >
       <div class="lg:ml-40 md:ml-20 pl-10">
         "Staging env" | | INCOMPLETE_CONTINUATION_EXPIRY_DAYS:
-        {{ INCOMPLETE_CONTINUATION_EXPIRY_DAYS }} | |
-        VUE_APP_PREFILL_EXPIRY_DAYS: {{ PREFILL_EXPIRY_DAYS }} | | SURVEY_IDS
-        {{ SURVEY_IDS }}
+        {{ INCOMPLETE_CONTINUATION_EXPIRY_DAYS }} | | SURVEY_IDS
+        {{ SURVEY_IDS }} | | ConsoleDebugNotes: VueExtn, Components>Expand
+        "survey" node>
+        $vm0.survey.setValue("PDC",[{"PDCSubstanceOrGambling":"Organic Opiate
+        Analgesics, n.e.c.","PDCMethodOfUse":"Smoke"}])
       </div>
     </div>
     <router-view />
@@ -19,8 +21,6 @@
 import {
   // APP_ENVIRONMENT,
   SURVEY_IDS,
-  PREFILL_EXPIRY_DAYS,
-  INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
   APP_AZSLOT
 } from "@/common/constants";
 
@@ -29,8 +29,6 @@ export default {
     console.log("app slot : ", APP_AZSLOT);
     return {
       SURVEY_IDS,
-      PREFILL_EXPIRY_DAYS,
-      INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
       APP_AZSLOT
     };
   },

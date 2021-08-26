@@ -132,7 +132,7 @@
                     params: { type: 'new', surveyid: survey.surveyid }
                   }"
                 >
-                  {{ survey.prefix }} {{ survey.name }}</router-link
+                  {{ survey.prefix }} {{ survey.displayName }}</router-link
                 >
                 <span class="flex absolute h-3 w-3 top-2 right-2">
                   <span
@@ -163,9 +163,10 @@ import { getCurrentYearMonthDayString } from "../common/utils";
 import { gapInDays } from "@/common/utils";
 import {
   // APP_ENVIRONMENT,
-  PREFILL_EXPIRY_DAYS,
-  INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
-  MODE_EMPTY_CLIENT_DATA
+  // PREFILL_EXPIRY_DAYS,
+  // INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
+  MODE_EMPTY_CLIENT_DATA,
+  SURVEY_DISPLAY_NAMES
 } from "@/common/constants";
 
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
@@ -223,27 +224,25 @@ export default {
       if (shouldContinue) {
         return nameSurveyIDList.map(e => {
           return {
-            prefix: "Continue ",
+            prefix: "Continue incomplete ",
             name: `${e.name}`,
-            surveyid: e.surveyid
+            surveyid: e.surveyid,
+            displayName: SURVEY_DISPLAY_NAMES[e.name]
           };
         });
       } else {
         return nameSurveyIDList.map(e => {
-          return { ...e, prefix: "New " };
+          return {
+            ...e,
+            prefix: "",
+            displayName: SURVEY_DISPLAY_NAMES[e.name]
+          };
         });
       }
     },
     handleStartSurvey(surveyName) {
       this.setSurveyMode("new");
-      const sNameArray = surveyName.split(" ");
-      const idx = sNameArray.findIndex(e => e.includes("rc")); // rc0.5 ABC.. (remove ReleaseCandidate descriptor)
-      if (idx > 0) {
-        const outSurveyName = sNameArray.slice(0, idx).join(" ");
-        this.setSurveyName(outSurveyName);
-      } else {
-        this.setSurveyName(surveyName);
-      }
+      this.setSurveyName(surveyName);
     },
     updateMode({ mode, text, data }) {
       this.showSpinner = false;
@@ -275,9 +274,7 @@ export default {
       );
 
       console.log(
-        ` Age of last survey ${Math.round(
-          gapInDaysSinceLastSurvey
-        )} days. expiry ${PREFILL_EXPIRY_DAYS}`
+        ` Age of last survey ${Math.round(gapInDaysSinceLastSurvey)} days. `
       );
       // 1. if the last survey done was "completed"
       //    a. if was done more than 1 year ago, show "CREATE NEW IA" button
@@ -285,36 +282,29 @@ export default {
       const prefillSurveyData = JSON.parse(JSON.stringify(lastSurveyDone)); // deep copy
 
       if (lastSurveyStatus === "Complete") {
-        if (gapInDaysSinceLastSurvey > PREFILL_EXPIRY_DAYS) {
-          this.surveyListForClient = this.filterButtonType("ATOM Initial");
-          return;
-        }
         prefillSurveyData["SurveyData"][
           "AssessmentDate"
         ] = getCurrentYearMonthDayString("-");
         this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
-      } else if (lastSurveyStatus === "Incomplete") {
-        if (gapInDaysSinceLastSurvey < INCOMPLETE_CONTINUATION_EXPIRY_DAYS) {
-          this.surveyListForClient = this.filterButtonType(
-            lastSurveyDone["SurveyName"],
-            true // should continue
-          );
-        } else {
-          this.surveyListForClient = this.filterButtonType(
-            lastSurveyDone["SurveyName"],
-            false // should not continue
-          );
-          prefillSurveyData["SurveyData"][
-            "AssessmentDate"
-          ] = getCurrentYearMonthDayString("-");
-        }
-        console.log(
-          "INCOMPLETE_CONTINUATION_EXPIRY_DAYS>>> ",
-          INCOMPLETE_CONTINUATION_EXPIRY_DAYS
+        this.surveyListForClient.push(
+          ...this.filterButtonType("ATOM Initial", false)
         );
+      } else if (lastSurveyStatus === "Incomplete") {
+        this.setCurrentSurveyData(prefillSurveyData);
+        this.surveyListForClient = this.filterButtonType(
+          lastSurveyDone["SurveyName"],
+          true // should continue
+        );
+        if (lastSurveyDone["SurveyName"] === "ATOM ITSP Review Assessment") {
+          this.surveyListForClient.push(
+            ...this.filterButtonType("ATOM Initial", false)
+          );
+          return;
+        }
       } else {
         console.error("unknown state for last survey ", lastSurveyStatus);
       }
+
       this.setCurrentSurveyData(prefillSurveyData);
     }
   }

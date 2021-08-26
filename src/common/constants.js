@@ -17,8 +17,6 @@ export const MODE_CLIENT_DATA_SET = 1; // show client survey history
 export const DB_ENTITY_NAME = "ATOM";
 
 export const SLK_LENGTH = 14;
-export const PREFILL_EXPIRY_DAYS =
-  process.env.VUE_APP_PREFILL_EXPIRY_DAYS || 365;
 
 export const INCOMPLETE_CONTINUATION_EXPIRY_DAYS =
   process.env.VUE_APP_INCOMPLETE_CONTINUATION_EXPIRY_DAYS || 21;
@@ -34,8 +32,12 @@ export const DB_IDTYPE_CCARE = "CCARE";
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
   "ATOM Initial Assessment": "INAS",
-  "ATOM ITSP Review Assessment": "ITSP",
-  TestSurvey: "TEST"
+  "ATOM ITSP Review Assessment": "ITSP"
+};
+
+export const SURVEY_DISPLAY_NAMES = {
+  "ATOM Initial Assessment": "’New Episode’ assessment",
+  "ATOM ITSP Review Assessment": "ITSP review"
 };
 
 export const DB_META_KEYS = [
