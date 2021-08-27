@@ -183,11 +183,14 @@ export default {
       ) {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
-        //
-        // if continuing a survey, we want to prefill everything.
-        //
+
         if (prefillSurvey["Status"] !== "Incomplete") {
           const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
+          // we're not continuing an incomplete survey, but starting a new one (with prefill)
+          prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
+            "-"
+          );
+
           sender
             .getAllQuestions()
             .filter(e => !prefillExclusionList.includes(e.name))
@@ -195,6 +198,9 @@ export default {
               me.survey.setValue(e.name, prefillSurveyData[e.name]);
             });
         } else {
+          //
+          // if continuing a survey, we want to prefill everything.
+          //
           sender.getAllQuestions().forEach(e => {
             me.survey.setValue(e.name, prefillSurveyData[e.name]);
           });
@@ -207,6 +213,7 @@ export default {
         me.survey.setValue("Staff", prefillSurvey["Staff"]);
         me.setClientSLK(prefillSurvey["PartitionKey"]);
       } else {
+        //nothing to prefill - first ever
         if (!me.$store.state.currentClientSLK) {
           console.log("missing slk. Lookup IDs: ", lookupIds);
           me.$router.push("/");
@@ -268,7 +275,8 @@ export default {
             missingFieldPageQuestionNames.push(`Question: ${e.title} \n`); // Page:${e.page.title} :
           }
         });
-      if (this.hasPreviewed && missingMandatoryFields.length > 0) {
+      if (this.hasPreviewed) {
+        // && missingMandatoryFields.length > 0) {
         me.setMissingMandatoryFields(missingMandatoryFields);
       }
       if (me.survey.isShowingPreview) {

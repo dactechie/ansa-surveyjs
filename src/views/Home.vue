@@ -7,7 +7,7 @@
 
       <div class="invisible md:visible">
         <a
-          href="https://directionshealth.sharepoint.com/:b:/g/EcdkvQWSdwpPkGFLPbM3l60BQIjE5Zm5ZM5boV4juKizKg?e=6GCSgZ"
+          href="https://directionshealth.sharepoint.com/Shared%20Documents/Forms/AllItems.aspx?viewid=06fc1372%2D9769%2D41f8%2Da246%2Dff6a324a1f9f&id=%2FShared%20Documents%2FICT%2FANSA%2FDocumentation%2FReleases"
           class="font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
           target="_blank"
         >
@@ -27,7 +27,7 @@
           target="_blank"
           >Open Issues</a
         >
-        <span class="ml-6 text-xs text-gray-500">v: 26-Jul-2021</span>
+        <span class="ml-6 text-xs text-gray-500">v: 30-Aug-2021</span>
       </div>
       <!-- </ul> -->
       <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />
@@ -84,12 +84,14 @@
                 a row to see the submission details.
               </div>
               <div class="pl-5 mx-5 mb-5">
-                <span class="font-semibold">Notes: </span>
+                <span class="font-semibold underline">Notes: </span>
                 <ul class="list-disc">
                   <li>
-                    ATOM ITSP Review Assesments will
-                    <span class="font-semibold text-red-500">pre-fill</span>
-                    from the previous assessment.
+                    When possible (and appropriate), it will
+                    <span class="font-semibold text-red-500"
+                      >pre-fill data</span
+                    >
+                    from the latest assessment.
                   </li>
                   <li>
                     <span class="font-semibold">Issues and Goals</span> for each

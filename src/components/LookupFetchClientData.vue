@@ -12,10 +12,10 @@
         value="by_slk"
         v-model="picked_type"
       />
-      <label class="text-sm pl-2 font-semibold align-top" for="by_slk"
+      <label class="text-md pl-2 font-semibold align-top" for="by_slk"
         >By SLK</label
       >
-      <br />
+      <span class="pt-15"><br /></span>
       <input
         class="form-radio h-6 w-6"
         type="radio"
@@ -24,7 +24,7 @@
         value="by_name"
         v-model="picked_type"
       />
-      <label class="text-sm pl-2 font-semibold align-top" for="by_name"
+      <label class="text-md pl-2 font-semibold align-top" for="by_name"
         >By Name, DOB, Gender</label
       >
       <br />
@@ -60,7 +60,7 @@
         v-model="lname"
       />
       <div class="pt-3">
-        <label class="text-sm pl-2 font-semibold" for="dob">DOB</label>
+        <label class="text-md pl-2 font-semibold" for="dob">DOB</label>
       </div>
       <input
         class="shadow appearance-none border rounded w-full py-2 px-3 font-semibold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -75,46 +75,46 @@
       <div class="mt-4 md:pl-4 flex space-x-4" id="sex_type">
         <div>
           <input
-            class=" form-radio h-6 w-6"
+            class="form-radio h-6 w-6 align-bottom"
             type="radio"
             id="male"
             v-model="sex_type"
             name="sex"
             value="male"
           />
-          <label class="text-sm pl-1 font-semibold align-top" for="male"
+          <label class="text-md pl-1 font-semibold align-middle" for="male"
             >Male</label
           >
         </div>
         <div>
           <input
-            class="pl-1 form-radio h-6 w-6"
+            class="pl-1 form-radio h-6 w-6 align-bottom"
             type="radio"
             id="female"
             v-model="sex_type"
             name="sex"
             value="female"
           />
-          <label class="text-sm pl-1 font-semibold align-top" for="female"
+          <label class="text-md pl-1 font-semibold align-middle" for="female"
             >Female</label
           >
         </div>
         <div>
           <input
-            class="pl-1 form-radio h-6 w-6"
+            class="pl-1 form-radio h-6 w-6 align-bottom"
             type="radio"
             id="other"
             v-model="sex_type"
             name="sex"
             value="other"
           />
-          <label class="text-sm pl-1 font-semibold align-top" for="other"
+          <label class="text-md pl-1 font-semibold align-middle" for="other"
             >Other</label
           >
         </div>
       </div>
       <div class="py-3 md:pl-10">
-        <label class="text-sm  font-semibold "> SLK: </label>
+        <label class="text-md font-semibold "> SLK: </label>
         <span
           class="text-lg pl-1 font-mono font-bold tracking-widest text-red-500 "
           >{{ slk }}</span
