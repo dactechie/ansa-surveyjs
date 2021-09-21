@@ -18,9 +18,6 @@ export const DB_ENTITY_NAME = "ATOM";
 
 export const SLK_LENGTH = 14;
 
-export const INCOMPLETE_CONTINUATION_EXPIRY_DAYS =
-  process.env.VUE_APP_INCOMPLETE_CONTINUATION_EXPIRY_DAYS || 21;
-
 export const PREFILL_EXCLUSIONS = process.env.VUE_APP_PREFILL_EXCLUSIONS || [];
 export const MANDATORY_FIELDS = process.env.VUE_APP_MANDATORY_FIELDS || [];
 

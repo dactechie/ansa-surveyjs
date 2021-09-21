@@ -165,8 +165,6 @@ import { getCurrentYearMonthDayString } from "../common/utils";
 import { gapInDays } from "@/common/utils";
 import {
   // APP_ENVIRONMENT,
-  // PREFILL_EXPIRY_DAYS,
-  // INCOMPLETE_CONTINUATION_EXPIRY_DAYS,
   MODE_EMPTY_CLIENT_DATA,
   SURVEY_DISPLAY_NAMES
 } from "@/common/constants";

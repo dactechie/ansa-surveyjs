@@ -61,8 +61,7 @@ export default {
       dirtyData: false,
       showModal: false,
       modalContent: "",
-      mandatoryFieldList: MANDATORY_FIELDS.split(","),
-      hasPreviewed: false
+      mandatoryFieldList: MANDATORY_FIELDS.split(",")
     };
   },
   // components: {
@@ -275,19 +274,15 @@ export default {
             missingFieldPageQuestionNames.push(`Question: ${e.title} \n`); // Page:${e.page.title} :
           }
         });
-      if (this.hasPreviewed) {
-        // && missingMandatoryFields.length > 0) {
+      if (missingMandatoryFields.length > 0) {
         me.setMissingMandatoryFields(missingMandatoryFields);
       }
       if (me.survey.isShowingPreview) {
-        //&& !me.isAutoNavigatingFromPreview
         // mandatory list -> superset to all questionnaires  (Initial assess: own, other, ITSP review etc.)
-        this.hasPreviewed = true;
         const oldSidebarState = me.sideBarOpen();
         me.hideSideBar();
 
         if (missingMandatoryFields.length > 0) {
-          // me.setMissingMandatoryFields(missingMandatoryFields);
           alert(
             "Missing mandatory fields " +
               missingFieldPageQuestionNames.join(",")

@@ -54,8 +54,10 @@ export default {
       // no need to try and override the Timestamp that was drawn from the server
       delete data["Timestamp"];
     }
+
     dbObj = {
       ...dbObj,
+      AssessmentDate: data["AssessmentDate"],
       SurveyID: surveyId,
       Status: status,
       SurveyData: JSON.stringify(data),

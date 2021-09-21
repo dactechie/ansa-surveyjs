@@ -5,8 +5,7 @@
       v-if="APP_AZSLOT === 'staging'"
     >
       <div class="lg:ml-40 md:ml-20 pl-10">
-        "Staging env" | | INCOMPLETE_CONTINUATION_EXPIRY_DAYS:
-        {{ INCOMPLETE_CONTINUATION_EXPIRY_DAYS }} | | SURVEY_IDS
+        "Staging env" | | SURVEY_IDS
         {{ SURVEY_IDS }} | | ConsoleDebugNotes: VueExtn, Components>Expand
         "survey" node>
         $vm0.survey.setValue("PDC",[{"PDCSubstanceOrGambling":"Organic Opiate
