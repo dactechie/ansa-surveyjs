@@ -38,6 +38,10 @@ export default {
   ) {
     let dbObj = {};
     const data = {};
+    const assessmentDateYYYYmmDD = surveyData["AssessmentDate"].replaceAll(
+      "-",
+      ""
+    );
     // Meta Keys are common to all surveys. they are the columns in the backend database
     // before uploading, extract these values out of the surveyData to store them as individual fields for ease of lookup/reporting
     Object.entries(surveyData).forEach(([key, value]) => {
@@ -57,7 +61,7 @@ export default {
 
     dbObj = {
       ...dbObj,
-      AssessmentDate: data["AssessmentDate"],
+      AssessmentDate: assessmentDateYYYYmmDD,
       SurveyID: surveyId,
       Status: status,
       SurveyData: JSON.stringify(data),
@@ -76,7 +80,7 @@ export default {
       // may be a paritial save
       SLK, //partition key
       dbObj,
-      surveyData["AssessmentDate"].replaceAll("-", ""),
+      assessmentDateYYYYmmDD,
       state.applicationMode // if admin, can override in Completed survey, creates a new entry and makes the old one inactive.
     );
     // }
