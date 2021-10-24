@@ -60,8 +60,9 @@ export default {
     ...mapGetters(["getCurrentSurvey", "getMissingMandatoryFields"]),
 
     getPageClass(page) {
-      const missingMandatoryQuestions = page.questions.filter(q =>
-        this.missingMandatoryFields.includes(q.name)
+      const missingMandatoryQuestions = page.questions.filter(
+        q =>
+          this.missingMandatoryFields.includes(q.name) && !q.value && q.visible // HowCloseToManagingImpactOfOthersUse was not visible
       );
       if (missingMandatoryQuestions.length > 0) {
         return page.isActive

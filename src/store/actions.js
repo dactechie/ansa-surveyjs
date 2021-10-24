@@ -61,7 +61,7 @@ export default {
 
     dbObj = {
       ...dbObj,
-      AssessmentDate: assessmentDateYYYYmmDD,
+      AssessmentDate: parseInt(assessmentDateYYYYmmDD),
       SurveyID: surveyId,
       Status: status,
       SurveyData: JSON.stringify(data),
