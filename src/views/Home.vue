@@ -162,7 +162,7 @@ import { mapActions, mapMutations, mapGetters } from "vuex";
 import { AtomSpinner } from "epic-spinners";
 
 import { getCurrentYearMonthDayString } from "../common/utils";
-import { gapInDays } from "@/common/utils";
+// import { gapInDays } from "@/common/utils";
 import {
   // APP_ENVIRONMENT,
   MODE_EMPTY_CLIENT_DATA,
@@ -198,7 +198,11 @@ export default {
     this.GET_QUESTIONNAIRE_LISTING();
   },
   methods: {
-    ...mapGetters(["getCurrentClientSLK", "getClientData"]),
+    ...mapGetters([
+      "getCurrentClientSLK",
+      "getClientData",
+      "getCurrentSurveyData"
+    ]),
     ...mapActions(["GET_QUESTIONNAIRE_LISTING"]),
     ...mapMutations([
       "setSurveyName",
@@ -253,60 +257,112 @@ export default {
         this.setClientLookupIDData(data);
         this.unsetClientData();
         sessionStorage.removeItem("ClientData");
-      }
-      this.showSurveyLaunchButtons();
-    },
-    showSurveyLaunchButtons() {
-      // 0. if brand new client , show CREATE new IA
-      this.clientData = this.getClientData();
-      if (!this.clientData || this.clientData.length === 0) {
         this.surveyListForClient = this.filterButtonType("ATOM Initial");
         return;
       }
-      const lastSurveyDone = this.clientData[0];
-      const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
-      const lastSurveyStatus = lastSurveyDone["Status"];
+      //some data was returned for this client
+      this.clientData = this.getClientData();
 
-      const gapInDaysSinceLastSurvey = gapInDays(lastSurveyDate);
-      sessionStorage.setItem(
-        "GapInDaysSinceLastSurvey",
-        gapInDaysSinceLastSurvey + ""
-      );
+      let lastSurveyDone = JSON.parse(JSON.stringify(this.clientData[0]));
+      let {
+        data: prefillSurveyData,
+        func: setLaunchBtnFunc
+      } = this.getPrefillSurveyDataAndLunchBtnsFunc(lastSurveyDone);
 
-      console.log(
-        ` Age of last survey ${Math.round(gapInDaysSinceLastSurvey)} days. `
-      );
-      // 1. if the last survey done was "completed"
-      //    a. if was done more than 1 year ago, show "CREATE NEW IA" button
-      //    b. otherwise show CREATE ITSP  (prefills from the last survey)
-      const prefillSurveyData = JSON.parse(JSON.stringify(lastSurveyDone)); // deep copy
+      this.setCurrentSurveyData(prefillSurveyData); // even if new-Initial , if there was data for this client, always prefill
 
-      if (lastSurveyStatus === "Complete") {
+      setLaunchBtnFunc(prefillSurveyData);
+    },
+    getPrefillSurveyDataAndLunchBtnsFunc(prefillSurveyData) {
+      // const lastSurveyDate = prefillSurveyData["SurveyData"]["AssessmentDate"];
+
+      if (prefillSurveyData["Status"] === "Complete") {
         prefillSurveyData["SurveyData"][
           "AssessmentDate"
         ] = getCurrentYearMonthDayString("-");
-        this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
-        this.surveyListForClient.push(
-          ...this.filterButtonType("ATOM Initial", false)
-        );
-      } else if (lastSurveyStatus === "Incomplete") {
-        this.setCurrentSurveyData(prefillSurveyData);
-        this.surveyListForClient = this.filterButtonType(
-          lastSurveyDone["SurveyName"],
-          true // should continue
-        );
-        if (lastSurveyDone["SurveyName"] === "ATOM ITSP Review Assessment") {
-          this.surveyListForClient.push(
-            ...this.filterButtonType("ATOM Initial", false)
-          );
-          return;
-        }
-      } else {
-        console.error("unknown state for last survey ", lastSurveyStatus);
-      }
 
-      this.setCurrentSurveyData(prefillSurveyData);
+        return {
+          data: prefillSurveyData,
+          func: this.setNewSurveyLaunchButtons
+        };
+      }
+      return { data: prefillSurveyData, func: this.setContinueLaunchButtons };
+    },
+    setNewSurveyLaunchButtons() {
+      this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
+      this.surveyListForClient.push(
+        ...[
+          ...this.filterButtonType("ATOM Initial", false),
+          ...this.filterButtonType("Arcadia House", false)
+        ]
+      );
+    },
+    setContinueLaunchButtons() {
+      const prefillData = this.getCurrentSurveyData();
+      const lastSurveyName = prefillData["SurveyName"];
+      this.surveyListForClient = this.filterButtonType(
+        lastSurveyName,
+        true // should continue
+      );
+      // allow user to abandon incomplete Review survey an start with a new Initial Assessment one
+      // can't rememebr why this is important - may be for migrated ATOMs
+      // if (lastSurveyName === "ATOM ITSP Review Assessment") {
+      this.surveyListForClient.push(
+        ...[
+          ...this.filterButtonType("ATOM Initial", false),
+          ...this.filterButtonType("Arcadia House", false)
+        ]
+      );
+      // }
     }
+
+    // showSurveyLaunchButtons(prefillSurveyData) {
+    //   // 0. if brand new client , show CREATE new IA
+    //   // this.clientData = this.getClientData();
+    //   if (!this.clientData || this.clientData.length === 0) {
+    //     this.surveyListForClient = this.filterButtonType("ATOM Initial");
+    //     return;
+    //   }
+    //   // const lastSurveyDone = this.clientData[0];
+    //   // const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
+    //   // const lastSurveyStatus = lastSurveyDone["Status"];
+
+    //   // const gapInDaysSinceLastSurvey = gapInDays(lastSurveyDate);
+    //   // sessionStorage.setItem(
+    //   //   "GapInDaysSinceLastSurvey",
+    //   //   gapInDaysSinceLastSurvey + ""
+    //   // );
+    //   // console.log(
+    //   //   ` Age of last survey ${Math.round(gapInDaysSinceLastSurvey)} days. `
+    //   // );
+    //   // 1. if the last survey done was "completed"
+    //   //    a. if was done more than 1 year ago, show "CREATE NEW IA" button
+    //   //    b. otherwise show CREATE ITSP  (prefills from the last survey)
+
+    //   const lastSurveyStatus = prefillSurveyData["Status"];
+    //   if (lastSurveyStatus === "Complete") {
+    //     this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
+    //     this.surveyListForClient.push(
+    //       ...this.filterButtonType("ATOM Initial", false)
+    //     );
+    //   } else if (lastSurveyStatus === "Incomplete") {
+    //     this.setCurrentSurveyData(prefillSurveyData); // TODO: remove this ?
+    //     this.surveyListForClient = this.filterButtonType(
+    //       lastSurveyDone["SurveyName"],
+    //       true // should continue
+    //     );
+    //     if (lastSurveyDone["SurveyName"] === "ATOM ITSP Review Assessment") {
+    //       this.surveyListForClient.push(
+    //         ...this.filterButtonType("ATOM Initial", false)
+    //       );
+    //       return; // TODO: remove this ?
+    //     }
+    //   } else {
+    //     console.error("unknown state for last survey ", lastSurveyStatus);
+    //   }
+
+    //   this.setCurrentSurveyData(prefillSurveyData);
+    // }
   }
 };
 </script>

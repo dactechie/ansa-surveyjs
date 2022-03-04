@@ -29,12 +29,14 @@ export const DB_IDTYPE_CCARE = "CCARE";
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
   "ATOM Initial Assessment": "INAS",
-  "ATOM ITSP Review Assessment": "ITSP"
+  "ATOM ITSP Review Assessment": "ITSP",
+  "Arcadia House Assessments": "ARCA"
 };
 
 export const SURVEY_DISPLAY_NAMES = {
   "ATOM Initial Assessment": "’New Episode’ assessment",
-  "ATOM ITSP Review Assessment": "ITSP review"
+  "ATOM ITSP Review Assessment": "ITSP review",
+  "Arcadia House Assessments": "Arcadia House Assessments"
 };
 
 export const DB_META_KEYS = [
