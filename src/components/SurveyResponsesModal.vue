@@ -1,5 +1,5 @@
 <template>
-  <div @click="close()">
+  <div>
     <Modal v-if="show" @close="close">
       <template v-slot:header>
         <h3>Survey Responses</h3>

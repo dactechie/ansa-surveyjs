@@ -34,9 +34,9 @@ export default {
   },
 
   async createData(SLK, rowData, keyDate, userMode) {
-    const { SurveyName, Program } = rowData;
+    const { AssessmentType, Program } = rowData;
     rowData[ROW_KEY] = generateRowKey(
-      SURVEY_TYPE_MAP[SurveyName],
+      SURVEY_TYPE_MAP[AssessmentType],
       Program,
       keyDate
     );
