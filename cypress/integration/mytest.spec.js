@@ -1,6 +1,6 @@
-// /// <reference types="cypress" />
+/// <reference types="cypress" />
 
-const { describe } = require("mocha");
+import { describe } from "mocha";
 
 // /// JSON fixture file can be loaded directly using
 // // the built-in JavaScript bundler

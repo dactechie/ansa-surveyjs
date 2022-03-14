@@ -1,0 +1,18 @@
+{
+  "odata.metadata": "https://storageaccountansa9783.table.core.windows.net/$metadata#StagingATOM",
+  "value": [
+    {
+      "odata.etag": "W/\"datetime'2021-05-30T22%3A53%3A04.330099Z'\"",
+      "PartitionKey": "RG9OM111220112",
+      "RowKey": "TSS_INAS_20210531",
+      "Timestamp": "2021-05-30T22:53:04.330099Z",
+      "IsActive": 1,
+      "Program": "TSS",
+      "Staff": "Aftab.Jalal",
+      "Status": "Incomplete",
+      "SurveyData": "{\"AssessmentDate\":\"2021-05-31\",\"ClientType\":\"ownuse\",\"IndigenousStatus\":\"Torres Strait Islander but not Aboriginal\",\"SDSIsAODUseOutOfControl\":\"1\",\"SDSDoesMissingFixMakeAnxious\":\"2\",\"SDSHowMuchDoYouWorryAboutAODUse\":\"1\",\"SDSDoYouWishToStop\":\"2\",\"SDSHowDifficultToStopOrGoWithout\":\"2\",\"Past4WkDailyLivingImpacted\":\"Less than weekly\",\"PrioritiseCare\":\"Moderately well\",\"Past4WkDifficultyFindingHousing\":\"Not at all\",\"DoYouFeelSafeWhereYouLive\":\"Mostly safe. Sometimes feel threatened\",\"SDS_Score\":8,\"CreatedDatetime\":\"31/05/2021 8:53:04 AM\"}",
+      "SurveyID": "16d6b32d-6284-42d0-a6e6-89d72abbf0e2",
+      "SurveyName": "ATOM Initial Assessment"
+    }
+  ]
+}
