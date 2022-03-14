@@ -58,19 +58,10 @@ function isValidDate(dayStr, monthStr, yearStr) {
   return day > 0 && day <= monthLength[month - 1];
 }
 
-const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
-function sumUp(list) {
-  const result = list.reduce(reducer);
-  console.log("SSDS SCORE ", result);
-  return result;
-}
-
 export {
   getCurrentYearMonthDay,
   getCurrentYearMonthDayString,
   getFriendlyTimestampString,
   gapInDays,
-  sumUp,
   isValidDate
 };

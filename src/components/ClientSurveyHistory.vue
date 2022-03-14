@@ -1,11 +1,5 @@
 <template>
   <div>
-    <!-- <button
-      class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-300 hover:border-red-400 hover:bg-red-300 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
-      @click="clearLookupResults"
-    >
-      Clear Results
-    </button> -->
     <!-- <ITSPCompareModal
       v-if="showModal"
       :selectedIndex="selectedIndex"
@@ -63,6 +57,7 @@
 import { mapMutations, mapGetters } from "vuex";
 import SurveyResponsesModal from "@/components/SurveyResponsesModal";
 import { getFriendlyTimestampString } from "@/common/utils";
+import { ARCA } from "@/common/constants";
 
 export default {
   name: "ClientSurveyHistory",
@@ -99,7 +94,8 @@ export default {
 
       data.forEach(function(c) {
         c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
-
+        if (c["SurveyName"].startsWith(ARCA))
+          c["SurveyName"] = `${ARCA} ${c["AssessmentType"]}`;
         let td = colHeaders.map(h => c[h]);
 
         const assdate = getFriendlyTimestampString(
@@ -122,26 +118,6 @@ export default {
     // },
     ...mapGetters(["getClientData"]),
     ...mapMutations(["setSurveyName"]),
-
-    // cloneOrEditSurvey(cloneOrEdit, surveyName, selectedIndexToPrefillFrom) {
-    //   this.$store.state["surveyMode"] = cloneOrEdit;
-    //   this.$store.state["prefillIndex"] = selectedIndexToPrefillFrom;
-    //   const foundSurvey = this.surveys.find(s => s.name === surveyName); // downloaded from survey.js
-
-    //   if (!foundSurvey) {
-    //     console.log(" not found survey: ", surveyName);
-    //     return;
-    //   }
-    //   this.setSurveyName(surveyName);
-
-    //   this.$router.push({
-    //     name: "SurveyView",
-    //     params: { surveyid: foundSurvey.surveyid }
-    //   });
-    // },
-    clearLookupResults() {
-      this.$emit("clear-lookup-results");
-    },
 
     showModalWithIndex(index) {
       this.selectedIndex = index;

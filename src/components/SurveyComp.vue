@@ -23,7 +23,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-import { getCurrentYearMonthDayString, sumUp } from "@/common/utils"; //gapInDays
+import { getCurrentYearMonthDayString } from "@/common/utils"; //gapInDays
 import { PREFILL_EXCLUSIONS, MANDATORY_FIELDS } from "@/common/constants";
 // import Modal from "@/components/Modal";
 
@@ -43,7 +43,6 @@ import { PREFILL_EXCLUSIONS, MANDATORY_FIELDS } from "@/common/constants";
 
 // const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
-SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp);
 // SurveyVue.FunctionFactory.Instance.register(
 //   "completionMandatoryValidator",
 //   completionMandatoryValidator
@@ -112,24 +111,7 @@ export default {
         console.error("Progarm not set . Unable to ssave");
         return;
       }
-      let sdsQuestions = this.survey
-        .getAllQuestions()
-        .filter(e => e.name.startsWith("SDS"));
-      if (sdsQuestions && sdsQuestions.length > 2) {
-        const intList = sdsQuestions.map(e => parseInt(e.value));
-        const sds_score = sumUp(intList);
-        console.log("SAVE SURVEY -------  SDS SCORE .............", sds_score);
-        this.survey.setValue("SDS_Score", sds_score);
-      }
-      let k10Questions = this.survey
-        .getAllQuestions()
-        .filter(e => e.name.startsWith("K10"));
-      if (k10Questions && k10Questions.length > 2) {
-        const intList = k10Questions.map(e => parseInt(e.value));
-        const k10_score = sumUp(intList);
-        console.log("SAVE SURVEY -------  K10 SCORE .............", k10_score);
-        this.survey.setValue("K10_Score", k10_score);
-      }
+
       // for the thank you page.
       this.setStaff(this.survey.data["Staff"]);
 
@@ -294,7 +276,7 @@ export default {
           );
           // add this class to all missing mandatory questions :   sv-question__title--error
           me.setSidebarState(oldSidebarState);
-          me.survey.currentPage = firstMissingQuestion.page.visibleIndex;
+          me.survey.currentPageNo = firstMissingQuestion.page.visibleIndex;
 
           return;
         }

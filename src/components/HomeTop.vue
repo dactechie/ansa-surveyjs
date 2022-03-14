@@ -5,7 +5,7 @@
 
     <div class="invisible md:visible">
       <a
-        href="https://directionshealth.sharepoint.com/Shared%20Documents/Forms/AllItems.aspx?viewid=06fc1372%2D9769%2D41f8%2Da246%2Dff6a324a1f9f&id=%2FShared%20Documents%2FICT%2FANSA%2FDocumentation%2FReleases"
+        href="https://directionshealth.sharepoint.com/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2FShared%20Documents%2FICT%2FATOM%2FDocumentation%2FReleases"
         class="font-semibold text-xs lg:text-sm no-underline hover:bg-gray-300 hover:text-indigo-800 shadow-md rounded-lg px-2 lg:px-4 py-2 rounded-bl-3xl"
         target="_blank"
       >

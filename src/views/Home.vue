@@ -29,7 +29,7 @@
             class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm lg:text-md subpixel-antialiased"
             :class="{ activeClass: showSpinner }"
           >
-            <Instructions />
+            <MainInstructions />
             <div
               class="mt-4 invisible md:visible shadow-md rounded-lg p-2 pl-3 rounded-bl-3xl bg-indigo-100"
             >
@@ -65,14 +65,14 @@
                 >
                   {{ survey.prefix }} {{ survey.displayName }}</router-link
                 >
-                <span class="flex absolute h-3 w-3 top-2 right-2">
+                <!-- <span class="flex absolute h-3 w-3 top-2 right-2">
                   <span
                     class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"
                   ></span>
                   <span
                     class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"
                   ></span>
-                </span>
+                </span> -->
               </div>
             </div>
           </div>
@@ -100,17 +100,17 @@ import {
 
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory";
-import HomeTop from "../components/HomeTop.vue";
-import Instructions from "../components/Instructions.vue";
+import HomeTop from "@/components/HomeTop.vue";
+import MainInstructions from "@/components/MainInstructions.vue";
 
 export default {
-  name: "Home",
+  name: "HomeView",
   components: {
     LeftsideNavbar,
     ClientSurveyHistory,
     AtomSpinner,
     HomeTop,
-    Instructions
+    MainInstructions
   },
   data() {
     return {

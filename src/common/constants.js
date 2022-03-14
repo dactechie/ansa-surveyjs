@@ -41,6 +41,8 @@ export const SURVEY_DISPLAY_NAMES = {
   "Arcadia House Assessments": "Arcadia House Assessments"
 };
 
+export const ARCA = "Arcadia";
+
 export const DB_META_KEYS = [
   PARTITION_KEY,
   ROW_KEY,

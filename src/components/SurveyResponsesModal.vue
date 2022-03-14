@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal v-if="show" @close="close">
+    <ModalComponent v-if="show" @close="close">
       <template v-slot:header>
         <h3>Survey Responses</h3>
       </template>
@@ -19,19 +19,19 @@
           Close
         </button>
       </template>
-    </Modal>
+    </ModalComponent>
   </div>
 </template>
 
 <script>
 // / / eslint-disable-line no-unused-vars
 import { mapGetters } from "vuex";
-import Modal from "./Modal";
+import ModalComponent from "./ModalComponent";
 import DetailsTable from "@/components/DetailsModal/DetailsTable";
 
 export default {
   name: "SurveyResponsesModal",
-  components: { Modal, DetailsTable },
+  components: { ModalComponent, DetailsTable },
   emits: ["close"],
   props: ["show", "selectedIndex"],
 

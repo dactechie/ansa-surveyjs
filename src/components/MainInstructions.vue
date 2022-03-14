@@ -1,4 +1,4 @@
-<template>
+<template name="MainInstructions">
   <div
     class="m-10  invisible md:visible md:col-span-2 shadow-md rounded-lg p-2 rounded-bl-3xl bg-gradient-to-b from-green-100 to-blue-100"
   >
