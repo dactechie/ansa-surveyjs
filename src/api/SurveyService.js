@@ -35,11 +35,12 @@ export default {
 
   async createData(SLK, rowData, keyDate, userMode) {
     const { AssessmentType, Program } = rowData;
-    rowData[ROW_KEY] = generateRowKey(
-      SURVEY_TYPE_MAP[AssessmentType],
-      Program,
-      keyDate
-    );
+    const assTypeCode = SURVEY_TYPE_MAP[AssessmentType];
+    if (!assTypeCode) {
+      alert(`Assessement Type was  undeinfed ${AssessmentType}`);
+      return undefined;
+    }
+    rowData[ROW_KEY] = generateRowKey(assTypeCode, Program, keyDate);
     rowData[PARTITION_KEY] = SLK;
     console.log(` in create data ${SLK}, ${rowData[ROW_KEY]}`);
 

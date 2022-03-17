@@ -28,8 +28,8 @@
           from the latest assessment.
         </li>
         <li>
-          <span class="font-semibold">Issues and Goals</span> for each domain
-          will not pre-fill. Please review with your client and updated
+          <span class="font-semibold">Summary Notes and Goals</span> for each
+          domain will not pre-fill. Please review with your client and updated
           accordingly.
         </li>
       </ul>

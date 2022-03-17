@@ -60,7 +60,8 @@ export default {
       dirtyData: false,
       showModal: false,
       modalContent: "",
-      mandatoryFieldList: MANDATORY_FIELDS.split(",")
+      mandatoryFieldList: MANDATORY_FIELDS.split(","),
+      scores: {}
     };
   },
   // components: {
@@ -91,6 +92,7 @@ export default {
       "hideSideBar",
       "setSidebarState",
       "setMissingMandatoryFields"
+      // "setCurrentPageQuestions"
     ]),
     ...mapGetters([
       "getCurrentSurveyData",
@@ -102,7 +104,6 @@ export default {
     ]),
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
-      console.log("survey data", this.survey.data);
       this.survey.data["Status"] = "Incomplete";
       this.saveSurvey("Incomplete");
     },
@@ -115,10 +116,20 @@ export default {
       // for the thank you page.
       this.setStaff(this.survey.data["Staff"]);
 
-      //this.survey.data["SurveyID"] = this.$route.params.surveyid;
+      if (!("AssessmentType" in this.survey.data)) {
+        // not present when doing final submission
+        this.survey.setValue(
+          "AssessmentType",
+          this.getCurrentSurveyData()["AssessmentType"]
+        );
+      }
+      // console.log(
+      //   `Going to Add To Server ${this.survey.data["AssessmentType"]}`
+      // );
+      let dataObj = { ...this.scores, ...this.survey.data };
       const response = this.ADD_SURVEY_DATASERVER({
         SLK: this.$store.state.currentClientSLK,
-        surveyData: this.survey.data,
+        surveyData: dataObj,
         surveyId: this.$route.params.surveyid,
         //surveyName: this.$store.state.surveyName,
         status: status
@@ -158,6 +169,8 @@ export default {
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
 
+      const prefillQuestionsList = sender.getAllQuestions(false); //even hidden questions (they maybe hidd)
+
       if (
         typeof prefillSurvey !== "undefined" &&
         prefillSurvey["PartitionKey"] !== undefined
@@ -172,8 +185,15 @@ export default {
             "-"
           );
 
-          sender
-            .getAllQuestions()
+          prefillQuestionsList
+            // .filter(
+            //   e =>
+            //     !wordWithPreOrSuffix(
+            //       e.name,
+            //       PREFILL_EXCLUSION_PREFIXES,
+            //       PREFILL_EXCLUSION_SUFFIXES
+            //     )
+            // )
             .filter(e => !prefillExclusionList.includes(e.name))
             .forEach(e => {
               me.survey.setValue(e.name, prefillSurveyData[e.name]);
@@ -182,7 +202,7 @@ export default {
           //
           // if continuing a survey, we want to prefill everything.
           //
-          sender.getAllQuestions().forEach(e => {
+          prefillQuestionsList.forEach(e => {
             me.survey.setValue(e.name, prefillSurveyData[e.name]);
           });
         }
@@ -238,6 +258,7 @@ export default {
       //   required: required.length,
       //   reqAnswered: reqAnswered.length
       // });
+
       let missingMandatoryFields = [];
       let missingFieldPageQuestionNames = [];
       let answeredKeys = Object.keys(me.survey.getAllValues());
@@ -283,6 +304,16 @@ export default {
       } else if (me.dirtyData && me.isProgramSet && !me.survey.isCompleted) {
         me.savePartialSurvey();
       }
+    });
+    this.survey.onCompleting.add(function(survey) {
+      console.log("On Completing survey");
+      console.log(survey.data);
+      survey
+        .getAllQuestions(false)
+        .filter(qq => qq.name.endsWith("_Score"))
+        .forEach(q => {
+          me.scores[q.name] = survey.getValue(q.name);
+        });
     });
 
     this.survey.onComplete.add(function(survey, options) {
