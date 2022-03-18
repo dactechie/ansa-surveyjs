@@ -23,8 +23,17 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-import { getCurrentYearMonthDayString } from "@/common/utils"; //gapInDays
-import { PREFILL_EXCLUSIONS, MANDATORY_FIELDS } from "@/common/constants";
+import {
+  getCurrentYearMonthDayString
+  // wordWithPreOrSuffix
+} from "@/common/utils"; //gapInDays
+import {
+  PREFILL_EXCLUSIONS_ALLCASES,
+  PREFILL_EXCLUSIONS,
+  MANDATORY_FIELDS
+  // PREFILL_EXCLUSION_PREFIXES,
+  // PREFILL_EXCLUSION_SUFFIXES
+} from "@/common/constants";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -116,13 +125,6 @@ export default {
       // for the thank you page.
       this.setStaff(this.survey.data["Staff"]);
 
-      if (!("AssessmentType" in this.survey.data)) {
-        // not present when doing final submission
-        this.survey.setValue(
-          "AssessmentType",
-          this.getCurrentSurveyData()["AssessmentType"]
-        );
-      }
       // console.log(
       //   `Going to Add To Server ${this.survey.data["AssessmentType"]}`
       // );
@@ -168,8 +170,10 @@ export default {
 
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
-
-      const prefillQuestionsList = sender.getAllQuestions(false); //even hidden questions (they maybe hidd)
+      const allCasesPrefillExclusions = PREFILL_EXCLUSIONS_ALLCASES.split(",");
+      const prefillQuestionsList = sender
+        .getAllQuestions(false) //even hidden questions (they maybe hidd)
+        .filter(e => !allCasesPrefillExclusions.includes(e.name)); // exclude scores
 
       if (
         typeof prefillSurvey !== "undefined" &&
@@ -258,6 +262,7 @@ export default {
       //   required: required.length,
       //   reqAnswered: reqAnswered.length
       // });
+      // this.setCurrentPageQuestions(me.survey.getCurrenPageQuestions(false));
 
       let missingMandatoryFields = [];
       let missingFieldPageQuestionNames = [];
