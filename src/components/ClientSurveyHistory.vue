@@ -46,7 +46,7 @@
     </table>
     <SurveyResponsesModal
       v-if="myData && selectedIndex >= 0"
-      :selectedIndex="selectedIndex"
+      :dataToShow="dataToShow"
       :show="showModal"
       @close="showModal = false"
     ></SurveyResponsesModal>
@@ -72,6 +72,9 @@ export default {
     };
   },
   computed: {
+    dataToShow() {
+      return this.getClientData()[this.selectedIndex]["SurveyData"];
+    },
     // QUESTION: Why is this a computed property ???????
     myData() {
       let data = this.getClientData();
@@ -112,6 +115,7 @@ export default {
       return tableVals;
     }
   },
+
   methods: {
     // setSurveyName(surveyName) {
     //   this.$store.state["surveyName"] = surveyName;

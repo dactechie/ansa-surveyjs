@@ -1,56 +1,34 @@
 <template>
   <div>
     <!-- <div id="body"></div>    -->
-    <table class="text-xs">
+    <table>
       <thead>
-        <th
+        <!-- <th
           class="bg-teal-200 text-gray-800 text-center border border-gray-400"
         >
           Question (Code)
-        </th>
+        </th> -->
         <th
+          v-for="(assessmentDate, index) of assessmentDates"
+          :key="index"
           class="bg-teal-200 text-gray-800 text-center border border-gray-400"
         >
-          Response
+          {{ assessmentDate }}
         </th>
       </thead>
       <tbody>
-        <tr
-          class="p-2"
-          v-for="title in Object.keys(selectedSurveyData)"
-          :key="title"
-        >
-          <td class="text-center  font-semibold border border-gray-100">
-            {{ title }}
-          </td>
-          <td class="text-center " v-if="objectArrayTypeKeys.includes(title)">
-            <DetailObjectListTable :tableData="selectedSurveyData[title]" />
-            <!-- exmaple : AODHistory : [ {} , {}...]  -->
-          </td>
+        <tr>
           <td
-            class="text-center  border border-gray-400"
-            v-else-if="objectOfObjectTypeKeys.includes(title)"
+            v-for="({ surveyDataDescription, dataToShow },
+            index) of displayData"
+            :key="index"
           >
-            <DetailObjectofObjectsTable
-              :tableData="selectedSurveyData[title]"
-            />
-          </td>
-          <!-- AddictiveBehaviours	{ 
-                "Gambling": { "yesNo": false, "Days": "25-28" }, 
-                "Sex": { "yesNo": true }, 
-                "Internet / Social Media": { "yesNo": false }, 
-                "Gaming": { "yesNo": true, "Days": "10-14" },
-                "Hoarding": { "yesNo": false, "Days": "15-19" }, 
-                "Other": { "yesNo": false, "Days": "0" } 
-                }-->
-          <td v-else-if="objectOfStringsTypeKeys.includes(title)">
-            <DetailObjectofStringsTable
-              :tableData="selectedSurveyData[title]"
-            />
-          </td>
-
-          <td class="pl-2" v-else>
-            {{ selectedSurveyData[title] }}
+            <SingleSurveyTable
+              :surveyDataDescription="surveyDataDescription"
+              :dataToShow="dataToShow"
+              :includeFieldCodes="index == 0"
+            >
+            </SingleSurveyTable>
           </td>
         </tr>
       </tbody>
@@ -60,74 +38,80 @@
 
 <script>
 import { mapState } from "vuex";
-import DetailObjectListTable from "./DetailObjectListTable";
-import DetailObjectofObjectsTable from "./DetailObjectofObjectsTable";
-import DetailObjectofStringsTable from "./DetailObjectofStringsTable";
+import { splitByTypes } from "@/common/utils";
+import SingleSurveyTable from "./SingleSurveyTable";
 
 export default {
   name: "DetailsTable",
-  props: ["selectedIndex"],
-  components: {
-    DetailObjectListTable,
-    DetailObjectofObjectsTable,
-    DetailObjectofStringsTable
-  },
+  props: ["allData", "keysToShow"],
+  components: { SingleSurveyTable },
   data() {
     return {
-      body: "",
-      selectedSurveyData: {},
-      objectArrayTypeKeys: [],
-      objectOfObjectTypeKeys: [],
-      objectOfStringsTypeKeys: []
+      displayData: [],
+      assessmentDates: []
+      // objectArrayTypeKeys: [],
+      // objectOfObjectTypeKeys: [],
+      // objectOfStringsTypeKeys: []
     };
   },
-  watch: {
-    selectedIndex: {
-      immediate: true,
-      handler() {
-        this.buildTable();
-      }
-    }
+  mounted() {
+    this.buildTable();
   },
   methods: {
-    buildTable() {
-      this.body = "";
-      console.log("in ITSP", this.selectedIndex);
-      console.log("in clientData", this.clientData);
-      let data = this.clientData[this.selectedIndex]["SurveyData"];
+    getResult(data) {
+      let result = {};
+      const [
+        objectArrayTypeKeys,
+        objectOfObjectTypeKeys,
+        objectOfStringsTypeKeys
+      ] = splitByTypes(data);
+      result = {
+        // AssessmentDate: objectOfStringsTypeKeys["AssessmentDate"],
+        objectArrayTypeKeys,
+        objectOfObjectTypeKeys,
+        objectOfStringsTypeKeys
+      };
+      return result;
+    },
 
-      this.objectArrayTypeKeys = Object.keys(data).filter(k => {
-        let v = data[k];
-        return (
-          Array.isArray(v) &&
-          typeof v[0] === "object" &&
-          v[0] !== null &&
-          Object.keys(v[0]).length > 0
-        );
-      });
-      // data :  { "... ", "AddictiveBehaviours" : { "Gambling": {"YesNo" : False, "Days": 34 }} }
-      //result :["Gambling", .. ]
-      this.objectOfObjectTypeKeys = Object.keys(data).filter(k => {
-        let v = data[k];
-        if (typeof v === "object") {
-          //"AddictiveBehaviours" : { "Gambling": {"YesNo" : False, "Days": 34 }} }
-          const keys = Object.keys(v); // ["Gambling" ,..]
-          if (keys.length > 0 && typeof v[keys[0]] === "object") {
-            return Object.keys(v[keys[0]]).length > 0; //{"YesNo"}
+    buildTable() {
+      console.log("buildTable KeysTosShow", this.keysToShow);
+      let result = [];
+      this.assessmentDates = [];
+      if (!Array.isArray(this.allData)) {
+        this.displayData.push({
+          surveyDataDescription: this.getResult(this.allData),
+          dataToShow: this.allData
+        });
+        return;
+      }
+
+      for (let index = 0; index < this.allData.length; index++) {
+        const element = this.allData[index];
+        let r = {};
+        for (const k in this.keysToShow) {
+          const key = this.keysToShow[k];
+          if (key in element) {
+            r[key] = element[key];
+          } else {
+            r[key] = element["SurveyData"][key];
           }
         }
-        return false;
-      });
-      this.objectOfStringsTypeKeys = Object.keys(data).filter(k => {
-        let v = data[k]; // mhealthnotes : {...}
-        if (typeof v === "object") {
-          const values = Object.values(v); // ["mental_issues" , "goals"]
-          return typeof v[0] === "undefined" && typeof values[0] === "string";
-        }
-        return false;
-      });
-      console.log("objectOfStringsTypeKeys", this.objectOfStringsTypeKeys);
-      this.selectedSurveyData = data;
+        this.assessmentDates.push(element["AssessmentDate"]);
+        result.push({
+          surveyDataDescription: this.getResult(r),
+          dataToShow: r
+        });
+      }
+      // this.allData.forEach(d => {
+      //   let dct = this.keysToShow.map(k => k: d[k]);
+      //   dct["AssessmentDate"] = d["AssessmentDate"];
+      //   result.push({
+      //     surveyDataDescription: this.getResult(dct),
+      //     dataToShow: dct
+      //   });
+      // });
+      this.displayData = result;
     }
   },
   computed: {

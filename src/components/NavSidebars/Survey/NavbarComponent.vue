@@ -99,8 +99,18 @@
       <p class="hidden lg:flex font-semibold text-md text-blue-900 pl-5 pr-5">
         {{ getCurrentPageTitle }}
       </p>
+
+      <ScoresModal :show="showScores" @close="showScores = false"></ScoresModal>
+
       <!-- right navbar -->
       <div class="hidden md:flex items-center relative space-x-2   pl-4">
+        <button
+          @click="showScores = true"
+          class="font-semibold text-orange-500"
+        >
+          ShowScores
+        </button>
+
         <p class="font-mono font-semibold text-md text-green-800">
           SLK: {{ currentClientSLK }}
         </p>
@@ -146,8 +156,10 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import ScoresModal from "@/components/ScoresModal";
 export default {
   name: "NavbarComponent",
+  components: { ScoresModal },
   computed: {
     ...mapState(["sideBarOpen", "surveyName", "currentClientSLK"]),
     ...mapGetters([
@@ -164,7 +176,8 @@ export default {
   // },
   data() {
     return {
-      dropDownOpen: false
+      dropDownOpen: false,
+      showScores: false
     };
   },
   methods: {

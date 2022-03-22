@@ -2,6 +2,9 @@
   <!-- <div class="home"> -->
   <div class="container mx-auto">
     <HomeTop />
+    <button @click="showScores = true" class="font-semibold text-orange-500">
+      ShowScores
+    </button>
 
     <div class="md:mt-1 flex flex-wrap">
       <LeftsideNavbar
@@ -10,6 +13,9 @@
         @search-initiated="showSpinner = true"
         @mode-updated="updateMode"
       />
+
+      <ScoresModal :show="showScores" @close="showScores = false"></ScoresModal>
+
       <div class="sm:w-3/5 lg:w-3/4 pl-2" id="main-content">
         <div v-if="showSpinner" class="absolute z-40 m-auto md:pl-40 md:py-40">
           <atom-spinner
@@ -100,8 +106,9 @@ import {
 
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory";
-import HomeTop from "@/components/HomeTop.vue";
-import MainInstructions from "@/components/MainInstructions.vue";
+import HomeTop from "@/components/HomeTop";
+import MainInstructions from "@/components/MainInstructions";
+import ScoresModal from "@/components/ScoresModal";
 
 export default {
   name: "HomeView",
@@ -110,7 +117,8 @@ export default {
     ClientSurveyHistory,
     AtomSpinner,
     HomeTop,
-    MainInstructions
+    MainInstructions,
+    ScoresModal
   },
   data() {
     return {
@@ -120,7 +128,8 @@ export default {
       picked_type: "lookup",
       surveyListForClient: [],
       showSpinner: false,
-      showInstructions: true
+      showInstructions: true,
+      showScores: false
     };
   },
 

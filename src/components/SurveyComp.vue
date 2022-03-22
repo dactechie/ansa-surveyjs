@@ -100,8 +100,8 @@ export default {
       "setSurveyName",
       "hideSideBar",
       "setSidebarState",
-      "setMissingMandatoryFields"
-      // "setCurrentPageQuestions"
+      "setMissingMandatoryFields",
+      "setCurrentPageQuestions"
     ]),
     ...mapGetters([
       "getCurrentSurveyData",
@@ -262,7 +262,9 @@ export default {
       //   required: required.length,
       //   reqAnswered: reqAnswered.length
       // });
-      // this.setCurrentPageQuestions(me.survey.getCurrenPageQuestions(false));
+      me.setCurrentPageQuestions(
+        surveyModel.getCurrentPageQuestions(false).map(q => q.name)
+      );
 
       let missingMandatoryFields = [];
       let missingFieldPageQuestionNames = [];
@@ -308,6 +310,7 @@ export default {
         }
       } else if (me.dirtyData && me.isProgramSet && !me.survey.isCompleted) {
         me.savePartialSurvey();
+        me.sideBarOpen();
       }
     });
     this.survey.onCompleting.add(function(survey) {

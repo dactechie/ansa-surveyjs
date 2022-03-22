@@ -62,6 +62,7 @@ export default {
 
 .modal-container {
   /* width: 300px; */
+  /* float: right; */
   margin: 10px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -79,8 +80,9 @@ export default {
 }
 
 .modal-body {
-  /* margin: 20px 0; */
-  height: 70vh;
+  margin: 20px 0;
+  /* height: 50vh; */
+  max-height: 70vh;
   overflow-y: auto;
 }
 

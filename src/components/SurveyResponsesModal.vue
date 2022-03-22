@@ -5,11 +5,7 @@
         <h3>Survey Responses</h3>
       </template>
       <template v-slot:body>
-        <DetailsTable
-          v-if="myData && selectedIndex >= 0"
-          :selectedIndex="selectedIndex"
-        >
-        </DetailsTable>
+        <DetailsTable :allData="dataToShow"> </DetailsTable>
       </template>
       <template v-slot:footer>
         <button
@@ -25,7 +21,7 @@
 
 <script>
 // / / eslint-disable-line no-unused-vars
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 import ModalComponent from "./ModalComponent";
 import DetailsTable from "@/components/DetailsModal/DetailsTable";
 
@@ -33,43 +29,47 @@ export default {
   name: "SurveyResponsesModal",
   components: { ModalComponent, DetailsTable },
   emits: ["close"],
-  props: ["show", "selectedIndex"],
-
+  props: ["show", "dataToShow"],
+  // data() {
+  //   return {
+  //     allClientData: this.getClientData()
+  //   };
+  // },
   methods: {
-    ...mapGetters(["getClientData"]),
+    // ...mapGetters(["getClientData"]),
     close: function() {
       this.$emit("close");
     }
-  },
-  computed: {
-    myData() {
-      let data = this.getClientData();
-      if (!data || data.length < 1) return undefined;
-
-      let colHeaders = [
-        // "PartitionKey",
-        "Timestamp",
-        "Program",
-        "Staff",
-        "Status",
-        "SurveyName"
-        //"PrincipalDrugOfConcern"
-      ];
-
-      let tableVals = [];
-
-      console.log("client data in histry ", data);
-
-      data.forEach(function(c) {
-        // c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
-        let td = colHeaders.map(h => c[h]);
-        tableVals.push(td);
-      });
-
-      return tableVals;
-    }
-    // clientData:  this.getClientData()
   }
+  // computed: {
+  //   myData() {
+  //     let data = this.getClientData();
+  //     if (!data || data.length < 1) return undefined;
+
+  //     let colHeaders = [
+  //       // "PartitionKey",
+  //       "Timestamp",
+  //       "Program",
+  //       "Staff",
+  //       "Status",
+  //       "SurveyName"
+  //       //"PrincipalDrugOfConcern"
+  //     ];
+
+  //     let tableVals = [];
+
+  //     console.log("client data in histry ", data);
+
+  //     data.forEach(function(c) {
+  //       // c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
+  //       let td = colHeaders.map(h => c[h]);
+  //       tableVals.push(td);
+  //     });
+
+  //     return tableVals;
+  //   }
+  //   // clientData:  this.getClientData()
+  // }
 };
 </script>
 

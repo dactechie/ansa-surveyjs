@@ -57,5 +57,8 @@ export const mutations = {
   },
   setMissingMandatoryFields(state, payload) {
     state.missingMandatoryFields = payload;
+  },
+  setCurrentPageQuestions(state, payload) {
+    state.currentPageQuestions = payload;
   }
 };
