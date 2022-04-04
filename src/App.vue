@@ -25,7 +25,8 @@ import {
 
 export default {
   data() {
-    console.log("app slot : ", APP_AZSLOT);
+    console.log("AZ app slot : ", APP_AZSLOT);
+    console.log("Node Proces env", process.env.NODE_ENV);
     return {
       SURVEY_IDS,
       APP_AZSLOT

@@ -24,6 +24,17 @@ npm run build
 npm run lint
 ```
 
+## End to End Testing (after launching the local web app)
+
+```
+npm run test
+```
+
+```
+after npm run staging,
+npx cypress open
+```
+
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
