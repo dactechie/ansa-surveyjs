@@ -23,6 +23,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
+// import QuestionnaireService from "@/api/SurveyQuestionnaireService";
 import {
   getCurrentYearMonthDayString
   // wordWithPreOrSuffix
@@ -34,6 +35,8 @@ import {
   // PREFILL_EXCLUSION_PREFIXES,
   // PREFILL_EXCLUSION_SUFFIXES
 } from "@/common/constants";
+
+import SurveyService from "../api/SurveyService";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -108,9 +111,11 @@ export default {
       // "getCurrentSurvey",
       // "getCurrentSurveyName",
       "getClientLookupIDs",
-      "sideBarOpen"
+      "sideBarOpen",
+      "isContinuingSurvey"
       // "totalTillNow"
     ]),
+
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
       this.survey.data["Status"] = "Incomplete";
@@ -146,6 +151,10 @@ export default {
         return "Please navigate to another page on the survey to save your changes. Are you sure you want to exit without saving the changes on this page ?";
       }
     };
+    // this.survey = QuestionnaireService.getSurveyModel(
+    //   SurveyVue,
+    //   this.$route.params.surveyid
+    // );
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
@@ -171,6 +180,10 @@ export default {
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
       const allCasesPrefillExclusions = PREFILL_EXCLUSIONS_ALLCASES.split(",");
+
+      //load question ssettings from survey question and then remove it so it is not saved in the client's survey submisison
+      //QuestionSettings
+
       const prefillQuestionsList = sender
         .getAllQuestions(false) //even hidden questions (they maybe hidd)
         .filter(e => !allCasesPrefillExclusions.includes(e.name)); // exclude scores
@@ -182,9 +195,14 @@ export default {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
 
-        if (prefillSurvey["Status"] !== "Incomplete") {
-          const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
+        if (
+          !me.isContinuingSurvey() //&&
+          //prefillSurvey["Status"] !== "Incomplete"
+        ) {
           // we're not continuing an incomplete survey, but starting a new one (with prefill)
+
+          //exclude Issues, Goals
+          const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
           prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
             "-"
           );
@@ -199,6 +217,13 @@ export default {
             //     )
             // )
             .filter(e => !prefillExclusionList.includes(e.name))
+            .filter(e =>
+              SurveyService.canPrefill(
+                me.survey,
+                e.name,
+                prefillSurveyData[e.name]
+              )
+            )
             .forEach(e => {
               me.survey.setValue(e.name, prefillSurveyData[e.name]);
             });
@@ -209,13 +234,14 @@ export default {
           prefillQuestionsList.forEach(e => {
             me.survey.setValue(e.name, prefillSurveyData[e.name]);
           });
+
+          me.survey.setValue("Program", prefillSurvey["Program"]);
+          me.survey.setValue("Staff", prefillSurvey["Staff"]);
         }
         // using sender.getAllQuestions() instead of  me.survey.data = prefilleSurveyData
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
 
-        me.survey.setValue("Program", prefillSurvey["Program"]);
-        me.survey.setValue("Staff", prefillSurvey["Staff"]);
         me.setClientSLK(prefillSurvey["PartitionKey"]);
       } else {
         //nothing to prefill - first ever
@@ -271,7 +297,7 @@ export default {
         .getAllQuestions(true) //true=> visible
         .filter(
           e =>
-            me.mandatoryFieldList.includes(e.name) &&
+            (me.mandatoryFieldList.includes(e.name) || e.isRequired) &&
             !answeredKeys.includes(e.name)
         )
         // get all mandatory & visible but not answered questions

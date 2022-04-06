@@ -33,9 +33,13 @@ export default new Vuex.Store({
     currentPageTitle: "",
     clientLookupIDs: {},
     questionsStatus: {},
-    missingMandatoryFields: []
+    missingMandatoryFields: [],
+    continuingSurvey: false
   },
   getters: {
+    isContinuingSurvey: state => {
+      return state.continuingSurvey;
+    },
     getApplicationMode: state => {
       return state.applicationMode;
     },

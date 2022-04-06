@@ -22,7 +22,39 @@ export default {
     });
     return result;
   },
+  canPrefill(survey, questionName, prefillData) {
+    const question = survey.getQuestionByName(questionName);
+    // if (!question) {
+    //   console.log("No question in current survey with Prefill question name: ",)
+    // }
+    if (!prefillData) return false;
 
+    // if not a 'choice list', assume that we can prefill
+    if (!["radiogroup", "dropdown", "checkbox"].includes(question.getType())) {
+      return true;
+    }
+    const choiceList = question.choices.map(c => c.itemValue);
+    let copyPrefilData = [];
+    if (prefillData.constructor === Array) copyPrefilData = prefillData;
+    else copyPrefilData.push(prefillData);
+
+    const extraInPrefillData = copyPrefilData.filter(
+      p => !choiceList.includes(p)
+    );
+    if (extraInPrefillData.length > 0) {
+      console.log(
+        `Prefill data "${copyPrefilData}" for question:${questionName} had these un-prefilllable value(s): ${extraInPrefillData}. Available values: `,
+        choiceList
+      );
+    }
+    // can prefill some
+    if (extraInPrefillData.length < copyPrefilData.length) {
+      return true;
+    }
+    //prefill data had more items for this control (radio group, checkbox/dropdown) than
+    // it could match with the avialble list in the survey questionnaire
+    return false;
+  },
   async getBySLK(slk, userMode) {
     let result = await getClientDataByPartitionKey(slk, userMode);
     return this.sortByAssessmentDate(result);
@@ -37,7 +69,9 @@ export default {
     const { AssessmentType, Program } = rowData;
     const assTypeCode = SURVEY_TYPE_MAP[AssessmentType];
     if (!assTypeCode) {
-      alert(`Assessement Type was  undeinfed ${AssessmentType}`);
+      alert(
+        `Assessement Type was  undeinfed ${AssessmentType}. Survey Can't be saved`
+      );
       return undefined;
     }
     rowData[ROW_KEY] = generateRowKey(assTypeCode, Program, keyDate);

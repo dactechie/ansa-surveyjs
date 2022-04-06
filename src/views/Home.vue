@@ -57,7 +57,7 @@
               >
                 <router-link
                   class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-2 md:px-6 inline-flex items-center"
-                  @click.native="handleStartSurvey(survey.name)"
+                  @click.native="handleStartSurvey(survey)"
                   :to="{
                     name: 'SurveyView',
                     params: { type: 'new', surveyid: survey.surveyid }
@@ -100,8 +100,8 @@ import {
 
 import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory";
-import HomeTop from "@/components/HomeTop.vue";
-import MainInstructions from "@/components/MainInstructions.vue";
+import HomeTop from "@/components/HomeTop";
+import MainInstructions from "@/components/MainInstructions";
 
 export default {
   name: "HomeView",
@@ -143,7 +143,8 @@ export default {
       "unsetClientData",
       "clearState",
       "setClientLookupIDData",
-      "setCurrentSurveyData"
+      "setCurrentSurveyData",
+      "setContinuingSurveyStatus"
     ]),
 
     filterButtonType(buttonTypeName, shouldContinue) {
@@ -177,9 +178,12 @@ export default {
         });
       }
     },
-    handleStartSurvey(surveyName) {
+    handleStartSurvey(surveyObj) {
+      if (!!surveyObj.prefix && surveyObj.prefix === "Continue incomplete ") {
+        this.setContinuingSurveyStatus(true);
+      }
       this.setSurveyMode("new");
-      this.setSurveyName(surveyName);
+      this.setSurveyName(surveyObj.name);
     },
     updateMode({ mode, text, data }) {
       this.showSpinner = false;

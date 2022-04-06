@@ -27,6 +27,8 @@ export default {
   data() {
     console.log("AZ app slot : ", APP_AZSLOT);
     console.log("Node Proces env", process.env.NODE_ENV);
+    console.log("Prefil exclusions ", process.env.VUE_APP_PREFILL_EXCLUSIONS);
+    console.log("Vue Mandatory fields  ", process.env.VUE_APP_MANDATORY_FIELDS);
     return {
       SURVEY_IDS,
       APP_AZSLOT
