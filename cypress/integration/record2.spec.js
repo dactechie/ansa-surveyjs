@@ -1,80 +1,21 @@
-// record2.spec.js created with Cypress
-//
-function clickButtonWithText(elementType, text) {
-  cy.contains(elementType, text).click();
-}
+import {
+  page_ProgramAndStaff,
+  page_PDC,
+  page_CDS5,
+  impactOfSubstanceUse,
+  dailyLivingImpact,
+  housingSafety,
+  physicalHealth,
+  mentalHealth,
+  relationships,
+  legal,
+  page_SDS,
+  smoking,
+  whereAreYouAtRightNow,
+  officialUseOnly
+} from "./survey_pages";
+import { clickButtonWithText, gotoNextPage } from "./survey_pages/utils";
 
-function selectRadioOption(sourceDivName, inputValue) {
-  cy.get(`div[name="${sourceDivName}"]`)
-    // .click({ force: true })
-    .get(`input[value="${inputValue}"]`)
-    .click({ force: true });
-}
-
-// function selectDropdownOption(AttributeType, controlName, inputValue) {
-//   cy.get(`select[${AttributeType}="${controlName}"]`)
-//     //  .click({ force: true })
-//     .get(`option[value="${inputValue}"]`)
-//     .click({ force: true });
-// }
-
-function selectDropdownOption(sourceDivName, inputValue) {
-  cy.get(`div[name="${sourceDivName}"]`)
-    //  .click({ force: true })
-    .get(`option[value="${inputValue}"]`)
-    .click({ force: true });
-}
-
-function selectDropdownWithAria(ariaLabel, selectedOption) {
-  cy.get(`select[aria-label="${ariaLabel}"]`).select(selectedOption);
-}
-
-function page_ProgramAndStaff() {
-  selectRadioOption("Program", "TSS");
-  selectRadioOption("Staff", "Aftab.Jalal");
-  selectRadioOption("ClientType", "ownuse");
-
-  /* ==== Generated with Cypress Studio ==== */
-  // cy.get('#sq_106i').select('Aboriginal but not Torres Strait Islander');
-  selectDropdownOption(
-    "IndigenousStatus",
-    "Aboriginal but not Torres Strait Islander"
-  );
-  //selectDropdownOption("PreferredLanguage", "English");
-
-  selectDropdownWithAria("Preferred Language", "Hindi"); // same as the one below in this case
-
-  selectDropdownOption("CountryOfBirth", "Australia");
-}
-
-function page_PDC() {
-  cy.get('select[aria-label="Drug of concern/Gambling"]').select("Heroin");
-  selectDropdownWithAria("Method of Use", "Inject");
-  selectDropdownWithAria("Days used in last 4 weeks?", "6");
-  selectDropdownWithAria("Units", "standard drinks");
-  selectDropdownWithAria("How much per occasion of use?", "0.6");
-  cy.get(`input[aria-label="Age First Used"]`)
-    .clear()
-    .type(6);
-
-  selectDropdownWithAria("Goals", "Reduce Harms");
-}
-
-function page_SDS() {
-  selectRadioOption("SDSIsAODUseOutOfControl", "0");
-  selectRadioOption("SDSDoesMissingFixMakeAnxious", "1");
-  selectRadioOption("SDSHowMuchDoYouWorryAboutAODUse", "2");
-  selectRadioOption("SDSDoYouWishToStop", "3");
-  selectRadioOption("SDSHowDifficultToStopOrGoWithout", "4");
-}
-
-function page_CDS5() {
-  selectRadioOption("DoYouSmoke", "Yes");
-  cy.get('div[name="CDS5RateAddictiontoCigarettes"]')
-    .get('input[aria-label="61-80"]')
-
-    .click({ force: true });
-}
 // Start writing your Cypress tests below!
 // If you're unfamiliar with how Cypress works,
 // check out the link below and learn how to write your first test:
@@ -89,34 +30,82 @@ it("NewTestRecord", function() {
   clickButtonWithText("span", "Fetch Client Data");
   clickButtonWithText("a", "’New Episode’ assessment");
 
-  page_ProgramAndStaff();
+  const blank_func = () => console.log("Not implemetned page");
 
-  cy.get(".sv-footer__next-btn").click();
+  const page_funcs = [
+    page_ProgramAndStaff,
+    page_PDC,
+    blank_func,
+    page_SDS,
+    smoking,
+    page_CDS5,
+    impactOfSubstanceUse,
+    dailyLivingImpact,
+    housingSafety,
+    physicalHealth,
+    mentalHealth,
+    relationships,
+    legal,
+    whereAreYouAtRightNow
+  ];
 
-  page_PDC();
+  page_funcs.forEach(pagefn => {
+    pagefn();
+    gotoNextPage();
+  });
+  officialUseOnly();
 
-  cy.get(".sv-footer__next-btn").click();
+  // page_ProgramAndStaff();
+  // // page_ProgramAndStaff();
 
-  page_SDS();
-  cy.get(".sv-footer__next-btn").click();
+  // gotoNextPage()
 
-  page_CDS5();
+  // page_PDC();
 
-  //https://stackoverflow.com/questions/56876330/how-do-i-target-a-nested-input-that-has-no-id-attribute-using-cypress
+  // gotoNextPage()
 
-  //   cy.get("div[cl;ass='label']").contains("LABEL TEXT2").parent().within(() => {
-  //     cy.get("input[type='text']").type("StackOverflowHelp")
-  //  });
+  // // ODC, injecting
+  // gotoNextPage()
 
-  //  <label class="Input">
-  //   <div class="label">LABEL TEXT1</div>
-  //   <input type="text">
-  // </label>
-  // <label class="Input">
-  //   <div class="label">LABEL TEXT2</div>
-  //   <input type="text">
-  // </label>
-  // cy.get("div[name='NotesODC']").type('some ODC notes')
-  // cy.get("div[name='HaveYouEverInjected']").find()
-  selectRadioOption("HaveYouEverInjected", "No");
+  // page_SDS();
+  // gotoNextPage()
+
+  // smoking();
+  // gotoNextPage()
+  // page_CDS5();
+  // gotoNextPage()
+  // impactOfSubstanceUse();
+  // gotoNextPage()
+  // dailyLivingImpact();
+  // gotoNextPage()
+  // housingSafety();
+
+  // //PHYSICAL HEALTH
+
+  // gotoNextPage()
+  // mentalHealth();
+  // gotoNextPage()
+  // relationships();
+  // gotoNextPage()
+  // legal();
+
+  // page_CDS5();
+
+  // //https://stackoverflow.com/questions/56876330/how-do-i-target-a-nested-input-that-has-no-id-attribute-using-cypress
+
+  // //   cy.get("div[cl;ass='label']").contains("LABEL TEXT2").parent().within(() => {
+  // //     cy.get("input[type='text']").type("StackOverflowHelp")
+  // //  });
+
+  // //  <label class="Input">
+  // //   <div class="label">LABEL TEXT1</div>
+  // //   <input type="text">
+  // // </label>
+  // // <label class="Input">
+  // //   <div class="label">LABEL TEXT2</div>
+  // //   <input type="text">
+  // // </label>
+  // // cy.get("div[name='NotesODC']").type('some ODC notes')
+  // // cy.get("div[name='HaveYouEverInjected']").find()
+  // selectRadioOption("HaveYouEverInjected", "No");
 });
