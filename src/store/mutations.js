@@ -1,4 +1,7 @@
 export const mutations = {
+  setContinuingSurveyStatus(state, payload) {
+    state.continuingSurvey = payload;
+  },
   setSurveyList(state, payload) {
     state.surveyNameIDList = payload;
   },
@@ -45,6 +48,7 @@ export const mutations = {
     state.currentStaff = "";
     (state.surveyName = ""), (state.surveyMode = "");
     state.currentPageTitle = "";
+    state.continuingSurvey = false;
   },
   toggleSidebar(state) {
     state.sideBarOpen = !state.sideBarOpen;

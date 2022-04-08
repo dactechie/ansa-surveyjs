@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  name: "Modal",
+  name: "ModalComponent",
   emits: ["close"],
   methods: {
     // close: function() {

@@ -3,7 +3,7 @@
     class="leading-normal tracking-normal text-xs md:text-sm "
     id="main-body"
   >
-    <Navbar />
+    <NavbarComponent />
     <div class="flex flex-wrap justify-center">
       <LeftsideNavbar
         v-if="sideBarOpen && surveyIsReady"
@@ -28,7 +28,7 @@
 <script>
 import { mapState } from "vuex";
 import LeftsideNavbar from "@/components/NavSidebars/Survey/LeftsideNavbar"; // https://tailwindcss-layouts.netlify.app/ https://github.com/Murked/vue-tailwind-admin/tree/master/src/components
-import Navbar from "@/components/NavSidebars/Survey/Navbar";
+import NavbarComponent from "@/components/NavSidebars/Survey/NavbarComponent";
 import SurveyComp from "@/components/SurveyComp";
 
 export default {
@@ -42,7 +42,7 @@ export default {
   components: {
     SurveyComp,
     LeftsideNavbar,
-    Navbar
+    NavbarComponent
   },
   computed: {
     ...mapState(["sideBarOpen"])

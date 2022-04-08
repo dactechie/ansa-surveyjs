@@ -18,8 +18,18 @@ export const DB_ENTITY_NAME = "ATOM";
 
 export const SLK_LENGTH = 14;
 
-export const PREFILL_EXCLUSIONS = process.env.VUE_APP_PREFILL_EXCLUSIONS || [];
-export const MANDATORY_FIELDS = process.env.VUE_APP_MANDATORY_FIELDS || [];
+export const PREFILL_EXCLUSIONS = process.env.VUE_APP_PREFILL_EXCLUSIONS || "";
+export const PREFILL_EXCLUSIONS_ALLCASES =
+  process.env.VUE_APP_PREFILL_EXCLUSIONS_ALLCASES || "";
+
+export const MANDATORY_FIELDS = process.env.VUE_APP_MANDATORY_FIELDS || "";
+
+// export const PREFILL_EXCLUSION_PREFIXES = (
+//   process.env.VUE_APP_PREFILL_EXCLUSION_PREFIXES || []
+// ).split(",");
+// export const PREFILL_EXCLUSION_SUFFIXES = (
+//   process.env.VUE_APP_PREFILL_EXCLUSION_SUFFIXES || []
+// ).split(",");
 
 export const MILLIS_IN_DAY = 86_400_000; // 24 * 60 * 60 * 1000
 export const MILLIS_IN_YEAR = 31_536_000_000; // 365 * MILLIS_IN_DAY
@@ -28,14 +38,20 @@ export const DB_IDTYPE_CCARE = "CCARE";
 
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
-  "ATOM Initial Assessment": "INAS",
-  "ATOM ITSP Review Assessment": "ITSP"
+  InitialAssessment: "INAS",
+  ITSPReview: "ITSP",
+  ArcadiaITSPReview: "ITSP",
+  SupplementaryIntakeAssessment: "SITK",
+  PostTreatmentAssessment: "POTA"
 };
 
 export const SURVEY_DISPLAY_NAMES = {
   "ATOM Initial Assessment": "’New Episode’ assessment",
-  "ATOM ITSP Review Assessment": "ITSP review"
+  "ATOM ITSP Review Assessment": "ITSP review",
+  "Arcadia House Assessments": "Arcadia House Assessments"
 };
+
+export const ARCA = "Arcadia";
 
 export const DB_META_KEYS = [
   PARTITION_KEY,

@@ -23,8 +23,20 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-import { getCurrentYearMonthDayString, sumUp } from "@/common/utils"; //gapInDays
-import { PREFILL_EXCLUSIONS, MANDATORY_FIELDS } from "@/common/constants";
+// import QuestionnaireService from "@/api/SurveyQuestionnaireService";
+import {
+  getCurrentYearMonthDayString
+  // wordWithPreOrSuffix
+} from "@/common/utils"; //gapInDays
+import {
+  PREFILL_EXCLUSIONS_ALLCASES,
+  PREFILL_EXCLUSIONS,
+  MANDATORY_FIELDS
+  // PREFILL_EXCLUSION_PREFIXES,
+  // PREFILL_EXCLUSION_SUFFIXES
+} from "@/common/constants";
+
+import SurveyService from "../api/SurveyService";
 // import Modal from "@/components/Modal";
 
 //import simpleIAJSON from "../simpleIAJSON";
@@ -43,7 +55,6 @@ import { PREFILL_EXCLUSIONS, MANDATORY_FIELDS } from "@/common/constants";
 
 // const Survey = SurveyVue.Survey;
 SurveyVue.StylesManager.applyTheme("modern");
-SurveyVue.FunctionFactory.Instance.register("sumUp", sumUp);
 // SurveyVue.FunctionFactory.Instance.register(
 //   "completionMandatoryValidator",
 //   completionMandatoryValidator
@@ -61,7 +72,8 @@ export default {
       dirtyData: false,
       showModal: false,
       modalContent: "",
-      mandatoryFieldList: MANDATORY_FIELDS.split(",")
+      mandatoryFieldList: MANDATORY_FIELDS.split(","),
+      scores: {}
     };
   },
   // components: {
@@ -92,18 +104,20 @@ export default {
       "hideSideBar",
       "setSidebarState",
       "setMissingMandatoryFields"
+      // "setCurrentPageQuestions"
     ]),
     ...mapGetters([
       "getCurrentSurveyData",
       // "getCurrentSurvey",
       // "getCurrentSurveyName",
       "getClientLookupIDs",
-      "sideBarOpen"
+      "sideBarOpen",
+      "isContinuingSurvey"
       // "totalTillNow"
     ]),
+
     savePartialSurvey() {
       // if the ROW-Key is not set  (program)
-      console.log("survey data", this.survey.data);
       this.survey.data["Status"] = "Incomplete";
       this.saveSurvey("Incomplete");
     },
@@ -112,31 +126,17 @@ export default {
         console.error("Progarm not set . Unable to ssave");
         return;
       }
-      let sdsQuestions = this.survey
-        .getAllQuestions()
-        .filter(e => e.name.startsWith("SDS"));
-      if (sdsQuestions && sdsQuestions.length > 2) {
-        const intList = sdsQuestions.map(e => parseInt(e.value));
-        const sds_score = sumUp(intList);
-        console.log("SAVE SURVEY -------  SDS SCORE .............", sds_score);
-        this.survey.setValue("SDS_Score", sds_score);
-      }
-      let k10Questions = this.survey
-        .getAllQuestions()
-        .filter(e => e.name.startsWith("K10"));
-      if (k10Questions && k10Questions.length > 2) {
-        const intList = k10Questions.map(e => parseInt(e.value));
-        const k10_score = sumUp(intList);
-        console.log("SAVE SURVEY -------  K10 SCORE .............", k10_score);
-        this.survey.setValue("K10_Score", k10_score);
-      }
+
       // for the thank you page.
       this.setStaff(this.survey.data["Staff"]);
 
-      //this.survey.data["SurveyID"] = this.$route.params.surveyid;
+      // console.log(
+      //   `Going to Add To Server ${this.survey.data["AssessmentType"]}`
+      // );
+      let dataObj = { ...this.scores, ...this.survey.data };
       const response = this.ADD_SURVEY_DATASERVER({
         SLK: this.$store.state.currentClientSLK,
-        surveyData: this.survey.data,
+        surveyData: dataObj,
         surveyId: this.$route.params.surveyid,
         //surveyName: this.$store.state.surveyName,
         status: status
@@ -151,6 +151,10 @@ export default {
         return "Please navigate to another page on the survey to save your changes. Are you sure you want to exit without saving the changes on this page ?";
       }
     };
+    // this.survey = QuestionnaireService.getSurveyModel(
+    //   SurveyVue,
+    //   this.$route.params.surveyid
+    // );
     this.survey = new SurveyVue.Model({
       surveyId: this.$route.params.surveyid
     });
@@ -175,6 +179,14 @@ export default {
 
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
+      const allCasesPrefillExclusions = PREFILL_EXCLUSIONS_ALLCASES.split(",");
+
+      //load question ssettings from survey question and then remove it so it is not saved in the client's survey submisison
+      //QuestionSettings
+
+      const prefillQuestionsList = sender
+        .getAllQuestions(false) //even hidden questions (they maybe hidd)
+        .filter(e => !allCasesPrefillExclusions.includes(e.name)); // exclude scores
 
       if (
         typeof prefillSurvey !== "undefined" &&
@@ -183,16 +195,35 @@ export default {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
 
-        if (prefillSurvey["Status"] !== "Incomplete") {
-          const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
+        if (
+          !me.isContinuingSurvey() //&&
+          //prefillSurvey["Status"] !== "Incomplete"
+        ) {
           // we're not continuing an incomplete survey, but starting a new one (with prefill)
+
+          //exclude Issues, Goals
+          const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
           prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
             "-"
           );
 
-          sender
-            .getAllQuestions()
+          prefillQuestionsList
+            // .filter(
+            //   e =>
+            //     !wordWithPreOrSuffix(
+            //       e.name,
+            //       PREFILL_EXCLUSION_PREFIXES,
+            //       PREFILL_EXCLUSION_SUFFIXES
+            //     )
+            // )
             .filter(e => !prefillExclusionList.includes(e.name))
+            .filter(e =>
+              SurveyService.canPrefill(
+                me.survey,
+                e.name,
+                prefillSurveyData[e.name]
+              )
+            )
             .forEach(e => {
               me.survey.setValue(e.name, prefillSurveyData[e.name]);
             });
@@ -200,16 +231,17 @@ export default {
           //
           // if continuing a survey, we want to prefill everything.
           //
-          sender.getAllQuestions().forEach(e => {
+          prefillQuestionsList.forEach(e => {
             me.survey.setValue(e.name, prefillSurveyData[e.name]);
           });
+
+          me.survey.setValue("Program", prefillSurvey["Program"]);
+          me.survey.setValue("Staff", prefillSurvey["Staff"]);
         }
         // using sender.getAllQuestions() instead of  me.survey.data = prefilleSurveyData
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
 
-        me.survey.setValue("Program", prefillSurvey["Program"]);
-        me.survey.setValue("Staff", prefillSurvey["Staff"]);
         me.setClientSLK(prefillSurvey["PartitionKey"]);
       } else {
         //nothing to prefill - first ever
@@ -256,6 +288,8 @@ export default {
       //   required: required.length,
       //   reqAnswered: reqAnswered.length
       // });
+      // this.setCurrentPageQuestions(me.survey.getCurrenPageQuestions(false));
+
       let missingMandatoryFields = [];
       let missingFieldPageQuestionNames = [];
       let answeredKeys = Object.keys(me.survey.getAllValues());
@@ -263,7 +297,7 @@ export default {
         .getAllQuestions(true) //true=> visible
         .filter(
           e =>
-            me.mandatoryFieldList.includes(e.name) &&
+            (me.mandatoryFieldList.includes(e.name) || e.isRequired) &&
             !answeredKeys.includes(e.name)
         )
         // get all mandatory & visible but not answered questions
@@ -294,13 +328,23 @@ export default {
           );
           // add this class to all missing mandatory questions :   sv-question__title--error
           me.setSidebarState(oldSidebarState);
-          me.survey.currentPage = firstMissingQuestion.page.visibleIndex;
+          me.survey.currentPageNo = firstMissingQuestion.page.visibleIndex;
 
           return;
         }
       } else if (me.dirtyData && me.isProgramSet && !me.survey.isCompleted) {
         me.savePartialSurvey();
       }
+    });
+    this.survey.onCompleting.add(function(survey) {
+      console.log("On Completing survey");
+      console.log(survey.data);
+      survey
+        .getAllQuestions(false)
+        .filter(qq => qq.name.endsWith("_Score"))
+        .forEach(q => {
+          me.scores[q.name] = survey.getValue(q.name);
+        });
     });
 
     this.survey.onComplete.add(function(survey, options) {

@@ -147,7 +147,7 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 export default {
-  name: "Navbar",
+  name: "NavbarComponent",
   computed: {
     ...mapState(["sideBarOpen", "surveyName", "currentClientSLK"]),
     ...mapGetters([
