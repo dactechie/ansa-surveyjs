@@ -7,6 +7,37 @@ const SurveyIds_INAS_ITSP = INAS_ITSP.split("_");
 
 export default {
   async getSurveysNameID() {
+    return (await process.env.APP_ENVIRONMENT) === "prod"
+      ? [
+          {
+            name: "ATOM Initial Assessment",
+            surveyid: "8a434de3-a367-42ea-a5a2-21a95cb1d65c"
+          },
+          {
+            name: "ATOM ITSP Review Assessment",
+            surveyid: "15ca1eb1-3ffa-4af4-81dc-d3a89c76002b"
+          },
+          {
+            name: "Arcadia House Assessments",
+            surveyid: "b0447a3a-1414-44fb-bc09-8d35468941df"
+          }
+        ]
+      : [
+          {
+            name: "ATOM Initial Assessment",
+            surveyid: "677c0e2a-1446-4dd6-bb61-4204ee693d79"
+          },
+          {
+            name: "ATOM ITSP Review Assessment",
+            surveyid: "8a3f9c55-c9ac-4824-9f82-6bf4bec93fae"
+          },
+          {
+            name: "Arcadia House Assessments",
+            surveyid: "708f01d7-20cb-4b98-948a-e7b8888bcbca"
+          }
+        ];
+  },
+  async getSurveysNameID_CORSIssue() {
     // return [
     //   {
     //     name: "ANSA InitialAssessment",
