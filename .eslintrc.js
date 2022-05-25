@@ -4,11 +4,16 @@ module.exports = {
     node: true
   },
   extends: ["plugin:vue/essential", "eslint:recommended", "@vue/prettier"],
-  parserOptions: {
-    parser: "babel-eslint"
-  },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off"    
-  }
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off"
+  },
+  overrides: [
+    {
+      files: ["*"],
+      rules: {
+        "no-unused-expressions": "off"
+      }
+    }
+  ]
 };

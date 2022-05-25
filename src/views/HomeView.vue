@@ -175,7 +175,7 @@ import LeftsideNavbar from "@/components/NavSidebars/Home/LeftsideNavbar";
 import ClientSurveyHistory from "@/components/ClientSurveyHistory";
 
 export default {
-  name: "Home",
+  name: "HomeView",
   components: {
     LeftsideNavbar,
     ClientSurveyHistory,
