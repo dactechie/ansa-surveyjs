@@ -23,6 +23,8 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
+import "survey-vue/defaultV2.css";
+
 // import QuestionnaireService from "@/api/SurveyQuestionnaireService";
 import {
   getCurrentYearMonthDayString
@@ -54,7 +56,9 @@ import SurveyService from "../api/SurveyService";
 // }
 
 // const Survey = SurveyVue.Survey;
-SurveyVue.StylesManager.applyTheme("modern");
+
+SurveyVue.StylesManager.applyTheme("defaultV2");
+
 // SurveyVue.FunctionFactory.Instance.register(
 //   "completionMandatoryValidator",
 //   completionMandatoryValidator
@@ -497,5 +501,9 @@ a {
   100% {
     transform: rotateZ(360deg) rotateX(66deg) rotateZ(360deg);
   }
+}
+
+input.sd-btn.sd-btn--action.sd-navigation__complete-btn {
+  background-color: green;
 }
 </style>
