@@ -1,5 +1,5 @@
-import { qmap } from "./question_type_map";
-import { clickButtonWithText, gotoNextPage } from "./survey_pages/utils";
+import { qmap } from "./question_type_map.cy";
+import { clickButtonWithText, gotoNextPage } from "./survey_pages/utils.cy";
 
 context("ATOMs", () => {
   beforeEach(() => {
