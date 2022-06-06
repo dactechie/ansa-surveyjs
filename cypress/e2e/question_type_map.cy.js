@@ -8,12 +8,12 @@ import {
   checkboxesWithinDiv2,
   selectRadioOption,
   inputTypeTextWithinDiv
-} from "./survey_pages/utils";
+} from "./survey_pages/utils.cy";
 
 export const qmap = {
-  Program: selectRadioOption,
-  Staff: selectRadioOption,
-  ClientType: selectRadioOption,
+  Program: checkDeepNestedRadio,
+  Staff: checkDeepNestedRadio,
+  ClientType: checkDeepNestedRadio,
   IndigenousStatus: selectDropdownOption,
   "Preferred Language": selectDropdownWithAria,
   CountryOfBirth: selectDropdownOption,

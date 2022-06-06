@@ -22,7 +22,7 @@
       </p>
       <ul>
         <li
-          v-for="(nPage, index) in visiblePages"
+          v-for="(nPage, index) in this.getCurrentSurvey().visiblePages"
           :key="index"
           class="mb-4  lg:mb-2"
           :class="getPageClass(nPage)"
@@ -49,9 +49,6 @@ export default {
   computed: {
     ...mapState(["sideBarOpen"]),
 
-    visiblePages: function() {
-      return this.getCurrentSurvey().visiblePages;
-    },
     missingMandatoryFields: function() {
       return this.getMissingMandatoryFields();
     }
