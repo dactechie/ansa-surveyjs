@@ -42,13 +42,17 @@ export const SURVEY_TYPE_MAP = {
   ITSPReview: "ITSP",
   ArcadiaITSPReview: "ITSP",
   SupplementaryIntakeAssessment: "SITK",
-  PostTreatmentAssessment: "POTA"
+  PostTreatmentAssessment: "POTA",
+  PsyReview: "ITSP",
+  PsyEnd: "PYND"
 };
 
+//mapping of SurveyJS.io survey title to Launch-Button display name
 export const SURVEY_DISPLAY_NAMES = {
   "ATOM Initial Assessment": "’New Episode’ assessment",
   "ATOM ITSP Review Assessment": "ITSP review",
-  "Arcadia House Assessments": "Arcadia House Assessments"
+  "Arcadia House Assessments": "Arcadia House Assessments",
+  "Psych Assessment": "Psych Program Assessments"
 };
 
 export const ARCA = "Arcadia";

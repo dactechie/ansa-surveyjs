@@ -194,7 +194,12 @@ export default {
         this.setClientLookupIDData(data);
         this.unsetClientData();
         sessionStorage.removeItem("ClientData");
-        this.surveyListForClient = this.filterButtonType("ATOM Initial");
+        this.surveyListForClient.push(
+          ...[
+            ...this.filterButtonType("ATOM Initial"),
+            ...this.filterButtonType("Psych")
+          ]
+        );
         return;
       }
       //some data was returned for this client
@@ -230,7 +235,8 @@ export default {
       this.surveyListForClient.push(
         ...[
           ...this.filterButtonType("ATOM Initial", false),
-          ...this.filterButtonType("Arcadia House", false)
+          ...this.filterButtonType("Arcadia House", false),
+          ...this.filterButtonType("Psych", false)
         ]
       );
     },
@@ -247,7 +253,8 @@ export default {
       this.surveyListForClient.push(
         ...[
           ...this.filterButtonType("ATOM Initial", false),
-          ...this.filterButtonType("Arcadia House", false)
+          ...this.filterButtonType("Arcadia House", false),
+          ...this.filterButtonType("Psych", false)
         ]
       );
       // }

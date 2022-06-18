@@ -46,6 +46,7 @@ export default {
         `Prefill data "${copyPrefilData}" for question:${questionName} had these un-prefilllable value(s): ${extraInPrefillData}. Available values: `,
         choiceList
       );
+      return true;
     }
     // can prefill some
     if (extraInPrefillData.length < copyPrefilData.length) {
