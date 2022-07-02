@@ -8,7 +8,7 @@ import {
   checkboxesWithinDiv2,
   selectRadioOption,
   inputTypeTextWithinDiv
-} from "./survey_pages/utils.cy";
+} from "./survey_pages/utils";
 
 export const qmap = {
   Program: checkDeepNestedRadio,

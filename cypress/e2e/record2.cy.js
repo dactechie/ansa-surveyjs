@@ -13,16 +13,26 @@ import {
   smoking,
   whereAreYouAtRightNow,
   officialUseOnly
-} from "./survey_pages";
+} from "./survey_pages/index.cy";
 import { clickButtonWithText, gotoNextPage } from "./survey_pages/utils";
 
+beforeEach(() => {
+  // load example.json fixture file and store
+  // in the test context object
+  cy.fixture("data_inas_tss.json").as("atom");
+  cy.fixture("config_pages_inas_tss.json").as("pages");
+  cy.fixture("config").then(function(data) {
+    this.config = data;
+    this.base_url = data[data["base_host_url"]];
+  });
+});
 // Start writing your Cypress tests below!
 // If you're unfamiliar with how Cypress works,
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
 /* ==== Test Created with Cypress Studio ==== */
 it("NewTestRecord", function() {
-  cy.visit("http://localhost:8080");
+  cy.visit(this.base_url);
 
   cy.get("#lookup_type > #by_slk").check();
   cy.get("#id_val").clear();

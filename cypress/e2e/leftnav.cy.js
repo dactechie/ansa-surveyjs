@@ -1,7 +1,7 @@
 import {
   clickButtonWithText,
   checkDeepNestedRadio
-} from "./survey_pages/utils.cy";
+} from "./survey_pages/utils";
 
 // Program: checkDeepNestedRadio,
 // Staff: checkDeepNestedRadio,
@@ -13,11 +13,16 @@ context("ATOMs", () => {
     // in the test context object
     cy.fixture("data_inas_tss.json").as("atom");
     cy.fixture("config_pages_inas_tss.json").as("pages");
+    cy.fixture("config").then(function(data) {
+      this.config = data;
+      this.base_url = data[data["base_host_url"]];
+    });
   });
 
   it("NewTestRecord", function() {
     // cy.visit("http://ansaweb.azurewebsites.net/");
-    cy.visit("http://localhost:8080");
+    console.log(`HOST NAME : ${this.base_url}`);
+    cy.visit(this.base_url);
     cy.wait(2000);
     cy.get("#lookup_type > #by_slk").check();
     cy.get("#id_val").clear();
