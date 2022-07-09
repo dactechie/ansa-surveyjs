@@ -21,9 +21,10 @@ beforeEach(() => {
   // in the test context object
   cy.fixture("data_inas_tss.json").as("atom");
   cy.fixture("config_pages_inas_tss.json").as("pages");
-  cy.fixture("config").then(function(data) {
+  cy.fixture(`config_${Cypress.env("atom_env")}`).then(function(data) {
     this.config = data;
-    this.base_url = data[data["base_host_url"]];
+    // this.SLK  = data["SLK"];
+    // this.base_url = data["base_host_url"];
   });
 });
 // Start writing your Cypress tests below!
@@ -32,11 +33,11 @@ beforeEach(() => {
 // https://on.cypress.io/writing-first-test
 /* ==== Test Created with Cypress Studio ==== */
 it("NewTestRecord", function() {
-  cy.visit(this.base_url);
+  cy.visit(this.config.base_host_url);
 
   cy.get("#lookup_type > #by_slk").check();
   cy.get("#id_val").clear();
-  cy.get("#id_val").type("ALLFT210719721");
+  cy.get("#id_val").type(this.config.SLK);
   clickButtonWithText("span", "Fetch Client Data");
   clickButtonWithText("a", "’New Episode’ assessment");
 

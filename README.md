@@ -38,3 +38,7 @@ npx cypress open
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## specificing a test file
+> ./node_modules/cypress/bin/cypress run  --spec="cypress/e2e/record2.cy.js"  --env atom_env=local --headed

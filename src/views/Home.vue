@@ -190,6 +190,7 @@ export default {
       this.showInstructions = false;
       this.mode = mode;
       this.searchResultText = text;
+      this.surveyListForClient = [];
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
         this.setClientLookupIDData(data);
         this.unsetClientData();
@@ -243,6 +244,7 @@ export default {
     setContinueLaunchButtons() {
       const prefillData = this.getCurrentSurveyData();
       const lastSurveyName = prefillData["SurveyName"];
+      // console.log(`going to add continue button for ${lastSurveyName}`);
       this.surveyListForClient = this.filterButtonType(
         lastSurveyName,
         true // should continue
@@ -253,8 +255,8 @@ export default {
       this.surveyListForClient.push(
         ...[
           ...this.filterButtonType("ATOM Initial", false),
-          ...this.filterButtonType("Arcadia House", false),
-          ...this.filterButtonType("Psych", false)
+          ...this.filterButtonType("Arcadia House", false)
+          // ...this.filterButtonType("Psych", false)
         ]
       );
       // }

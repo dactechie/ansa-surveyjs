@@ -1,6 +1,0 @@
-{
-  "local": "http://localhost:8080",
-  "staging": "http://ansaweb-dev.azurewebsites.net/",
-  "live": "http://ansaweb.azurewebsites.net/",
-  "base_host_url": "staging"
-}

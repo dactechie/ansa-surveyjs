@@ -38,10 +38,10 @@ export function selectRadioOption(sourceDivName, inputValue) {
 // }
 
 export function selectDropdownOption(sourceDivName, inputValue) {
-  cy.get(`div[data-name="${sourceDivName}"]`)
-    //  .click({ force: true })
-    .get(`option[value="${inputValue}"]`)
-    .click({ force: true });
+  cy.get(`div[data-name="${sourceDivName}"]`).within(() => {
+    cy.get(`option[value="${inputValue}"]`).click({ force: true });
+  });
+  //  .click({ force: true })
 }
 
 export function selectDropdownWithAria(ariaLabel, selectedOption) {
@@ -63,7 +63,7 @@ export function textareaWithinDiv(wrapperDivName, text, options = {}) {
 }
 
 export function inputTypeTextWithinDiv(wrapperDivName, text, options = {}) {
-  cy.get(`div[name='${wrapperDivName}']`).within(() => {
+  cy.get(`div[data-name='${wrapperDivName}']`).within(() => {
     cy.get("input[type='text']")
       .clear(options)
       .type(text);
