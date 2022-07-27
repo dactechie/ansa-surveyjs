@@ -8,9 +8,6 @@ export const mutations = {
   setQuestionsStatus(state, payload) {
     state.questionsStatus = payload;
   },
-  setClientLookupIDData(state, payload) {
-    state.clientLookupIDs = payload;
-  },
   setClientData(state, payload) {
     state.clientData = payload;
     sessionStorage.setItem("ClientData", JSON.stringify(payload));

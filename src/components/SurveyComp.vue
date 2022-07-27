@@ -112,9 +112,7 @@ export default {
     ]),
     ...mapGetters([
       "getCurrentSurveyData",
-      // "getCurrentSurvey",
-      // "getCurrentSurveyName",
-      "getClientLookupIDs",
+
       "sideBarOpen",
       "isContinuingSurvey"
       // "totalTillNow"
@@ -170,16 +168,6 @@ export default {
 
       console.log("sender ", sender);
       console.log("options", options);
-
-      // regardless of whether data was found in vuex/local/session store..
-      // we can prefill data that was just enetered into the lookup fields for Firstname etc.
-      //TODO: prefill name DOB sex
-      const lookupIds = me.getClientLookupIDs();
-      if (lookupIds) {
-        for (const [k, v] of Object.entries(lookupIds)) {
-          me.survey.setValue(k, v);
-        }
-      }
 
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
@@ -250,7 +238,7 @@ export default {
       } else {
         //nothing to prefill - first ever
         if (!me.$store.state.currentClientSLK) {
-          console.log("missing slk. Lookup IDs: ", lookupIds);
+          console.log("missing slk");
           me.$router.push("/");
         }
 
