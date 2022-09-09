@@ -8,7 +8,7 @@ import {
   checkboxesWithinDiv2,
   selectRadioOption,
   inputTypeWithinDiv
-} from "./utils.cy";
+} from "./utils.js";
 
 export function page_ProgramAndStaff() {
   selectRadioOption("Program", "TSS");

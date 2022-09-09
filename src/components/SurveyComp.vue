@@ -112,9 +112,7 @@ export default {
     ]),
     ...mapGetters([
       "getCurrentSurveyData",
-      // "getCurrentSurvey",
-      // "getCurrentSurveyName",
-      "getClientLookupIDs",
+
       "sideBarOpen",
       "isContinuingSurvey"
       // "totalTillNow"
@@ -171,16 +169,6 @@ export default {
       console.log("sender ", sender);
       console.log("options", options);
 
-      // regardless of whether data was found in vuex/local/session store..
-      // we can prefill data that was just enetered into the lookup fields for Firstname etc.
-      //TODO: prefill name DOB sex
-      const lookupIds = me.getClientLookupIDs();
-      if (lookupIds) {
-        for (const [k, v] of Object.entries(lookupIds)) {
-          me.survey.setValue(k, v);
-        }
-      }
-
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
       const allCasesPrefillExclusions = PREFILL_EXCLUSIONS_ALLCASES.split(",");
@@ -188,16 +176,22 @@ export default {
       //load question ssettings from survey question and then remove it so it is not saved in the client's survey submisison
       //QuestionSettings
 
-      const prefillQuestionsList = sender
-        .getAllQuestions(false) //even hidden questions (they maybe hidd)
-        .filter(e => !allCasesPrefillExclusions.includes(e.name)); // exclude scores
-
       if (
         typeof prefillSurvey !== "undefined" &&
         prefillSurvey["PartitionKey"] !== undefined
       ) {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
+
+        const prefillQuestionNamesList = sender
+          .getAllQuestions(false) //even hidden questions (they maybe hidd)
+          .map(q => q.name)
+          .filter(qname => !allCasesPrefillExclusions.includes(qname)); // exclude scores
+        // some questions have a comment field which is not returned in the by getAllQuestions
+        //so include those as well
+        const prefillCommentQuestionsList = sender
+          .getAllQuestions(false)
+          .filter(q => q.hasComment);
 
         if (
           !me.isContinuingSurvey() //&&
@@ -210,8 +204,7 @@ export default {
           prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
             "-"
           );
-
-          prefillQuestionsList
+          const canPrefillQuestionNames = prefillQuestionNamesList
             // .filter(
             //   e =>
             //     !wordWithPreOrSuffix(
@@ -220,23 +213,33 @@ export default {
             //       PREFILL_EXCLUSION_SUFFIXES
             //     )
             // )
-            .filter(e => !prefillExclusionList.includes(e.name))
-            .filter(e =>
+            .filter(qname => !prefillExclusionList.includes(qname))
+            .filter(qname =>
               SurveyService.canPrefill(
                 me.survey,
-                e.name,
-                prefillSurveyData[e.name]
+                qname,
+                prefillSurveyData[qname]
               )
-            )
-            .forEach(e => {
-              me.survey.setValue(e.name, prefillSurveyData[e.name]);
+            );
+          canPrefillQuestionNames.forEach(qname => {
+            me.survey.setValue(qname, prefillSurveyData[qname]);
+          });
+          prefillCommentQuestionsList
+            .filter(q => canPrefillQuestionNames.includes(q.name))
+            .forEach(commentQuestion => {
+              commentQuestion.comment =
+                prefillSurveyData[`${commentQuestion.name}-Comment`];
             });
         } else {
           //
           // if continuing a survey, we want to prefill everything.
           //
-          prefillQuestionsList.forEach(e => {
-            me.survey.setValue(e.name, prefillSurveyData[e.name]);
+          prefillQuestionNamesList.forEach(qname => {
+            me.survey.setValue(qname, prefillSurveyData[qname]);
+          });
+          prefillCommentQuestionsList.forEach(commentQuestion => {
+            commentQuestion.comment =
+              prefillSurveyData[`${commentQuestion.name}-Comment`];
           });
 
           me.survey.setValue("Program", prefillSurvey["Program"]);
@@ -250,7 +253,7 @@ export default {
       } else {
         //nothing to prefill - first ever
         if (!me.$store.state.currentClientSLK) {
-          console.log("missing slk. Lookup IDs: ", lookupIds);
+          console.log("missing slk");
           me.$router.push("/");
         }
 

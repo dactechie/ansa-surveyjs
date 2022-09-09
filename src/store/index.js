@@ -43,9 +43,6 @@ export default new Vuex.Store({
     getApplicationMode: state => {
       return state.applicationMode;
     },
-    getClientLookupIDs: state => {
-      return state.clientLookupIDs;
-    },
     getCurrentPageTitle: state => {
       return state.currentPageTitle;
     },

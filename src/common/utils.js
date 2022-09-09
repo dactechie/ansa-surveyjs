@@ -8,7 +8,7 @@ function getFriendlyTimestampString(dateObj) {
   })} ${dateObj.toLocaleTimeString()}`;
 }
 
-function getCurrentYearMonthDay() {
+function _getCurrentYearMonthDay() {
   const now = new Date();
   return {
     year: now.getFullYear(),
@@ -18,7 +18,7 @@ function getCurrentYearMonthDay() {
 }
 
 function getCurrentYearMonthDayString(separator = "") {
-  const { year, month, day } = getCurrentYearMonthDay();
+  const { year, month, day } = _getCurrentYearMonthDay();
   const monthStr = `${month}`.padStart(2, "0");
   const dateStr = `${day}`.padStart(2, "0");
   return `${year}${separator}${monthStr}${separator}${dateStr}`;
@@ -59,7 +59,6 @@ function isValidDate(dayStr, monthStr, yearStr) {
 }
 
 export {
-  getCurrentYearMonthDay,
   getCurrentYearMonthDayString,
   getFriendlyTimestampString,
   gapInDays,

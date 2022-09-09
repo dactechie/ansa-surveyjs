@@ -1,5 +1,6 @@
 export function gotoNextPage() {
-  cy.get(".sv-footer__next-btn").click();
+  cy.get('input[value="Next"]').click();
+  // cy.get(".sv-footer__next-btn").click();
 }
 
 // export function checkboxes(parentDiv, checks) {
@@ -23,17 +24,24 @@ export function clickButtonWithText(elementType, text) {
 }
 
 export function selectRadioOption(sourceDivName, inputValue) {
-  cy.get(`div[name="${sourceDivName}"]`)
+  cy.get(`div[data-name="${sourceDivName}"]`)
     // .click({ force: true })
     .get(`input[value="${inputValue}"]`)
     .click({ force: true });
 }
 
+// export function selectRadioOption(sourceDivName, inputValue) {
+//   cy.get(`div[name="${sourceDivName}"]`)
+//     // .click({ force: true })
+//     .get(`input[value="${inputValue}"]`)
+//     .click({ force: true });
+// }
+
 export function selectDropdownOption(sourceDivName, inputValue) {
-  cy.get(`div[name="${sourceDivName}"]`)
-    //  .click({ force: true })
-    .get(`option[value="${inputValue}"]`)
-    .click({ force: true });
+  cy.get(`div[data-name="${sourceDivName}"]`).within(() => {
+    cy.get(`option[value="${inputValue}"]`).click({ force: true });
+  });
+  //  .click({ force: true })
 }
 
 export function selectDropdownWithAria(ariaLabel, selectedOption) {
@@ -47,7 +55,7 @@ export function inputWithAria(ariaLabel, text) {
 }
 
 export function textareaWithinDiv(wrapperDivName, text, options = {}) {
-  cy.get(`div[name='${wrapperDivName}']`).within(() => {
+  cy.get(`div[data-name='${wrapperDivName}']`).within(() => {
     cy.get("textarea")
       .clear(options)
       .type(text);
@@ -55,7 +63,7 @@ export function textareaWithinDiv(wrapperDivName, text, options = {}) {
 }
 
 export function inputTypeTextWithinDiv(wrapperDivName, text, options = {}) {
-  cy.get(`div[name='${wrapperDivName}']`).within(() => {
+  cy.get(`div[data-name='${wrapperDivName}']`).within(() => {
     cy.get("input[type='text']")
       .clear(options)
       .type(text);
@@ -68,7 +76,7 @@ export function inputTypeWithinDiv(
   text,
   options = {}
 ) {
-  cy.get(`div[name='${wrapperDivName}']`).within(() => {
+  cy.get(`div[data-name='${wrapperDivName}']`).within(() => {
     cy.get(`input[type='${inputType}']`)
       .clear(options)
       .type(text);

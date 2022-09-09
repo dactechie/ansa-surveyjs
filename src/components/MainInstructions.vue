@@ -5,10 +5,9 @@
     <!-- <div v-if="showInstructions"> -->
     <div class="pl-5 my-5 mx-5 mb-5">
       <span class="font-semibold">
-        Start by entering your client's details using the search function on the
+        Start by entering your client's SLK using the search function on the
         left.</span
       >
-      (See the animation on the right for instructions)
     </div>
 
     <div class="pl-5 mx-5 mb-5">

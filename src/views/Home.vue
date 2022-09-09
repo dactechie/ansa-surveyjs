@@ -26,15 +26,10 @@
         </div> -->
           <div
             v-if="showInstructions"
-            class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm lg:text-md subpixel-antialiased"
+            class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-md subpixel-antialiased"
             :class="{ activeClass: showSpinner }"
           >
             <MainInstructions />
-            <div
-              class="mt-4 invisible md:visible shadow-md rounded-lg p-2 pl-3 rounded-bl-3xl bg-indigo-100"
-            >
-              <img src="@/assets/images/LookupAnimation-oie.gif" />
-            </div>
           </div>
 
           <div v-else>
@@ -190,11 +185,17 @@ export default {
       this.showInstructions = false;
       this.mode = mode;
       this.searchResultText = text;
+      this.surveyListForClient = [];
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
         this.setClientLookupIDData(data);
         this.unsetClientData();
         sessionStorage.removeItem("ClientData");
-        this.surveyListForClient = this.filterButtonType("ATOM Initial");
+        this.surveyListForClient.push(
+          ...[
+            ...this.filterButtonType("ATOM Initial"),
+            ...this.filterButtonType("ATOM Psych")
+          ]
+        );
         return;
       }
       //some data was returned for this client
@@ -230,13 +231,15 @@ export default {
       this.surveyListForClient.push(
         ...[
           ...this.filterButtonType("ATOM Initial", false),
-          ...this.filterButtonType("Arcadia House", false)
+          ...this.filterButtonType("Arcadia House", false),
+          ...this.filterButtonType("ATOM Psych", false)
         ]
       );
     },
     setContinueLaunchButtons() {
       const prefillData = this.getCurrentSurveyData();
       const lastSurveyName = prefillData["SurveyName"];
+      // console.log(`going to add continue button for ${lastSurveyName}`);
       this.surveyListForClient = this.filterButtonType(
         lastSurveyName,
         true // should continue
@@ -248,6 +251,7 @@ export default {
         ...[
           ...this.filterButtonType("ATOM Initial", false),
           ...this.filterButtonType("Arcadia House", false)
+          // ...this.filterButtonType("Psych", false)
         ]
       );
       // }
