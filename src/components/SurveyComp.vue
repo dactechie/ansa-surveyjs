@@ -204,8 +204,7 @@ export default {
           prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
             "-"
           );
-
-          prefillQuestionNamesList
+          const canPrefillQuestionNames = prefillQuestionNamesList
             // .filter(
             //   e =>
             //     !wordWithPreOrSuffix(
@@ -221,9 +220,15 @@ export default {
                 qname,
                 prefillSurveyData[qname]
               )
-            )
-            .forEach(qname => {
-              me.survey.setValue(qname, prefillSurveyData[qname]);
+            );
+          canPrefillQuestionNames.forEach(qname => {
+            me.survey.setValue(qname, prefillSurveyData[qname]);
+          });
+          prefillCommentQuestionsList
+            .filter(q => canPrefillQuestionNames.includes(q.name))
+            .forEach(commentQuestion => {
+              commentQuestion.comment =
+                prefillSurveyData[`${commentQuestion.name}-Comment`];
             });
         } else {
           //
