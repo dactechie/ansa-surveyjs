@@ -5,7 +5,7 @@
     class="md:top-0 md:left-0 sm:block shadow-lg bg-gradient-to-r from-white to-green-100 border-r rounded-lg "
     id="main-nav"
   >
-    <div class="mt-3 mb-4 px-3">
+    <div class="mt-10 px-3">
       <LookupFetchClientData
         :mode="mode"
         @search-initiated="$emit('search-initiated')"

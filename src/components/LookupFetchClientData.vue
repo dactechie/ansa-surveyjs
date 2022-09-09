@@ -1,25 +1,22 @@
 <template>
   <div id="sp_100">
-    <div class="sv-table__cell" id="by_slk">
+    <div id="by_slk">
       <br />
       <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-2xl font-bold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-2xl text-center font-bold text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         type="text"
         id="id_val"
         v-model="slk"
         placeholder="Enter an SLK"
       />
     </div>
-
-    <div class="mt-10 pl-3 md:pl-10">
-      <button
-        :disabled="!canFetch"
-        @click.prevent="fetchClientDataByLookupValues"
-        class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6"
-      >
-        <span class="mx-auto">Fetch Client Data</span>
-      </button>
-    </div>
+    <button
+      :disabled="!canFetch"
+      @click.prevent="fetchClientDataByLookupValues"
+      class="mt-10 w-full bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6"
+    >
+      <span class="mx-auto text-xl">Fetch Client Data</span>
+    </button>
   </div>
 </template>
 
@@ -63,6 +60,7 @@ export default {
       result = await this.GET_CLIENT_DATA_BYSLK(this.slk);
       unableToFindWithIds = `SLK : ${this.slk}`;
 
+      // CHECK: What is the point of this check?
       if (this.slk.length === SLK_LENGTH) {
         // get action may set it to ""
         this.setClientSLK(this.slk);

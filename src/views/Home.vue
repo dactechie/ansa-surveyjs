@@ -26,7 +26,7 @@
         </div> -->
           <div
             v-if="showInstructions"
-            class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-sm lg:text-md subpixel-antialiased"
+            class="m-0 grid grid-cols-2 md:grid-cols-3 md:gap-2 text-md subpixel-antialiased"
             :class="{ activeClass: showSpinner }"
           >
             <MainInstructions />
