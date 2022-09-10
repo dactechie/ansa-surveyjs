@@ -251,7 +251,7 @@ export default {
         ...[
           ...this.filterButtonType("ATOM Initial", false),
           ...this.filterButtonType("Arcadia House", false),
-          ...this.filterButtonType("Psych", false)
+          ...this.filterButtonType("ATOM Psych", false)
         ]
       );
       // }
