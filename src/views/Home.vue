@@ -250,8 +250,8 @@ export default {
       this.surveyListForClient.push(
         ...[
           ...this.filterButtonType("ATOM Initial", false),
-          ...this.filterButtonType("Arcadia House", false)
-          // ...this.filterButtonType("Psych", false)
+          ...this.filterButtonType("Arcadia House", false),
+          ...this.filterButtonType("Psych", false)
         ]
       );
       // }
