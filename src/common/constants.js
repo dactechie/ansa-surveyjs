@@ -5,6 +5,8 @@ export const APP_ENVIRONMENT = process.env.VUE_APP_ENVIRONMENT || "prod";
 
 export const APP_AZSLOT = process.env.VUE_APP_AZSLOT || "prod";
 
+export const CLIENT_HISTORY_URL = process.env.VUE_APP_CLIENT_HISTORY_URL;
+
 export const SURVEY_IDS =
   process.env.VUE_APP_SURVEYIDS_INAS_ITSP || "unknownids";
 
