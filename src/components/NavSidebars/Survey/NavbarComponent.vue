@@ -102,7 +102,13 @@
       <!-- right navbar -->
       <div class="hidden md:flex items-center relative space-x-2   pl-4">
         <p class="font-mono font-semibold text-md text-green-800">
-          SLK: {{ currentClientSLK }}
+          <a
+            :href="getClientHistoryUrl()"
+            target="_blank"
+            class="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+          >
+            SLK: {{ currentClientSLK }}
+          </a>
         </p>
         <!-- <button
           v-if="dirtyData && isProgramSet"
@@ -146,6 +152,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import { CLIENT_HISTORY_URL } from "@/common/constants";
 export default {
   name: "NavbarComponent",
   computed: {
@@ -170,6 +177,9 @@ export default {
   methods: {
     toggleSidebar() {
       this.$store.dispatch("toggleSidebar");
+    },
+    getClientHistoryUrl() {
+      return `${CLIENT_HISTORY_URL}${this.currentClientSLK}`;
     }
   }
 };

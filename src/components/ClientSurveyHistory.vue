@@ -63,7 +63,7 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-import SurveyResponsesModal from "@/components/SurveyResponsesModal";
+import SurveyResponsesModal from "@/components/Modals/SurveyResponsesModal";
 import { getFriendlyTimestampString } from "@/common/utils";
 import { ARCA, CLIENT_HISTORY_URL } from "@/common/constants";
 

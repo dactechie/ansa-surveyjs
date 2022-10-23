@@ -7,7 +7,11 @@
       </template>
       <h3 slot="header">Question</h3>
     </modal> -->
-
+    <ResponseHistoryModal
+      :show="showMoreInfo"
+      @close="showMoreInfo = false"
+      :questionName="questionName"
+    />
     <survey :survey="survey"></survey>
     <!-- && (!survey || survey.state !== 'completed') -->
     <!-- <button
@@ -23,6 +27,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
+import ResponseHistoryModal from "@/components/Modals/ResponseHistoryModal";
 import "survey-vue/defaultV2.css";
 
 // import QuestionnaireService from "@/api/SurveyQuestionnaireService";
@@ -39,42 +44,20 @@ import {
 } from "@/common/constants";
 
 import SurveyService from "../api/SurveyService";
-// import Modal from "@/components/Modal";
-
-//import simpleIAJSON from "../simpleIAJSON";
-// import FakeEpisodes from "@/FakeEpisodes";
-
-// eslint-disable-next-line
-// function completionMandatoryValidator(params) {
-//   // no access to vuex store jst to sessionStorage
-//   const hasReviewed = sessionStorage.getItem("hasReviewed");
-//   if (hasReviewed) {
-//     console.log(params);
-//     // const value = params[0];
-//   }
-//   return false;
-// }
-
-// const Survey = SurveyVue.Survey;
 
 SurveyVue.StylesManager.applyTheme("defaultV2");
 
-// SurveyVue.FunctionFactory.Instance.register(
-//   "completionMandatoryValidator",
-//   completionMandatoryValidator
-// );
-
-//const fakeData = FakeEpisodes[0];
-
 export default {
   name: "SurveyComp",
+  components: { ResponseHistoryModal },
   props: ["currentPage"],
   emits: ["survey-is-ready"], //search-index-built"],F
   data() {
     return {
       survey: {},
       dirtyData: false,
-      showModal: false,
+      showMoreInfo: false,
+      questionName: "",
       modalContent: "",
       mandatoryFieldList: MANDATORY_FIELDS.split(","),
       scores: {}
@@ -352,30 +335,33 @@ export default {
         .forEach(q => {
           me.scores[q.name] = survey.getValue(q.name);
         });
+      // survey.surveyShowDataSaving = true;
+      // survey.showBrandInfo = true;
     });
-
+    //https://surveyjs.io/form-library/documentation/handle-survey-results-store
+    //https://surveyjs.answerdesk.io/ticket/details/t3317/show-data-saving-error
+    //https://surveyjs.io/form-library/documentation/surveymodel#onComplete
+    //https://surveyjs.io/form-library/documentation/surveymodel#onCompleting
     this.survey.onComplete.add(function(survey, options) {
       console.log("survet options", options);
+      // survey.surveyShowDataSaving = true;
       me.saveSurvey("Complete");
+      // survey.surveyShowDataSaving = false;
       // remove the button to save incomplete survey
     });
-    // TODO : build search index from pages
-    //  survey.visiblePages
-    // pages [
-    //   {
-    //     title: "page title",
-    //     elements: [
-    //       {
-    //         name:"ElementName"
-    //       }
-    //     ]
-    //   }
-    // ]
-    //this.$emit('search-index-built', searchIndex);
-
-    // {
-    //   surveyId: "9fe4d164-8c6c-4b0a-ac60-aabf803413b7"
-    // });
+    //https://surveyjs.io/form-library/examples/survey-titleactions/vuejs#content-js
+    this.survey.onGetQuestionTitleActions.add((_, opt) => {
+      opt.titleActions = [
+        {
+          title: "Response History",
+          innerCss: "btn-more-info",
+          action: () => {
+            me.questionName = opt.question.name;
+            me.showMoreInfo = true;
+          }
+        }
+      ];
+    });
   },
   mounted() {
     console.log(" mounted -> survey data", this.survey.data);
