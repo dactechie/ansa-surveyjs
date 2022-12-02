@@ -193,7 +193,8 @@ export default {
         this.surveyListForClient.push(
           ...[
             ...this.filterButtonType("ATOM Initial"),
-            ...this.filterButtonType("ATOM Psych")
+            ...this.filterButtonType("ATOM Psych"),
+            ...this.filterButtonType("ATOM Butt-It-Out")
           ]
         );
         return;
@@ -232,7 +233,8 @@ export default {
         ...[
           ...this.filterButtonType("ATOM Initial", false),
           ...this.filterButtonType("Arcadia House", false),
-          ...this.filterButtonType("ATOM Psych", false)
+          ...this.filterButtonType("ATOM Psych", false),
+          ...this.filterButtonType("ATOM Butt-It-Out", false)
         ]
       );
     },
@@ -251,7 +253,8 @@ export default {
         ...[
           ...this.filterButtonType("ATOM Initial", false),
           ...this.filterButtonType("Arcadia House", false),
-          ...this.filterButtonType("ATOM Psych", false)
+          ...this.filterButtonType("ATOM Psych", false),
+          ...this.filterButtonType("ATOM Butt-It-Out", false)
         ]
       );
       // }
