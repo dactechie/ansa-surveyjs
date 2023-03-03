@@ -35,8 +35,30 @@ export default new Vuex.Store({
     questionsStatus: {},
     missingMandatoryFields: [],
     continuingSurvey: false
+    // pastResponses: {}
   },
   getters: {
+    // getHistoryMeta: state => exclusions => {
+    //   console.log("client data", state.clientData);
+    //   if (state.clientData === undefined) return undefined;
+
+    //   const metaItems = ATOM_META.filter(
+    //     metaItem => !exclusions.includes(metaItem)
+    //   );
+    //   console.log("meta data", metaItems);
+
+    //   return state.clientData.map(atom => {
+    //     return metaItems.map(metaItem => {
+    //       if (atom[metaItem] !== undefined) return atom[metaItem];
+    //       return state.clientData["SurveyData"][metaItem];
+    //     });
+    //   });
+    // },
+    // getPastResponsesForQuestion: state => questionName => {
+    //   if (state.clientData !== undefined)
+    //     return state.clientData["SurveyData"].map(atom => atom[questionName]);
+    //   return undefined;
+    // },
     isContinuingSurvey: state => {
       return state.continuingSurvey;
     },

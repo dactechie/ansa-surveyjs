@@ -173,6 +173,38 @@ export default {
         });
       }
     },
+
+    // filterButtonType(buttonTypeName, shouldContinue) {
+    //   // if (APP_ENVIRONMENT === "test") {
+    //   //   let surveys = this.$store.state["surveyNameIDList"].forEach((s) => {
+    //   //     if (!s.name.startsWith(buttonTypeName)) {
+    //   //       s.name = s.name + "(hidden in production)";
+    //   //     }
+    //   //   });
+    //   //   return this.$store.state["surveyNameIDList"];
+    //   // }
+    //   let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s =>
+    //     s.name.startsWith(buttonTypeName)
+    //   );
+    //   if (shouldContinue) {
+    //     return nameSurveyIDList.map(e => {
+    //       return {
+    //         prefix: "Continue incomplete ",
+    //         name: `${e.name}`,
+    //         surveyid: e.surveyid,
+    //         displayName: SURVEY_DISPLAY_NAMES[e.name]
+    //       };
+    //     });
+    //   } else {
+    //     return nameSurveyIDList.map(e => {
+    //       return {
+    //         ...e,
+    //         prefix: "",
+    //         displayName: SURVEY_DISPLAY_NAMES[e.name]
+    //       };
+    //     });
+    //   }
+    // },
     handleStartSurvey(surveyObj) {
       if (!!surveyObj.prefix && surveyObj.prefix === "Continue incomplete ") {
         this.setContinuingSurveyStatus(true);
@@ -259,54 +291,6 @@ export default {
       );
       // }
     }
-
-    // showSurveyLaunchButtons(prefillSurveyData) {
-    //   // 0. if brand new client , show CREATE new IA
-    //   // this.clientData = this.getClientData();
-    //   if (!this.clientData || this.clientData.length === 0) {
-    //     this.surveyListForClient = this.filterButtonType("ATOM Initial");
-    //     return;
-    //   }
-    //   // const lastSurveyDone = this.clientData[0];
-    //   // const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
-    //   // const lastSurveyStatus = lastSurveyDone["Status"];
-
-    //   // const gapInDaysSinceLastSurvey = gapInDays(lastSurveyDate);
-    //   // sessionStorage.setItem(
-    //   //   "GapInDaysSinceLastSurvey",
-    //   //   gapInDaysSinceLastSurvey + ""
-    //   // );
-    //   // console.log(
-    //   //   ` Age of last survey ${Math.round(gapInDaysSinceLastSurvey)} days. `
-    //   // );
-    //   // 1. if the last survey done was "completed"
-    //   //    a. if was done more than 1 year ago, show "CREATE NEW IA" button
-    //   //    b. otherwise show CREATE ITSP  (prefills from the last survey)
-
-    //   const lastSurveyStatus = prefillSurveyData["Status"];
-    //   if (lastSurveyStatus === "Complete") {
-    //     this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
-    //     this.surveyListForClient.push(
-    //       ...this.filterButtonType("ATOM Initial", false)
-    //     );
-    //   } else if (lastSurveyStatus === "Incomplete") {
-    //     this.setCurrentSurveyData(prefillSurveyData); // TODO: remove this ?
-    //     this.surveyListForClient = this.filterButtonType(
-    //       lastSurveyDone["SurveyName"],
-    //       true // should continue
-    //     );
-    //     if (lastSurveyDone["SurveyName"] === "ATOM ITSP Review Assessment") {
-    //       this.surveyListForClient.push(
-    //         ...this.filterButtonType("ATOM Initial", false)
-    //       );
-    //       return; // TODO: remove this ?
-    //     }
-    //   } else {
-    //     console.error("unknown state for last survey ", lastSurveyStatus);
-    //   }
-
-    //   this.setCurrentSurveyData(prefillSurveyData);
-    // }
   }
 };
 </script>
