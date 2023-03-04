@@ -1,0 +1,35 @@
+{
+  "AssessmentDate": "2023-03-06",
+  "ReferredFrom": "TSS",
+  "Staff": "Aftab.Jalal",
+  "DiversityList": ["CALD", "ATSI", "LGBTQI", "DIS"],
+
+  "SLK": "AQLFT210719811",
+
+  "DoYouSmoke": "Yes",
+  "HowLongSmoked": "5To10Years",
+
+  "TobaccoAsSpin": "Alway",
+  "MotivationToQuit": "4",
+  "ConfidentQuittingReducing": "Somewhat",
+  "HowManyTimesQuitSmoking": "1To5Times",
+  "HowManagingQuitting": "3",
+  "HowMuchDoYouKnow": "ABIT",
+
+  "CDS5RateAddictiontoCigarettes": "1",
+  "CDS5HowManyCigarettesPerDay": "2",
+  "CDS5HowSoonAfterWaking": "3",
+  "CDS5HowHardIsQuitting": "4",
+  "CDS5HowStrongTheUrgeToSmoke": "5",
+  "SmokingITSPNotes": "Smokiung ITSPSD Notes",
+  "SmokingITSPGoals": "mokiung ITSPSDGoals",
+  "QuitlineReferral": "No",
+
+  "Past4WkPhysicalHealth": "4",
+  "InterventionType": ["BRIEFINT", "FOLLOWUP", "GROUP", "QUITPRO"],
+  "FinalChecklist": [
+    "ProvidedWithRightsResponsibilities",
+    "ProvidedFeedbackComplaintsProc",
+    "AlreadyProvided"
+  ]
+}

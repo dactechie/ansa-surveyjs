@@ -25,11 +25,7 @@
     "SDSDoYouWishToStop",
     "SDSHowDifficultToStopOrGoWithout"
   ],
-  [
-    "DoYouSmoke",
-    "MotivationtoQuit",
-    "ManagingQuitting"
-  ],
+  ["DoYouSmoke", "TobaccoAsSpin", "MotivationtoQuit", "ManagingQuitting"],
   [
     "CDS5RateAddictiontoCigarettes",
     "CDS5HowManyCigarettesPerDay",
@@ -40,6 +36,7 @@
   [
     "Past4WkAodRisks",
     "Past4WkAnyOtherAddictiveB",
+    "OtherAddictiveBehaviours",
     "BehavioursOfDependenceNotes",
     "SubstanceUseITSPIssues",
     "SubstanceUseITSPGoals"

@@ -12,7 +12,6 @@ context("ATOMs", () => {
   it("NewTestRecord", function() {
     cy.visit("http://localhost:8080");
 
-    cy.get("#lookup_type > #by_slk").check();
     cy.get("#id_val").clear();
     cy.get("#id_val").type(this.atom.SLK);
     clickButtonWithText("span", "Fetch Client Data");
