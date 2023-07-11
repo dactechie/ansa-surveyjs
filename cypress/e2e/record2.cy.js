@@ -21,7 +21,8 @@ beforeEach(() => {
   // in the test context object
   cy.fixture("data_inas_tss.json").as("atom");
   cy.fixture("config_pages_inas_tss.json").as("pages");
-  cy.fixture(`config_${Cypress.env("atom_env")}`).then(function(data) {
+  const envl = Cypress.env("atom_env") || "local";
+  cy.fixture(`config_${envl}`).then(function(data) {
     this.config = data;
     // this.SLK  = data["SLK"];
     // this.base_url = data["base_host_url"];
@@ -35,7 +36,6 @@ beforeEach(() => {
 it("NewTestRecord", function() {
   cy.visit(this.config.base_host_url);
 
-  cy.get("#lookup_type > #by_slk").check();
   cy.get("#id_val").clear();
   cy.get("#id_val").type(this.config.SLK);
   clickButtonWithText("span", "Fetch Client Data");
@@ -61,7 +61,9 @@ it("NewTestRecord", function() {
   ];
 
   page_funcs.forEach(pagefn => {
-    pagefn();
+    // console.log(this.atom);
+    pagefn(this.atom);
+    cy.pause();
     gotoNextPage();
   });
   officialUseOnly();

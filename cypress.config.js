@@ -1,7 +1,7 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  experimentalStudio: true,
+  // experimentalStudio: true,
   viewportWidth: 1800,
   viewportHeight: 1260,
   e2e: {

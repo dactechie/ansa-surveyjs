@@ -22,6 +22,7 @@
   "Goals": "Reduce Harms",
   "HaveYouEverInjected": "No",
   "DoYouSmoke": "Yes",
+  "TobaccoAsSpin": "Alway",
   "MotivationtoQuit": "4",
   "ManagingQuitting": "3",
   "CDS5RateAddictiontoCigarettes": "1",
@@ -36,6 +37,10 @@
     "Overdose or hospitalisation from drinking / using drugs"
   ],
   "Past4WkAnyOtherAddictiveB": "Yes",
+  "OtherAddictiveBehaviours": {
+    "Gambling": { "Days": "14" },
+    "Hoarding": { "Days": "13" }
+  },
   "BehavioursOfDependenceNotes": "Behav of depedent notes",
   "SubstanceUseITSPIssues": "SubstanceUseITSPIssues text",
   "SubstanceUseITSPGoals": "SubstanceUseITSPGoals text",
@@ -56,10 +61,7 @@
   "Past4WkBeenHospCallAmbulanceNotes": "Past4WkBeenHospCallAmbulanceNotes text",
   "AreYouCurrentlyTakingMeds": "Yes",
   "MedicationsNotes": "MedicationsNotes text",
-  "HealthChecklist_STAFF": [
-    "SexualHealth",
-    "Vaccinations"
-  ],
+  "HealthChecklist_STAFF": ["SexualHealth", "Vaccinations"],
   "PhysicalHealthITSPIssues": "PhysicalHealthITSPIssues text",
   "PhysicalHealthITSPGoals": "PhysicalHealthITSPGoals text",
   "Past4WkMentalHealth": "7",
@@ -71,9 +73,7 @@
     "Suicidal thoughts, ideation, planning, attempts (RISK ASSESSMENT)",
     "Recent physical abuse"
   ],
-  "MHHistoricalRiskIssues": [
-    "Prison, custody, legal problems"
-  ],
+  "MHHistoricalRiskIssues": ["Prison, custody, legal problems"],
   "K10Q01": "1",
   "K10Q02": "2",
   "K10Q03": "3",
@@ -127,9 +127,7 @@
     "Relationships / Parenting / Social Wellbeing",
     "Other"
   ],
-  "RiskAssessmentChecklist": [
-    "PotentialOD"
-  ],
+  "RiskAssessmentChecklist": ["PotentialOD"],
   "RiskAssessmentNotes": "RiskAssessmentNotes text",
   "FinalChecklist": [
     "ProvidedWithRightsResponsibilities",

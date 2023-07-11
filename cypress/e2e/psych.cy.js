@@ -28,7 +28,6 @@ beforeEach(() => {
 it("PsychNSWTest", function() {
   cy.visit(this.config.base_host_url);
 
-  cy.get("#lookup_type > #by_slk").check();
   cy.get("#id_val").clear();
   cy.get("#id_val").type(this.config.SLK);
   clickButtonWithText("span", "Fetch Client Data");

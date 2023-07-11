@@ -1,0 +1,24 @@
+[
+  ["AssessmentDate", "ReferredFrom", "Staff", "DiversityList"],
+  [
+    "DoYouSmoke",
+    "HowLongSmoked",
+    "TobaccoAsSpin",
+    "MotivationToQuit",
+    "ConfidentQuittingReducing",
+    "HowManyTimesQuitSmoking",
+    "HowManagingQuitting",
+    "HowMuchDoYouKnow"
+  ],
+  [
+    "CDS5RateAddictiontoCigarettes",
+    "CDS5HowManyCigarettesPerDay",
+    "CDS5HowSoonAfterWaking",
+    "CDS5HowHardIsQuitting",
+    "CDS5HowStrongTheUrgeToSmoke"
+  ],
+  ["SmokingITSPNotes", "SmokingITSPGoals", "QuitlineReferral"],
+  ["Past4WkPhysicalHealth", "InterventionType"],
+
+  ["FinalChecklist"]
+]

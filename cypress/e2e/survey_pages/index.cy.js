@@ -56,13 +56,17 @@ export function page_CDS5() {
   checkDeepNestedRadio("CDS5HowStrongTheUrgeToSmoke", "5");
 }
 
-export function smoking() {
+export function smoking(atom_data) {
   selectRadioOption("DoYouSmoke", "Yes");
+  if (atom_data["TobaccoAsSpin"] !== undefined) {
+    checkDeepNestedRadio("TobaccoAsSpin", atom_data["TobaccoAsSpin"]);
+  }
+  checkDeepNestedRadio("MotivationtoQuit", "4");
   checkDeepNestedRadio("MotivationtoQuit", "4");
   checkDeepNestedRadio("ManagingQuitting", "3");
 }
 
-export function impactOfSubstanceUse() {
+export function impactOfSubstanceUse(atom_data) {
   checkboxesWithinDiv2("Past4WkAodRisks", [
     "Using more than one drug at a time",
     "Unsafe sex",
@@ -87,12 +91,16 @@ export function impactOfSubstanceUse() {
   // });
   // cy.get("#Past4WkAodRisks > textarea").type("AOD risk text");
 
-  textareaWithinDiv("Past4WkAodRisks", "AOD risk text");
+  // textareaWithinDiv("Past4WkAodRisks", "AOD risk text");
   // cy.get("div[name='Past4WkAodRisks']").within(() => {
   //   cy.get("textarea").type("AOD risk text");
   // });
 
   checkDeepNestedRadio("Past4WkAnyOtherAddictiveB", "Yes");
+
+  console.log(atom_data["OtherAddictiveBehaviours"]);
+  // selectDropdownWithAria("Gambling", "Heroin");
+
   textareaWithinDiv("BehavioursOfDependenceNotes", "Behav of depedent notes");
   textareaWithinDiv("SubstanceUseITSPIssues", "SubstanceUseITSPIssues text");
   textareaWithinDiv("SubstanceUseITSPGoals", "SubstanceUseITSPGoals text");
@@ -180,14 +188,15 @@ export function mentalHealth() {
   checkDeepNestedRadio("EverDiagnosedMentalHealthIssue", "Yes"); // if not selected or no is slected , no next qusetion:
   selectDropdownOption(
     "WhenMentalHealthDiagnosis",
-    "More than 3 months but less than 12 months ago"
+    "Within last 3 months"
+    // "More than 3 months but less than 12 months ago"
   );
 
   // textareaWithinDiv("WhenMentalHealthDiagnosis", "diagnosed 2 days ago with depression")
-  cy.get('textarea[aria-label="When were you diagnosed?"]')
-    .clear({ force: true })
-    .first()
-    .type("diagnosed 2 days ago with depression", { force: true });
+  // cy.get('textarea[aria-label="When were you diagnosed?"]')
+  //   .clear({ force: true })
+  //   .first()
+  //   .type("diagnosed 2 days ago with depression", { force: true });
 
   // textareaWithinDiv(
   //   "WhenMentalHealthDiagnosis",
@@ -199,11 +208,11 @@ export function mentalHealth() {
     "Self Injury",
     "Suicidal thoughts, ideation, planning, attempts (RISK ASSESSMENT)"
   ]);
-  textareaWithinDiv("MHRecentRiskIssues", "MHRecentRiskIssues notes");
+  // textareaWithinDiv("MHRecentRiskIssues", "MHRecentRiskIssues notes");
   checkboxesWithinDiv2("MHHistoricalRiskIssues", [
     "Prison, custody, legal problems"
   ]);
-  textareaWithinDiv("MHHistoricalRiskIssues", "MHHistoricalRiskIssues notes");
+  // textareaWithinDiv("MHHistoricalRiskIssues", "MHHistoricalRiskIssues notes");
 
   //doK10 -> yes (default yes for tss, so not excplicitly clicking)
   checkDeepNestedRadio("K10Q01", "1");
