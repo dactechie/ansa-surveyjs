@@ -188,14 +188,6 @@ export default {
             "-"
           );
           const canPrefillQuestionNames = prefillQuestionNamesList
-            // .filter(
-            //   e =>
-            //     !wordWithPreOrSuffix(
-            //       e.name,
-            //       PREFILL_EXCLUSION_PREFIXES,
-            //       PREFILL_EXCLUSION_SUFFIXES
-            //     )
-            // )
             .filter(qname => !prefillExclusionList.includes(qname))
             .filter(qname =>
               SurveyService.canPrefill(

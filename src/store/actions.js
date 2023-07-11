@@ -7,6 +7,9 @@ export default {
   toggleSidebar(context) {
     context.commit("toggleSidebar");
   },
+  // setPastResponseData({ commit }, data) {
+  //   commit("setPastResponseData", data);
+  // },
   GET_QUESTIONNAIRE_LISTING: async function({ commit }) {
     const response = await QuestionnaireService.getSurveysNameID();
     commit("setSurveyList", await response);
