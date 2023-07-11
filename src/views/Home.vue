@@ -221,6 +221,7 @@ export default {
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
         this.setClientLookupIDData(data);
         this.unsetClientData();
+        this.clientData = [];
         sessionStorage.removeItem("ClientData");
         this.surveyListForClient.push(
           ...[
