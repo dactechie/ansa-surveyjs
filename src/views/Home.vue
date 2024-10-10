@@ -212,14 +212,13 @@ export default {
       this.setSurveyMode("new");
       this.setSurveyName(surveyObj.name);
     },
-    updateMode({ mode, text, data }) {
+    updateMode({ mode, text }) {
       this.showSpinner = false;
       this.showInstructions = false;
       this.mode = mode;
       this.searchResultText = text;
       this.surveyListForClient = [];
       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
-        this.setClientLookupIDData(data);
         this.unsetClientData();
         this.clientData = [];
         sessionStorage.removeItem("ClientData");
@@ -227,7 +226,9 @@ export default {
           ...[
             ...this.filterButtonType("ATOM Initial"),
             ...this.filterButtonType("ATOM Psych"),
-            ...this.filterButtonType("ATOM Butt-It-Out")
+            //...this.filterButtonType("Arcadia House"), Can't start arcadia for new clients ?
+            ...this.filterButtonType("ATOM Butt-It-Out"),
+            ...this.filterButtonType("ATOM T25")
           ]
         );
         return;
@@ -267,7 +268,8 @@ export default {
           ...this.filterButtonType("ATOM Initial", false),
           ...this.filterButtonType("Arcadia House", false),
           ...this.filterButtonType("ATOM Psych", false),
-          ...this.filterButtonType("ATOM Butt-It-Out", false)
+          ...this.filterButtonType("ATOM Butt-It-Out", false),
+          ...this.filterButtonType("ATOM T25", false)
         ]
       );
     },
@@ -287,7 +289,8 @@ export default {
           ...this.filterButtonType("ATOM Initial", false),
           ...this.filterButtonType("Arcadia House", false),
           ...this.filterButtonType("ATOM Psych", false),
-          ...this.filterButtonType("ATOM Butt-It-Out", false)
+          ...this.filterButtonType("ATOM Butt-It-Out", false),
+          ...this.filterButtonType("ATOM T25", false)
         ]
       );
       // }

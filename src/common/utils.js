@@ -1,5 +1,25 @@
 import { MILLIS_IN_DAY } from "@/common/constants";
 
+function calculateAgeFromSLK(slk) {
+  // Extract date of birth from SLK-581
+  // SLK-581 format: CCCCCDDMMYYYYX
+  const dobString = slk.substring(5, 13);
+  const day = parseInt(dobString.substring(0, 2));
+  const month = parseInt(dobString.substring(2, 4)) - 1; // JS months are 0-indexed
+  const year = parseInt(dobString.substring(4, 8));
+
+  const dob = new Date(year, month, day);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+
+  return age;
+}
+
 function getFriendlyTimestampString(dateObj) {
   return `${dateObj.toLocaleDateString("en-au", {
     year: "numeric",
@@ -62,5 +82,6 @@ export {
   getCurrentYearMonthDayString,
   getFriendlyTimestampString,
   gapInDays,
-  isValidDate
+  isValidDate,
+  calculateAgeFromSLK
 };

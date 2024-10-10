@@ -25,9 +25,7 @@
         target="_blank"
         >Open Issues</a
       >
-      
-      <span class="ml-6 text-xs text-gray-500">v: 11-Jul-2023</span>
-
+      <span class="ml-6 text-xs text-gray-500">v: 14-October-2024</span>
     </div>
     <!-- </ul> -->
     <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />

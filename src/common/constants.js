@@ -55,7 +55,8 @@ export const SURVEY_DISPLAY_NAMES = {
   "ATOM ITSP Review Assessment": "ITSP review",
   "Arcadia House Assessments": "Arcadia House Assessments",
   "ATOM Psych Assessment": "Psych Program Assessments",
-  "ATOM Butt-It-Out Assessment": "Butt-It-Out Assessment"
+  "ATOM Butt-It-Out Assessment": "Butt-It-Out Assessment",
+  "ATOM T25 Assessment": "T25 Assessment"
 };
 
 export const ARCA = "Arcadia";

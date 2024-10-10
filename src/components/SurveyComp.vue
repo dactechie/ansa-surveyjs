@@ -5,8 +5,8 @@
       <template v-slot:body>
         {{ modalContent }}
       </template>
-      <h3 slot="header">Question</h3>
-    </modal> -->
+<h3 slot="header">Question</h3>
+</modal> -->
     <ResponseHistoryModal
       :show="showMoreInfo"
       @close="showMoreInfo = false"
@@ -27,12 +27,14 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
+// import { FunctionFactory } from "survey-vue";
 import ResponseHistoryModal from "@/components/Modals/ResponseHistoryModal";
 import "survey-vue/defaultV2.css";
 
 // import QuestionnaireService from "@/api/SurveyQuestionnaireService";
 import {
-  getCurrentYearMonthDayString
+  getCurrentYearMonthDayString,
+  calculateAgeFromSLK
   // wordWithPreOrSuffix
 } from "@/common/utils"; //gapInDays
 import {
@@ -46,6 +48,28 @@ import {
 import SurveyService from "../api/SurveyService";
 
 SurveyVue.StylesManager.applyTheme("defaultV2");
+// SurveyVue.FunctionFactory.Instance.register(
+//   "calculateAgeFromSLK",
+//   calculateAgeFromSLK
+// );
+// FunctionFactory.Instance.register("extractDOBFromSLK", function(slk) {
+//   if (!slk || typeof slk !== "string" || slk.length !== 14) {
+//     console.warn("Invalid SLK:", slk);
+//     return null;
+//   }
+
+//   try {
+//     const dobString = slk.substring(5, 13);
+//     const day = dobString.substring(0, 2);
+//     const month = dobString.substring(2, 4);
+//     const year = dobString.substring(4, 8);
+
+//     return `${year}-${month}-${day}`;
+//   } catch (error) {
+//     console.error("Error extracting DOB from SLK:", error);
+//     return null;
+//   }
+// });
 
 export default {
   name: "SurveyComp",
@@ -95,7 +119,7 @@ export default {
     ]),
     ...mapGetters([
       "getCurrentSurveyData",
-
+      "getCurrentClientSLK",
       "sideBarOpen",
       "isContinuingSurvey"
       // "totalTillNow"
@@ -158,7 +182,8 @@ export default {
 
       //load question ssettings from survey question and then remove it so it is not saved in the client's survey submisison
       //QuestionSettings
-
+      // me.survey.setValue("slk", String(me.getCurrentClientSLK()));
+      // console.log("age ", age);
       if (
         typeof prefillSurvey !== "undefined" &&
         prefillSurvey["PartitionKey"] !== undefined
@@ -224,16 +249,32 @@ export default {
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
         // from a previous submission when the current survey has no matching question or answer
 
-        me.setClientSLK(prefillSurvey["PartitionKey"]);
+        // me.setClientSLK(prefillSurvey["PartitionKey"]);
       } else {
         //nothing to prefill - first ever
         if (!me.$store.state.currentClientSLK) {
           console.log("missing slk");
           me.$router.push("/");
         }
-
         me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
       }
+      const caclAgeQuestion = sender.getQuestionByName("ClientAge");
+      if (caclAgeQuestion ?? null !== null) {
+        const age = calculateAgeFromSLK(me.getCurrentClientSLK());
+        me.survey.setValue("ClientAge", age);
+      }
+
+      // .getAllQuestions(false) //even hidden questions (they maybe hidd)
+      // .filter(q =>Q_calculateAgeFromSLK == q.name);
+
+      // const preComputedQuestions = {"Q_calculateAgeFromSLK": calculateAgeFromSLK};
+      // const precomputed_questions = sender
+      //   .getAllQuestions(false) //even hidden questions (they maybe hidd)
+      //   .filter(q => preComputedQuestions.includes(q.name));
+
+      // precomputed_questions.array.forEach(element => {
+      //   me.survey.setValue(element
+      // });
 
       me.dirtyData = false; // so we don't save to backend after the prefil/initial assessment date set
       me.setCurrentSurvey(me.survey); // for the nav to work
@@ -247,7 +288,7 @@ export default {
     this.survey.onCurrentPageChanged.add(function(surveyModel) {
       //}, options) {
       window.scrollTo(0, 0);
-      me.setCurrentPageTitle(surveyModel.currentPage.title);
+      me.setCurrentPageTitle(surveyModel.currentPage?.title || "Complete");
       // if (
       //   !!options.oldCurrentPage &&
       //   !!options.newCurrentPage &&
@@ -379,9 +420,11 @@ export default {
 .sv-question__title {
   font-size: 1em;
 }
+
 .sv-page__title {
   font-size: 1.5em;
 }
+
 .sv-root-modern .sv-description {
   color: black;
 }
@@ -392,9 +435,11 @@ export default {
     margin-left: 25%;
   }
 }
+
 .sv-matrix__cell {
   min-width: 1em;
 }
+
 /*h3 {
   margin: 40px 0 0;
 }
