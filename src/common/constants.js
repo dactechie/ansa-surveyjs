@@ -9,7 +9,7 @@ export const CLIENT_HISTORY_URL = process.env.VUE_APP_CLIENT_HISTORY_URL;
 
 export const SURVEY_IDS =
   process.env.VUE_APP_SURVEYIDS_INAS_ITSP ||
-  "a756e7f0-2be0-4888-8326-e0fa97f9bf72_677c0e2a-1446-4dd6-bb61-4204ee693d79_8a3f9c55-c9ac-4824-9f82-6bf4bec93fae_708f01d7-20cb-4b98-948a-e7b8888bcbca_85e8b35d-5b10-4707-a550-8cb62ce1ea50_94c10760-f04d-4e5e-8ec3-1432c4cde1c8_aff3512e-057c-4792-b10a-872a584d2224_28b00db7-bb8a-4096-b326-04406806ba89";
+  "aff3512e-057c-4792-b10a-872a584d2224_28b00db7-bb8a-4096-b326-04406806ba89";
 
 export const PARTITION_KEY = "PartitionKey";
 export const ROW_KEY = "RowKey";
@@ -48,21 +48,11 @@ export const DB_IDTYPE_CCARE = "CCARE";
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
   InitialAssessment: "INAS",
-  ITSPReview: "ITSP",
-  ArcadiaITSPReview: "ITSP",
-  SupplementaryIntakeAssessment: "SITK",
-  PostTreatmentAssessment: "POTA",
-  PsyReview: "ITSP",
-  PsyEnd: "PYND"
+  ITSPReview: "ITSP"
 };
 
 //mapping of SurveyJS.io survey title to Launch-Button display name
 export const SURVEY_DISPLAY_NAMES = {
-  "ATOM Initial Assessment": "’New Episode’ assessment",
-  "ATOM ITSP Review Assessment": "ITSP review",
-  "Arcadia House Assessments": "Arcadia House Assessments",
-  "ATOM Psych Assessment": "Psych Program Assessments",
-  "ATOM Butt-It-Out Assessment": "Butt-It-Out Assessment",
   "ATOM T25 Initial Assessment": "T-25 Initial Assessment",
   "ATOM T25 Review Assessment": "T-25 Review Assessment"
 };
