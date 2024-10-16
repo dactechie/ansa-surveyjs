@@ -48,28 +48,6 @@ import {
 import SurveyService from "../api/SurveyService";
 
 SurveyVue.StylesManager.applyTheme("defaultV2");
-// SurveyVue.FunctionFactory.Instance.register(
-//   "calculateAgeFromSLK",
-//   calculateAgeFromSLK
-// );
-// FunctionFactory.Instance.register("extractDOBFromSLK", function(slk) {
-//   if (!slk || typeof slk !== "string" || slk.length !== 14) {
-//     console.warn("Invalid SLK:", slk);
-//     return null;
-//   }
-
-//   try {
-//     const dobString = slk.substring(5, 13);
-//     const day = dobString.substring(0, 2);
-//     const month = dobString.substring(2, 4);
-//     const year = dobString.substring(4, 8);
-
-//     return `${year}-${month}-${day}`;
-//   } catch (error) {
-//     console.error("Error extracting DOB from SLK:", error);
-//     return null;
-//   }
-// });
 
 export default {
   name: "SurveyComp",

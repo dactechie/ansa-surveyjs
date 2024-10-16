@@ -151,9 +151,11 @@ export default {
       //   });
       //   return this.$store.state["surveyNameIDList"];
       // }
+      console.log("Full list ", this.$store.state["surveyNameIDList"]);
       let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s =>
         s.name.startsWith(buttonTypeName)
       );
+      console.log("buttonTypeName", buttonTypeName);
       if (shouldContinue) {
         return nameSurveyIDList.map(e => {
           return {
@@ -228,7 +230,7 @@ export default {
             ...this.filterButtonType("ATOM Psych"),
             //...this.filterButtonType("Arcadia House"), Can't start arcadia for new clients ?
             ...this.filterButtonType("ATOM Butt-It-Out"),
-            ...this.filterButtonType("ATOM T25")
+            ...this.filterButtonType("ATOM T25 Initial")
           ]
         );
         return;
@@ -248,7 +250,6 @@ export default {
     },
     getPrefillSurveyDataAndLunchBtnsFunc(prefillSurveyData) {
       // const lastSurveyDate = prefillSurveyData["SurveyData"]["AssessmentDate"];
-
       if (prefillSurveyData["Status"] === "Complete") {
         prefillSurveyData["SurveyData"][
           "AssessmentDate"
@@ -269,18 +270,19 @@ export default {
           ...this.filterButtonType("Arcadia House", false),
           ...this.filterButtonType("ATOM Psych", false),
           ...this.filterButtonType("ATOM Butt-It-Out", false),
-          ...this.filterButtonType("ATOM T25", false)
+          ...this.filterButtonType("ATOM T25 Initial", false),
+          ...this.filterButtonType("ATOM T25 Review", false)
         ]
       );
     },
     setContinueLaunchButtons() {
       const prefillData = this.getCurrentSurveyData();
       const lastSurveyName = prefillData["SurveyName"];
-      // console.log(`going to add continue button for ${lastSurveyName}`);
       this.surveyListForClient = this.filterButtonType(
         lastSurveyName,
         true // should continue
       );
+      console.log(">>> Last Survey", lastSurveyName);
       // allow user to abandon incomplete Review survey an start with a new Initial Assessment one
       // can't rememebr why this is important - may be for migrated ATOMs
       // if (lastSurveyName === "ATOM ITSP Review Assessment") {
@@ -290,7 +292,7 @@ export default {
           ...this.filterButtonType("Arcadia House", false),
           ...this.filterButtonType("ATOM Psych", false),
           ...this.filterButtonType("ATOM Butt-It-Out", false),
-          ...this.filterButtonType("ATOM T25", false)
+          ...this.filterButtonType("ATOM T25 Initial", false)
         ]
       );
       // }
