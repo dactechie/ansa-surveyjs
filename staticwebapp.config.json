@@ -1,30 +1,8 @@
 {
-  "trailingSlash": "auto",
-  "routes": [
-    {
-      "route": "/",
-      "allowedRoles": ["authenticated"]
-    },
-    {
-      "route": "/.auth/login/x",
-      "statusCode": 404
-    },
-    {
-      "route": "/logout",
-      "redirect": "/.auth/logout"
-    }
-  ],
-  "navigationFallback": {
-    "rewrite": "index.html",
-    "exclude": ["/images/*.{png,jpg,gif}", "/css/*"]
-  },
-  "responseOverrides": {
-    "401": {
-      "redirect": "/login",
-      "statusCode": 302
-    }
-  },
-  "globalHeaders": {
-    "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'"
+  "networking": {
+    "allowedIpRanges": [
+      "110.145.155.162/32",
+      "119.15.100.181/32"
+    ]
   }
 }
