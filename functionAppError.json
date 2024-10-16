@@ -1,0 +1,14 @@
+{
+  "EventName": "FunctionCompleted",
+  "InvocationId": "ff094686-5f55-47a2-b5d7-94c6a5cf724e",
+  "ProcessId": "1752",
+  "EventId": "3",
+  "prop__invocationId": "ff094686-5f55-47a2-b5d7-94c6a5cf724e",
+  "HostInstanceId": "475a0844-6bd8-4bb6-a8af-55f9b6485b80",
+  "prop__functionName": "Functions.ANSA_JSFlattener_HttpTrigger",
+  "Category": "Function.ANSA_JSFlattener_HttpTrigger",
+  "prop__executionDuration": "8",
+  "prop__{OriginalFormat}": "Executed '{functionName}' ({status}, Id={invocationId}, Duration={executionDuration}ms)",
+  "prop__status": "Failed",
+  "LogLevel": "Error"
+}

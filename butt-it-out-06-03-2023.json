@@ -1,0 +1,669 @@
+{
+  "title": "ATOM Butt-It-Out Assessment",
+  "logoPosition": "right",
+  "completedHtml": "<h2>Thanks for completing an ATOM</h2>\n<p>\nA summary will be emailed to:\n</p>\n<p>\nPlease ensure the summary is uploaded to the client file\n</p>\n\n",
+  "completedBeforeHtml": "\nCompleted before HTML",
+  "loadingHtml": "\n\nLOADING ...",
+  "pages": [
+    {
+      "name": "survey_meta",
+      "elements": [
+        {
+          "type": "text",
+          "name": "AssessmentDate",
+          "minWidth": "200px",
+          "maxWidth": "650px",
+          "title": "Date of Assessment",
+          "titleLocation": "top",
+          "description": "(When completed with the client)",
+          "defaultValueExpression": "today()",
+          "inputType": "date",
+          "size": 10
+        },
+        {
+          "type": "radiogroup",
+          "name": "AssessmentType",
+          "defaultValue": "InitialAssessment",
+          "readOnly": true,
+          "choices": [
+            {
+              "value": "InitialAssessment",
+              "text": "ATOM Initial Assessment"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "Program",
+          "title": "Program Details",
+          "titleLocation": "top",
+          "defaultValue": "BUTTITOUT",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": "TEST",
+              "text": "For ATOM Training/Trials"
+            },
+            {
+              "value": "BUTTITOUT",
+              "text": "Butt It Out"
+            }
+          ],
+          "colCount": 3
+        },
+        {
+          "type": "radiogroup",
+          "name": "ReferredFrom",
+          "visibleIf": "{Program} = 'BUTTITOUT'",
+          "title": "Referred from which Program? ",
+          "titleLocation": "top",
+          "isRequired": true,
+          "choices": [
+            "TSS",
+            {
+              "value": "TEST",
+              "text": "For ATOM Training/Trials"
+            },
+            {
+              "value": "ALTHEA",
+              "text": "Althea"
+            },
+            {
+              "value": "ARCADIA",
+              "text": "Arcadia"
+            },
+            "PAT",
+            "NSP"
+          ],
+          "colCount": 3
+        },
+        {
+          "type": "radiogroup",
+          "name": "Staff",
+          "title": "Team Members",
+          "titleLocation": "top",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": "Tim.Ireson",
+              "text": "Tim",
+              "visibleIf": "{Program} anyof ['SAPPHIRE', 'BEGAPATH', 'TEST']"
+            },
+            {
+              "value": "Aftab.Jalal",
+              "text": "MJ"
+            },
+            {
+              "value": "Corrina.Trimarchi",
+              "text": "Corrina"
+            },
+            {
+              "value": "Anne.Develin",
+              "text": "Anne"
+            },
+            {
+              "value": "Augustine.Fordjour",
+              "text": "Augustine"
+            },
+            {
+              "value": "iAli.Loom",
+              "text": "Ali"
+            },
+            {
+              "value": "Meghan.Campbell",
+              "text": "Meghan"
+            },
+            {
+              "value": "Sandy.Lendrum",
+              "text": "Sandy"
+            },
+            {
+              "value": "Catherine.Horan",
+              "text": "Cath"
+            },
+            {
+              "value": "Khawn.Sant",
+              "text": "Khawn"
+            }
+          ],
+          "otherText": "Corrina",
+          "colCount": 3
+        },
+        {
+          "type": "radiogroup",
+          "name": "ClientType",
+          "visible": false,
+          "title": "Client Type",
+          "titleLocation": "top",
+          "defaultValue": "ownuse",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": "ownuse",
+              "text": "Own Substance Use"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "name": "DiversityList",
+          "title": "Diversity",
+          "titleLocation": "top",
+          "description": "Are you a member of any of the following diverse communities?",
+          "choices": [
+            "CALD",
+            {
+              "value": "ATSI",
+              "text": "Aboriginal and/or Torres Strait Islander"
+            },
+            {
+              "value": "LGBTQI",
+              "text": "LGBTQI+"
+            },
+            {
+              "value": "DIS",
+              "text": "Disability"
+            },
+            {
+              "value": "NOTA",
+              "text": "None of the Above"
+            }
+          ]
+        }
+      ],
+      "questionTitleLocation": "hidden",
+      "title": "Program and Staff"
+    },
+    {
+      "name": "Smoking",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "DoYouSmoke",
+          "title": "Do you smoke cigarettes or nicotine vapes?",
+          "choices": [
+            "Cigarettes",
+            {
+              "value": "NicotineVapes",
+              "text": "Nicotine Vapes"
+            },
+            {
+              "value": "Both",
+              "text": "Both cigarettes and nicotine vapes"
+            }
+          ],
+          "showNoneItem": true,
+          "noneText": "No - there's no need for you to answer any more questions"
+        },
+        {
+          "type": "radiogroup",
+          "name": "HowLongSmoked",
+          "visibleIf": "{DoYouSmoke} anyof ['Cigarettes', 'NicotineVapes', 'Both']",
+          "title": "How long have you smoked tobacco / nicotine vapes?",
+          "choices": [
+            {
+              "value": "LessThan1Year",
+              "text": "Less than 1 year"
+            },
+            {
+              "value": "1To5Years",
+              "text": "1 - 5 years"
+            },
+            {
+              "value": "5To10Years",
+              "text": "5 - 10 years"
+            },
+            {
+              "value": "MoreThan10",
+              "text": "More than 10 years"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "TobaccoAsSpin",
+          "visibleIf": "{Program} = 'BUTTITOUT' or {Program} = 'TEST'",
+          "title": "Do you use tobacco as spin with your marijuana?",
+          "choices": [
+            {
+              "value": "Alway",
+              "text": "Yes- always"
+            },
+            {
+              "value": "Sometimes",
+              "text": "Yes- sometimes"
+            },
+            {
+              "value": "Never",
+              "text": "No - never"
+            },
+            {
+              "value": "N/A",
+              "text": "N/A - I don't smoke marijuana"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "MotivationToQuit",
+          "visibleIf": "{DoYouSmoke} = 'Cigarettes' or {DoYouSmoke} = 'Both' or {DoYouSmoke} = 'NicotineVapes'",
+          "title": "How motivated are you to quit or reduce your smoking?",
+          "requiredIf": "{DoYouSmoke} = 'Cigarettes'",
+          "choices": [
+            {
+              "value": "1",
+              "text": "Not at all"
+            },
+            {
+              "value": "2",
+              "text": "A little "
+            },
+            {
+              "value": "3",
+              "text": "Willing to try"
+            },
+            {
+              "value": "4",
+              "text": "Quite motivated"
+            },
+            {
+              "value": "5",
+              "text": "Extremely motivated"
+            }
+          ],
+          "colCount": 5
+        },
+        {
+          "type": "radiogroup",
+          "name": "ConfidentQuittingReducing",
+          "visibleIf": "{DoYouSmoke} = 'Cigarettes' or {DoYouSmoke} = 'Both' or {DoYouSmoke} = 'NicotineVapes'",
+          "title": "How confident are you to quit or reduce your smoking?",
+          "requiredIf": "{DoYouSmoke} = 'Cigarettes'",
+          "choices": [
+            {
+              "value": "NotAtAll",
+              "text": "Not at all confident"
+            },
+            {
+              "value": "Somewhat",
+              "text": "Fairly confident"
+            },
+            {
+              "value": "Quite",
+              "text": "Quite confident"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "HowManyTimesQuitSmoking",
+          "visibleIf": "{DoYouSmoke} = 'Cigarettes' or {DoYouSmoke} = 'Both' or {DoYouSmoke} = 'NicotineVapes'",
+          "title": "How many times have you tried to quit smoking?",
+          "requiredIf": "{DoYouSmoke} = 'Cigarettes'",
+          "choices": [
+            "Never",
+            {
+              "value": "1To5Times",
+              "text": "1 - 5 times"
+            },
+            {
+              "value": "5To10Times",
+              "text": "5 - 10 times"
+            },
+            {
+              "value": "MoreThan10",
+              "text": "More than 10 times"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "HowManagingQuitting",
+          "visibleIf": "{DoYouSmoke} = 'Cigarettes' or {DoYouSmoke} = 'Both' or {DoYouSmoke} = 'NicotineVapes'",
+          "title": "How well are you managing in trying to quit or reduce your smoking so far?",
+          "requiredIf": "{DoYouSmoke} = 'Cigarettes'",
+          "choices": [
+            {
+              "value": "1",
+              "text": "Not well - I haven't been able to make any changes to my smoking"
+            },
+            {
+              "value": "2",
+              "text": "I'm really struggling"
+            },
+            {
+              "value": "3",
+              "text": "It's a challenge but I'm still trying "
+            },
+            {
+              "value": "4",
+              "text": "I'm making progress"
+            },
+            {
+              "value": "5",
+              "text": "I'm managing really well - successfully quitting or reducing"
+            },
+            {
+              "value": "6",
+              "text": "I have managed to quit smoking"
+            }
+          ],
+          "otherText": "I'm making progress"
+        },
+        {
+          "type": "radiogroup",
+          "name": "HowMuchDoYouKnow",
+          "visibleIf": "{Program} = 'BUTTITOUT' ",
+          "title": "How much do you know about quit smoking support at Directions?",
+          "choices": [
+            {
+              "value": "IDK",
+              "text": "I didn't know that Directions could support me to quit smoking"
+            },
+            {
+              "value": "ALITTLE",
+              "text": "I thought Directions might be able to help me"
+            },
+            {
+              "value": "SOME",
+              "text": "I knew that Directions could provide some assistance, but didn't have much detail"
+            },
+            {
+              "value": "ABIT",
+              "text": "I knew Directions could provide some quit smoking support"
+            },
+            {
+              "value": "LOTS",
+              "text": "I knew Directions could provide a range of specialist supports to help me quit smoking"
+            }
+          ]
+        }
+      ],
+      "title": "Smoking"
+    },
+    {
+      "name": "CDS5",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "CDS5RateAddictiontoCigarettes",
+          "visibleIf": "{Program} = 'BUTTITOUT' or {Program} = 'TEST'",
+          "title": "Please rate your addiction to cigarettes on a scale of 1-100 (NOT addicted to cigarettes at all = 0 / Extremely addicted to cigarettes = 100)",
+          "choices": [
+            {
+              "value": "1",
+              "text": "0-20"
+            },
+            {
+              "value": "2",
+              "text": "21-40"
+            },
+            {
+              "value": "3",
+              "text": "41-60"
+            },
+            {
+              "value": "4",
+              "text": "61-80"
+            },
+            {
+              "value": "5",
+              "text": "81-100"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "CDS5HowManyCigarettesPerDay",
+          "title": "On average, how many cigarettes do you smoke per day?",
+          "choices": [
+            {
+              "value": "1",
+              "text": "0-5"
+            },
+            {
+              "value": "2",
+              "text": "6-10"
+            },
+            {
+              "value": "3",
+              "text": "11-20"
+            },
+            {
+              "value": "4",
+              "text": "21-29"
+            },
+            {
+              "value": "5",
+              "text": "30+"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "CDS5HowSoonAfterWaking",
+          "title": "Usually, how soon after waking up do you smoke your first cigarette?",
+          "choices": [
+            {
+              "value": "5",
+              "text": "0-5 minutes"
+            },
+            {
+              "value": "4",
+              "text": "6-15 minutes"
+            },
+            {
+              "value": "3",
+              "text": "16-30 minutes"
+            },
+            {
+              "value": "2",
+              "text": "31-60 minutes"
+            },
+            {
+              "value": "1",
+              "text": "61 + minutes"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "CDS5HowHardIsQuitting",
+          "visibleIf": "{Program} = 'BUTTITOUT'",
+          "title": "For you, quitting smoking would be:",
+          "choices": [
+            {
+              "value": "5",
+              "text": "Impossible"
+            },
+            {
+              "value": "4",
+              "text": "Very Difficult"
+            },
+            {
+              "value": "3",
+              "text": "Fairly Difficult"
+            },
+            {
+              "value": "2",
+              "text": "Fairly Easy"
+            },
+            {
+              "value": "1",
+              "text": "Very Easy"
+            }
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "CDS5HowStrongTheUrgeToSmoke",
+          "title": "Do you agree with the following statement?                           \nAfter a few hours without smoking, I feel an irresistible urge to smoke",
+          "choices": [
+            {
+              "value": "1",
+              "text": "Totally disagree"
+            },
+            {
+              "value": "2",
+              "text": "Somewhat disagree"
+            },
+            {
+              "value": "3",
+              "text": "Neither agree nor disagree"
+            },
+            {
+              "value": "4",
+              "text": "Somewhat agree"
+            },
+            {
+              "value": "5",
+              "text": "Fully agree"
+            }
+          ]
+        },
+        {
+          "type": "expression",
+          "name": "CDS5_Score",
+          "visible": false,
+          "title": "CDS 5 ",
+          "expression": "{CDS5RateAddictiontoCigarettes}+{CDS5HowManyCigarettesPerDay}+{CDS5HowSoonAfterWaking}+{CDS5HowHardIsQuitting}+{CDS5HowStrongTheUrgeToSmoke}"
+        }
+      ],
+      "visibleIf": "{DoYouSmoke} = 'Cigarettes' or {DoYouSmoke} = 'Both'",
+      "requiredIf": "{DoYouSmoke} anyof ['Cigarettes', 'Both']",
+      "title": "CDS-5",
+      "description": "Cigarette Dependence Scale "
+    },
+    {
+      "name": "impact",
+      "elements": [
+        {
+          "type": "comment",
+          "name": "SmokingITSPNotes",
+          "title": "Smoking SUMMARY - NOTES",
+          "autoGrow": true
+        },
+        {
+          "type": "comment",
+          "name": "SmokingITSPGoals",
+          "title": "Smoking GOALS - NOTES ",
+          "autoGrow": true
+        },
+        {
+          "type": "radiogroup",
+          "name": "QuitlineReferral",
+          "visible": false,
+          "visibleIf": "{Program} = 'BUTTITOUT'",
+          "title": "Would you like to be referred to the ACT Quitline for continued smoking support after your participation in the Butt it Out program?",
+          "choices": [
+            {
+              "value": "Yes",
+              "text": "Yes please"
+            },
+            {
+              "value": "No",
+              "text": "No thanks"
+            }
+          ]
+        }
+      ],
+      "visible": false,
+      "visibleIf": "{ClientType} = 'ownuse'",
+      "title": "Smoking Summary Notes"
+    },
+    {
+      "name": "physicalhealth",
+      "elements": [
+        {
+          "type": "matrix",
+          "name": "Past4WkPhysicalHealth",
+          "visibleIf": "{Program} = 'BUTTITOUT' or {Program} = 'TEST'",
+          "title": "How has your physical health been, in the last 4 weeks?",
+          "description": "10 is the best possible",
+          "columns": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+        },
+        {
+          "type": "checkbox",
+          "name": "InterventionType",
+          "visibleIf": "{Program} = 'BUTTITOUT' or {Program} = 'TEST'",
+          "title": "Intervention Type",
+          "description": "Interventions  nominated by client",
+          "choices": [
+            {
+              "value": "INFOADVICE",
+              "text": "Information & Advice"
+            },
+            {
+              "value": "BRIEFINT",
+              "text": "Brief Intervention"
+            },
+            {
+              "value": "FOLLOWUP",
+              "text": "Brief Intervention Follow Up"
+            },
+            {
+              "value": "GROUP",
+              "text": "Smoking Cessation Group"
+            },
+            {
+              "value": "QUITPRO",
+              "text": "Quit Program"
+            },
+            {
+              "value": "NRT",
+              "text": "NRT "
+            }
+          ]
+        }
+      ],
+      "title": "Physical Health & Wellbeing"
+    },
+    {
+      "name": "officeuse",
+      "elements": [
+        {
+          "type": "checkbox",
+          "name": "FinalChecklist",
+          "visibleIf": "{Program} = 'BUTTITOUT' or {Program} = 'TEST'",
+          "title": "CHECKLIST",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": "ConsentToShareInfo",
+              "text": "Client Consent to Share Information - signed"
+            },
+            {
+              "value": "ProvidedWithRightsResponsibilities",
+              "text": "Client provided with Rights and Responsibilities"
+            },
+            {
+              "value": "ProvidedFeedbackComplaintsProc",
+              "text": "Client provided with Feedback and Complaints process"
+            },
+            {
+              "value": "AlreadyProvided",
+              "text": "Client already provided with the above mentioned information by the referring program"
+            }
+          ]
+        }
+      ],
+      "title": "OFFICE USE ONLY:",
+      "description": "DIRECTIONS / PATHWAYS SERVICES \n"
+    }
+  ],
+  "triggers": [
+    {
+      "type": "setvalue",
+      "expression": "{Program} anyof ['SAPPHIRE', 'EUROPATH', 'MONPATH', 'COCO', 'TSS', 'BEGAPATH', 'TEST']",
+      "setToName": "doK10",
+      "setValue": "Yes"
+    }
+  ],
+  "showTitle": false,
+  "showCompletedPage": false,
+  "navigateToUrl": "/#/completed",
+  "progressBarType": "questions",
+  "clearInvisibleValues": "onHiddenContainer",
+  "autoGrowComment": true,
+  "showPreviewBeforeComplete": "showAllQuestions"
+}

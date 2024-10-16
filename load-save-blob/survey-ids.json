@@ -1,0 +1,30 @@
+{
+  "Live": {
+    "INAS": {
+      "name": "IntialAssessment",
+      "id": "8a434de3-a367-42ea-a5a2-21a95cb1d65c"
+    },
+    "ITSP": {
+      "name": "ITSPReviewAssessment",
+      "id": "15ca1eb1-3ffa-4af4-81dc-d3a89c76002b"
+    },
+    "ARCA": {
+      "name": "ArcadiaHouse",
+      "id": "b0447a3a-1414-44fb-bc09-8d35468941df"
+    }
+  },
+  "Staging": {
+    "INAS": {
+      "name": "IntialAssessment",
+      "id": "677c0e2a-1446-4dd6-bb61-4204ee693d79"
+    },
+    "ITSP": {
+      "name": "ITSPReviewAssessment",
+      "id": "8a3f9c55-c9ac-4824-9f82-6bf4bec93fae"
+    },
+    "ARCA": {
+      "name": "ArcadiaHouse",
+      "id": "708f01d7-20cb-4b98-948a-e7b8888bcbca"
+    }
+  }
+}

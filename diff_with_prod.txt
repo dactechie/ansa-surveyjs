@@ -1,0 +1,344 @@
+diff --git a/package-lock.json b/package-lock.json
+index 4897c65..397adaa 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -3917,9 +3917,9 @@
+       }
+     },
+     "node_modules/caniuse-lite": {
+-      "version": "1.0.30001422",
+-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001422.tgz",
+-      "integrity": "sha512-hSesn02u1QacQHhaxl/kNMZwqVG35Sz/8DgvmgedxSH8z9UUpcDYSPYgsj3x5dQNRcNp6BwpSfQfVzYUTm+fog==",
++      "version": "1.0.30001666",
++      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001666.tgz",
++      "integrity": "sha512-gD14ICmoV5ZZM1OdzPWmpx+q4GyefaK06zi8hmfHV5xe4/2nOQX3+Dw5o+fSqOws2xVwL9j+anOPFwHzdEdV4g==",
+       "dev": true,
+       "funding": [
+         {
+@@ -3929,6 +3929,10 @@
+         {
+           "type": "tidelift",
+           "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
+         }
+       ]
+     },
+@@ -16102,9 +16106,9 @@
+       }
+     },
+     "caniuse-lite": {
+-      "version": "1.0.30001422",
+-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001422.tgz",
+-      "integrity": "sha512-hSesn02u1QacQHhaxl/kNMZwqVG35Sz/8DgvmgedxSH8z9UUpcDYSPYgsj3x5dQNRcNp6BwpSfQfVzYUTm+fog==",
++      "version": "1.0.30001666",
++      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001666.tgz",
++      "integrity": "sha512-gD14ICmoV5ZZM1OdzPWmpx+q4GyefaK06zi8hmfHV5xe4/2nOQX3+Dw5o+fSqOws2xVwL9j+anOPFwHzdEdV4g==",
+       "dev": true
+     },
+     "case-sensitive-paths-webpack-plugin": {
+diff --git a/src/common/constants.js b/src/common/constants.js
+index 66add7c..3478136 100644
+--- a/src/common/constants.js
++++ b/src/common/constants.js
+@@ -55,7 +55,8 @@ export const SURVEY_DISPLAY_NAMES = {
+   "ATOM ITSP Review Assessment": "ITSP review",
+   "Arcadia House Assessments": "Arcadia House Assessments",
+   "ATOM Psych Assessment": "Psych Program Assessments",
+-  "ATOM Butt-It-Out Assessment": "Butt-It-Out Assessment"
++  "ATOM Butt-It-Out Assessment": "Butt-It-Out Assessment",
++  "ATOM T25 Client Self Assessment": "T25 Client Self Assessment"
+ };
+ 
+ export const ARCA = "Arcadia";
+diff --git a/src/components/DetailsModal/a.json b/src/components/DetailsModal/a.json
+deleted file mode 100644
+index 0cf5c62..0000000
+--- a/src/components/DetailsModal/a.json
++++ /dev/null
+@@ -1,44 +0,0 @@
+-{
+-  "PartitionKey": "ACSFT210719992",
+-  "RowKey": "EUROPATH_INAS_20201013",
+-  "Timestamp": "10/13/2020 6:25:36 PM",
+-  "Program": "EUROPATH",
+-  "Staff": "glenda.mccarthy",
+-  "Status": "Complete",
+-  "SurveyData": {
+-    "Gender": "female",
+-    "IndigenousStatus": "aboriginal but not tsi",
+-    "PreferredLanguage": "english",
+-    "CountryOfBirth": "kenya",
+-    "ClientType": "item2",
+-    "SourceOfReferral": "aod",
+-    "PrincipalDrugOfConcern": "cocaine",
+-    "how_many_days": "20",
+-    "MethodOfUse": "inhales",
+-    "CreatedDatetime": "10/13/2020 6:16:33 PM",
+-    "AODHistory": [
+-      {
+-        "drug_type": "cannabinoids",
+-        "age_first_used": 9,
+-        "how_often_used": "weekly",
+-        "method_of_use": "transdermal",
+-        "usage_units": "shots",
+-        "units_consumed_per_period": "40 - 49"
+-      }
+-    ],
+-    "clientID": "5675",
+-    "OtherDrugsOfConcern": [
+-      {
+-        "drug_type": "cannabinoid",
+-        "method_of_use": "injects",
+-        "how_many_days": "22"
+-      }
+-    ],
+-    "aod_harms_risks": ["memloss"],
+-    "impctdaily": "3",
+-    "additive_behaviours": ["sex", "other"],
+-    "additive_behaviours-Comment": "These are other additive behaviours"
+-  },
+-  "SurveyID": "ddc3dec4-6de5-4bc9-a963-87e20896feed",
+-  "SurveyName": "ANSA InitialAssessment"
+-}
+diff --git a/src/components/HomeTop.vue b/src/components/HomeTop.vue
+index 1ed695f..cdc6bf5 100644
+--- a/src/components/HomeTop.vue
++++ b/src/components/HomeTop.vue
+@@ -25,7 +25,9 @@
+         target="_blank"
+         >Open Issues</a
+       >
+-      <span class="ml-6 text-xs text-gray-500">v: 6-Mar-2023</span>
++      
++      <span class="ml-6 text-xs text-gray-500">v: 11-Jul-2023</span>
++
+     </div>
+     <!-- </ul> -->
+     <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />
+diff --git a/src/components/SurveyComp.vue b/src/components/SurveyComp.vue
+index 95ce926..e5722a4 100644
+--- a/src/components/SurveyComp.vue
++++ b/src/components/SurveyComp.vue
+@@ -188,14 +188,6 @@ export default {
+             "-"
+           );
+           const canPrefillQuestionNames = prefillQuestionNamesList
+-            // .filter(
+-            //   e =>
+-            //     !wordWithPreOrSuffix(
+-            //       e.name,
+-            //       PREFILL_EXCLUSION_PREFIXES,
+-            //       PREFILL_EXCLUSION_SUFFIXES
+-            //     )
+-            // )
+             .filter(qname => !prefillExclusionList.includes(qname))
+             .filter(qname =>
+               SurveyService.canPrefill(
+diff --git a/src/store/actions.js b/src/store/actions.js
+index 92f836d..7f286f6 100644
+--- a/src/store/actions.js
++++ b/src/store/actions.js
+@@ -7,6 +7,9 @@ export default {
+   toggleSidebar(context) {
+     context.commit("toggleSidebar");
+   },
++  // setPastResponseData({ commit }, data) {
++  //   commit("setPastResponseData", data);
++  // },
+   GET_QUESTIONNAIRE_LISTING: async function({ commit }) {
+     const response = await QuestionnaireService.getSurveysNameID();
+     commit("setSurveyList", await response);
+diff --git a/src/store/index.js b/src/store/index.js
+index 93c732d..83ac03d 100644
+--- a/src/store/index.js
++++ b/src/store/index.js
+@@ -35,8 +35,30 @@ export default new Vuex.Store({
+     questionsStatus: {},
+     missingMandatoryFields: [],
+     continuingSurvey: false
++    // pastResponses: {}
+   },
+   getters: {
++    // getHistoryMeta: state => exclusions => {
++    //   console.log("client data", state.clientData);
++    //   if (state.clientData === undefined) return undefined;
++
++    //   const metaItems = ATOM_META.filter(
++    //     metaItem => !exclusions.includes(metaItem)
++    //   );
++    //   console.log("meta data", metaItems);
++
++    //   return state.clientData.map(atom => {
++    //     return metaItems.map(metaItem => {
++    //       if (atom[metaItem] !== undefined) return atom[metaItem];
++    //       return state.clientData["SurveyData"][metaItem];
++    //     });
++    //   });
++    // },
++    // getPastResponsesForQuestion: state => questionName => {
++    //   if (state.clientData !== undefined)
++    //     return state.clientData["SurveyData"].map(atom => atom[questionName]);
++    //   return undefined;
++    // },
+     isContinuingSurvey: state => {
+       return state.continuingSurvey;
+     },
+diff --git a/src/views/Home.vue b/src/views/Home.vue
+index 4e9bcd8..3b805ae 100644
+--- a/src/views/Home.vue
++++ b/src/views/Home.vue
+@@ -173,6 +173,38 @@ export default {
+         });
+       }
+     },
++
++    // filterButtonType(buttonTypeName, shouldContinue) {
++    //   // if (APP_ENVIRONMENT === "test") {
++    //   //   let surveys = this.$store.state["surveyNameIDList"].forEach((s) => {
++    //   //     if (!s.name.startsWith(buttonTypeName)) {
++    //   //       s.name = s.name + "(hidden in production)";
++    //   //     }
++    //   //   });
++    //   //   return this.$store.state["surveyNameIDList"];
++    //   // }
++    //   let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s =>
++    //     s.name.startsWith(buttonTypeName)
++    //   );
++    //   if (shouldContinue) {
++    //     return nameSurveyIDList.map(e => {
++    //       return {
++    //         prefix: "Continue incomplete ",
++    //         name: `${e.name}`,
++    //         surveyid: e.surveyid,
++    //         displayName: SURVEY_DISPLAY_NAMES[e.name]
++    //       };
++    //     });
++    //   } else {
++    //     return nameSurveyIDList.map(e => {
++    //       return {
++    //         ...e,
++    //         prefix: "",
++    //         displayName: SURVEY_DISPLAY_NAMES[e.name]
++    //       };
++    //     });
++    //   }
++    // },
+     handleStartSurvey(surveyObj) {
+       if (!!surveyObj.prefix && surveyObj.prefix === "Continue incomplete ") {
+         this.setContinuingSurveyStatus(true);
+@@ -180,21 +212,24 @@ export default {
+       this.setSurveyMode("new");
+       this.setSurveyName(surveyObj.name);
+     },
+-    updateMode({ mode, text, data }) {
++    updateMode({ mode, text }) {
+       this.showSpinner = false;
+       this.showInstructions = false;
+       this.mode = mode;
+       this.searchResultText = text;
+       this.surveyListForClient = [];
+       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
+-        this.setClientLookupIDData(data);
++        // this.setClientLookupIDData(data);
+         this.unsetClientData();
++        this.clientData = [];
+         sessionStorage.removeItem("ClientData");
+         this.surveyListForClient.push(
+           ...[
+             ...this.filterButtonType("ATOM Initial"),
+             ...this.filterButtonType("ATOM Psych"),
+-            ...this.filterButtonType("ATOM Butt-It-Out")
++            // ...this.filterButtonType("Arcadia House"),
++            ...this.filterButtonType("ATOM Butt-It-Out"),
++            ...this.filterButtonType("ATOM T25")
+           ]
+         );
+         return;
+@@ -234,7 +269,8 @@ export default {
+           ...this.filterButtonType("ATOM Initial", false),
+           ...this.filterButtonType("Arcadia House", false),
+           ...this.filterButtonType("ATOM Psych", false),
+-          ...this.filterButtonType("ATOM Butt-It-Out", false)
++          ...this.filterButtonType("ATOM Butt-It-Out", false),
++          ...this.filterButtonType("ATOM T25", false)
+         ]
+       );
+     },
+@@ -254,59 +290,12 @@ export default {
+           ...this.filterButtonType("ATOM Initial", false),
+           ...this.filterButtonType("Arcadia House", false),
+           ...this.filterButtonType("ATOM Psych", false),
+-          ...this.filterButtonType("ATOM Butt-It-Out", false)
++          ...this.filterButtonType("ATOM Butt-It-Out", false),
++          ...this.filterButtonType("ATOM T25", false)
+         ]
+       );
+       // }
+     }
+-
+-    // showSurveyLaunchButtons(prefillSurveyData) {
+-    //   // 0. if brand new client , show CREATE new IA
+-    //   // this.clientData = this.getClientData();
+-    //   if (!this.clientData || this.clientData.length === 0) {
+-    //     this.surveyListForClient = this.filterButtonType("ATOM Initial");
+-    //     return;
+-    //   }
+-    //   // const lastSurveyDone = this.clientData[0];
+-    //   // const lastSurveyDate = lastSurveyDone["SurveyData"]["AssessmentDate"];
+-    //   // const lastSurveyStatus = lastSurveyDone["Status"];
+-
+-    //   // const gapInDaysSinceLastSurvey = gapInDays(lastSurveyDate);
+-    //   // sessionStorage.setItem(
+-    //   //   "GapInDaysSinceLastSurvey",
+-    //   //   gapInDaysSinceLastSurvey + ""
+-    //   // );
+-    //   // console.log(
+-    //   //   ` Age of last survey ${Math.round(gapInDaysSinceLastSurvey)} days. `
+-    //   // );
+-    //   // 1. if the last survey done was "completed"
+-    //   //    a. if was done more than 1 year ago, show "CREATE NEW IA" button
+-    //   //    b. otherwise show CREATE ITSP  (prefills from the last survey)
+-
+-    //   const lastSurveyStatus = prefillSurveyData["Status"];
+-    //   if (lastSurveyStatus === "Complete") {
+-    //     this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
+-    //     this.surveyListForClient.push(
+-    //       ...this.filterButtonType("ATOM Initial", false)
+-    //     );
+-    //   } else if (lastSurveyStatus === "Incomplete") {
+-    //     this.setCurrentSurveyData(prefillSurveyData); // TODO: remove this ?
+-    //     this.surveyListForClient = this.filterButtonType(
+-    //       lastSurveyDone["SurveyName"],
+-    //       true // should continue
+-    //     );
+-    //     if (lastSurveyDone["SurveyName"] === "ATOM ITSP Review Assessment") {
+-    //       this.surveyListForClient.push(
+-    //         ...this.filterButtonType("ATOM Initial", false)
+-    //       );
+-    //       return; // TODO: remove this ?
+-    //     }
+-    //   } else {
+-    //     console.error("unknown state for last survey ", lastSurveyStatus);
+-    //   }
+-
+-    //   this.setCurrentSurveyData(prefillSurveyData);
+-    // }
+   }
+ };
+ </script>
+diff --git a/vue.config.js b/vue.config.js
+index 3d77a85..cd2ddee 100644
+--- a/vue.config.js
++++ b/vue.config.js
+@@ -4,5 +4,8 @@ module.exports = {
+       args[0].title = "Assessment Tool and Outcome Measure (ATOM) V1.0";
+       return args;
+     });
++  },
++  configureWebpack: {
++    devtool: "source-map"
+   }
+ };

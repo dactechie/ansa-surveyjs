@@ -1,0 +1,120 @@
+diff --git a/package-lock.json b/package-lock.json
+index 4897c65..397adaa 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -3917,9 +3917,9 @@
+       }
+     },
+     "node_modules/caniuse-lite": {
+-      "version": "1.0.30001422",
+-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001422.tgz",
+-      "integrity": "sha512-hSesn02u1QacQHhaxl/kNMZwqVG35Sz/8DgvmgedxSH8z9UUpcDYSPYgsj3x5dQNRcNp6BwpSfQfVzYUTm+fog==",
++      "version": "1.0.30001666",
++      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001666.tgz",
++      "integrity": "sha512-gD14ICmoV5ZZM1OdzPWmpx+q4GyefaK06zi8hmfHV5xe4/2nOQX3+Dw5o+fSqOws2xVwL9j+anOPFwHzdEdV4g==",
+       "dev": true,
+       "funding": [
+         {
+@@ -3929,6 +3929,10 @@
+         {
+           "type": "tidelift",
+           "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
+         }
+       ]
+     },
+@@ -16102,9 +16106,9 @@
+       }
+     },
+     "caniuse-lite": {
+-      "version": "1.0.30001422",
+-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001422.tgz",
+-      "integrity": "sha512-hSesn02u1QacQHhaxl/kNMZwqVG35Sz/8DgvmgedxSH8z9UUpcDYSPYgsj3x5dQNRcNp6BwpSfQfVzYUTm+fog==",
++      "version": "1.0.30001666",
++      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001666.tgz",
++      "integrity": "sha512-gD14ICmoV5ZZM1OdzPWmpx+q4GyefaK06zi8hmfHV5xe4/2nOQX3+Dw5o+fSqOws2xVwL9j+anOPFwHzdEdV4g==",
+       "dev": true
+     },
+     "case-sensitive-paths-webpack-plugin": {
+diff --git a/src/common/constants.js b/src/common/constants.js
+index 66add7c..3478136 100644
+--- a/src/common/constants.js
++++ b/src/common/constants.js
+@@ -55,7 +55,8 @@ export const SURVEY_DISPLAY_NAMES = {
+   "ATOM ITSP Review Assessment": "ITSP review",
+   "Arcadia House Assessments": "Arcadia House Assessments",
+   "ATOM Psych Assessment": "Psych Program Assessments",
+-  "ATOM Butt-It-Out Assessment": "Butt-It-Out Assessment"
++  "ATOM Butt-It-Out Assessment": "Butt-It-Out Assessment",
++  "ATOM T25 Client Self Assessment": "T25 Client Self Assessment"
+ };
+ 
+ export const ARCA = "Arcadia";
+diff --git a/src/views/Home.vue b/src/views/Home.vue
+index 2d5db62..3b805ae 100644
+--- a/src/views/Home.vue
++++ b/src/views/Home.vue
+@@ -212,14 +212,14 @@ export default {
+       this.setSurveyMode("new");
+       this.setSurveyName(surveyObj.name);
+     },
+-    updateMode({ mode, text, data }) {
++    updateMode({ mode, text }) {
+       this.showSpinner = false;
+       this.showInstructions = false;
+       this.mode = mode;
+       this.searchResultText = text;
+       this.surveyListForClient = [];
+       if (this.mode === MODE_EMPTY_CLIENT_DATA) {
+-        this.setClientLookupIDData(data);
++        // this.setClientLookupIDData(data);
+         this.unsetClientData();
+         this.clientData = [];
+         sessionStorage.removeItem("ClientData");
+@@ -227,7 +227,9 @@ export default {
+           ...[
+             ...this.filterButtonType("ATOM Initial"),
+             ...this.filterButtonType("ATOM Psych"),
+-            ...this.filterButtonType("ATOM Butt-It-Out")
++            // ...this.filterButtonType("Arcadia House"),
++            ...this.filterButtonType("ATOM Butt-It-Out"),
++            ...this.filterButtonType("ATOM T25")
+           ]
+         );
+         return;
+@@ -267,7 +269,8 @@ export default {
+           ...this.filterButtonType("ATOM Initial", false),
+           ...this.filterButtonType("Arcadia House", false),
+           ...this.filterButtonType("ATOM Psych", false),
+-          ...this.filterButtonType("ATOM Butt-It-Out", false)
++          ...this.filterButtonType("ATOM Butt-It-Out", false),
++          ...this.filterButtonType("ATOM T25", false)
+         ]
+       );
+     },
+@@ -287,7 +290,8 @@ export default {
+           ...this.filterButtonType("ATOM Initial", false),
+           ...this.filterButtonType("Arcadia House", false),
+           ...this.filterButtonType("ATOM Psych", false),
+-          ...this.filterButtonType("ATOM Butt-It-Out", false)
++          ...this.filterButtonType("ATOM Butt-It-Out", false),
++          ...this.filterButtonType("ATOM T25", false)
+         ]
+       );
+       // }
+diff --git a/vue.config.js b/vue.config.js
+index 3d77a85..cd2ddee 100644
+--- a/vue.config.js
++++ b/vue.config.js
+@@ -4,5 +4,8 @@ module.exports = {
+       args[0].title = "Assessment Tool and Outcome Measure (ATOM) V1.0";
+       return args;
+     });
++  },
++  configureWebpack: {
++    devtool: "source-map"
+   }
+ };

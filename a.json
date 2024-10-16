@@ -1,0 +1,419 @@
+{
+  "properties": {
+    "Anyodc": {
+      "type": "string"
+    },
+
+    "AssessmentDate": {
+      "type": "string"
+    },
+    "AssessmentType": {
+      "type": "string"
+    },
+    "AssistAccessOtherServicesYN": {
+      "type": "string"
+    },
+    "BailConditionsYN": {
+      "type": "string"
+    },
+    "CDS5HowHardIsQuitting": {
+      "type": "string"
+    },
+    "CDS5HowManyCigarettesPerDay": {
+      "type": "string"
+    },
+    "CDS5HowSoonAfterWaking": {
+      "type": "string"
+    },
+    "CDS5HowStrongTheUrgeToSmoke": {
+      "type": "string"
+    },
+    "CDS5RateAddictiontoCigarettes": {
+      "type": "string"
+    },
+    "CDS5_Score": {
+      "type": "integer"
+    },
+    "CSO": {
+      "type": "string"
+    },
+    "CanYouBudgetYN": {
+      "type": "string"
+    },
+    "ChangeActivitiesHealthLivingFrequency": {
+      "type": "string"
+    },
+    "ChangeActivitiesLifeWithoutFrequency": {
+      "type": "string"
+    },
+    "ChangeActivitiesLifestyleChangesFrequency": {
+      "type": "string"
+    },
+    "ChangeActivitiesManageSubstanceFrequency": {
+      "type": "string"
+    },
+    "ChangeActivitiesManagingEmotionsFrequency": {
+      "type": "string"
+    },
+    "ChangeActivitiesSelfReflectionFrequency": {
+      "type": "string"
+    },
+    "ChildCustody": {
+      "type": "string"
+    },
+    "ChildProtectionConcerns": {
+      "type": "string"
+    },
+    "ChildrenYN": {
+      "type": "string"
+    },
+    "ClientType": {
+      "type": "string"
+    },
+    "CorrectiveServsApptsYN": {
+      "type": "string"
+    },
+    "CourtDatesYN": {
+      "type": "string"
+    },
+    "CreatedDatetime": {
+      "type": "string"
+    },
+    "CriminalRecordYN": {
+      "type": "string"
+    },
+    "CurrentlySmokeYN": {
+      "type": "string"
+    },
+    "DoYouFeelSafeWhereYouLive": {
+      "type": "string"
+    },
+    "EngagedLookingafterchildrenDays": {
+      "type": "string"
+    },
+    "EngagedLookingafterchildrenFrequency": {
+      "type": "string"
+    },
+    "EngagedOthercaregivingactivitiesDays": {
+      "type": "string"
+    },
+    "EngagedOthercaregivingactivitiesFrequency": {
+      "type": "string"
+    },
+    "EngagedPaidWorkDays": {
+      "type": "string"
+    },
+    "EngagedPaidWorkFrequency": {
+      "type": "string"
+    },
+    "EngagedStudycollegeDays": {
+      "type": "string"
+    },
+    "EngagedStudycollegeFrequency": {
+      "type": "string"
+    },
+    "EngagedVoluntaryWorkDays": {
+      "type": "string"
+    },
+    "EngagedVoluntaryWorkFrequency": {
+      "type": "string"
+    },
+    "EverDiagnosedMentalHealthIssue": {
+      "type": "string"
+    },
+    "FinalChecklist": {
+      "properties": {
+        "FeedbackToReferrer": {
+          "type": "string"
+        },
+        "HealthReferralsActioned": {
+          "type": "string"
+        },
+        "RiskAssessmentsCompleted": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "HaveAnySocialSupport": {
+      "type": "string"
+    },
+    "HaveDVOrFamilySafetyConcerns": {
+      "type": "string"
+    },
+    "HaveYouEverInjected": {
+      "type": "string"
+    },
+    "HealthChecklist_STAFF": {
+      "properties": {
+        "BBVScreening": {
+          "type": "string"
+        },
+        "Dental": {
+          "type": "string"
+        },
+        "SexualHealth": {
+          "type": "string"
+        },
+        "Vaccinations": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "HowCloseToManagingSubstanceUse": {
+      "type": "string"
+    },
+    "HowDoYouSpendTime": {
+      "properties": {
+        "FamilyHome": {
+          "type": "string"
+        },
+        "HobbiesSportsRecreation": {
+          "type": "string"
+        },
+        "MeTime": {
+          "type": "string"
+        },
+        "OtherBehavioursDependence": {
+          "type": "string"
+        },
+        "WorkOrStudy": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "HowImportantIsChangeToYou": {
+      "type": "string"
+    },
+    "ICOYN": {
+      "type": "string"
+    },
+    "IncarceratedAMCYN": {
+      "type": "string"
+    },
+    "IncomeSource": {
+      "type": "string"
+    },
+    "K10Q01": {
+      "type": "string"
+    },
+    "K10Q02": {
+      "type": "string"
+    },
+    "K10Q03": {
+      "type": "string"
+    },
+    "K10Q04": {
+      "type": "string"
+    },
+    "K10Q05": {
+      "type": "string"
+    },
+    "K10Q06": {
+      "type": "string"
+    },
+    "K10Q07": {
+      "type": "string"
+    },
+    "K10Q08": {
+      "type": "string"
+    },
+    "K10Q09": {
+      "type": "string"
+    },
+    "K10Q10": {
+      "type": "string"
+    },
+    "K10_Score": {
+      "type": "integer"
+    },
+    "MHStrategies": {
+      "type": "string"
+    },
+    "ManagingLife": {
+      "type": "string"
+    },
+    "ManagingMH": {
+      "type": "string"
+    },
+    "ManagingPH": {
+      "type": "string"
+    },
+    "ManagingRelations": {
+      "type": "string"
+    },
+    "MedicalConditions": {
+      "type": "string"
+    },
+    "MedicareNumber": {
+      "type": "string"
+    },
+    "NeedHelpWrkDevlpmntOrdrPayingOutstndngFines": {
+      "type": "string"
+    },
+    "OBehaveGamblingDays": {
+      "type": "string"
+    },
+    "OBehaveGamingDays": {
+      "type": "string"
+    },
+    "OBehaveHoardingDays": {
+      "type": "string"
+    },
+    "OBehaveInternetSocialMediaDays": {
+      "type": "string"
+    },
+    "OBehaveOtherDays": {
+      "type": "string"
+    },
+    "OBehavePornDays": {
+      "type": "string"
+    },
+    "OBehaveSexDays": {
+      "type": "string"
+    },
+    "OtherLegalIssuesYN": {
+      "type": "string"
+    },
+    "PDCDaysInLast28": {
+      "type": "string"
+    },
+    "PDCHowMuchPerOccasion": {
+      "type": "string"
+    },
+    "PDCMethodOfUse": {
+      "type": "string"
+    },
+    "PDCSubstanceOrGambling": {
+      "type": "string"
+    },
+    "PDCUnits": {
+      "type": "string"
+    },
+    "PTOYN": {
+      "type": "string"
+    },
+    "Past4WkAnyOtherAddictiveB": {
+      "type": "string"
+    },
+    "Past4WkAodRisks": {
+      "type": "string"
+    },
+    "Past4WkBeenArrested": {
+      "type": "string"
+    },
+    "Past4WkDailyLivingImpacted": {
+      "type": "string"
+    },
+    "Past4WkDifficultyFindingHousing": {
+      "type": "string"
+    },
+    "Past4WkHadCaregivingResponsibilities": {
+      "type": "string"
+    },
+    "Past4WkHaveYouViolenceAbusive": {
+      "type": "string"
+    },
+    "Past4WkHowOftenMentalHealthCausedProblems": {
+      "type": "string"
+    },
+    "Past4WkHowOftenPhysicalHealthCausedProblems": {
+      "type": "string"
+    },
+    "Past4WkMentalHealth": {
+      "type": "string"
+    },
+    "Past4WkPhysicalHealth": {
+      "type": "string"
+    },
+    "Past4WkQualityOfLifeScore": {
+      "type": "string"
+    },
+    "Past4WkUseLedToProblemsWithFamilyFriend": {
+      "type": "string"
+    },
+    "PrioritiseCare": {
+      "type": "string"
+    },
+    "PsychiatricHospitalAdmissonYN": {
+      "type": "string"
+    },
+    "PublicTrusteeYN": {
+      "type": "string"
+    },
+    "QuitSmokingBefore": {
+      "type": "string"
+    },
+    "QuitSmokingBeforeYN": {
+      "type": "string"
+    },
+    "ReportingRequirementsYN": {
+      "type": "string"
+    },
+    "RiskAssessmentChecklist": {
+      "properties": {
+        "IndicationDV": {
+          "type": "string"
+        },
+        "IndicationMHRisks": {
+          "type": "string"
+        },
+        "IndicationSuicide": {
+          "type": "string"
+        },
+        "PotentialOD": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SDSDoYouWishToStop": {
+      "type": "string"
+    },
+    "SDSDoesMissingFixMakeAnxious": {
+      "type": "string"
+    },
+    "SDSHowDifficultToStopOrGoWithout": {
+      "type": "string"
+    },
+    "SDSHowMuchDoYouWorryAboutAODUse": {
+      "type": "string"
+    },
+    "SDSIsAODUseOutOfControl": {
+      "type": "string"
+    },
+    "SDS_Score": {
+      "type": "integer"
+    },
+    "SeeingMHProfessionalYN": {
+      "type": "string"
+    },
+    "SelfHarmYN": {
+      "type": "string"
+    },
+    "SupervisedVisitYN": {
+      "type": "string"
+    },
+    "SupportFromWhichOtherServices": {
+      "type": "string"
+    },
+    "SupportTypeBestMatchesNeedsGoals": {
+      "type": "string"
+    },
+    "WhenMentalHealthDiagnosis": {
+      "type": "string"
+    },
+    "WhereAreYouAt": {
+      "type": "string"
+    },
+    "YourCurrentHousing": {
+      "type": "string"
+    },
+    "doK10": {
+      "type": "string"
+    }
+  },
+  "type": "object"
+}
