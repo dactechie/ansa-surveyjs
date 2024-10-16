@@ -153,6 +153,11 @@ export default {
 
       console.log("sender ", sender);
       console.log("options", options);
+      const caclAgeQuestion = sender.getQuestionByName("ClientAge");
+      if (caclAgeQuestion ?? null !== null) {
+        const age = calculateAgeFromSLK(me.getCurrentClientSLK());
+        me.survey.setValue("ClientAge", age);
+      }
 
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
@@ -235,11 +240,6 @@ export default {
           me.$router.push("/");
         }
         me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
-      }
-      const caclAgeQuestion = sender.getQuestionByName("ClientAge");
-      if (caclAgeQuestion ?? null !== null) {
-        const age = calculateAgeFromSLK(me.getCurrentClientSLK());
-        me.survey.setValue("ClientAge", age);
       }
 
       // .getAllQuestions(false) //even hidden questions (they maybe hidd)

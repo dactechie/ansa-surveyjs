@@ -8,7 +8,6 @@ export const APP_AZSLOT = process.env.VUE_APP_AZSLOT || "staging";
 export const CLIENT_HISTORY_URL = process.env.VUE_APP_CLIENT_HISTORY_URL;
 
 export const SURVEY_IDS =
-  process.env.VUE_APP_SURVEYIDS_INAS_ITSP ||
   "aff3512e-057c-4792-b10a-872a584d2224_28b00db7-bb8a-4096-b326-04406806ba89";
 
 export const PARTITION_KEY = "PartitionKey";

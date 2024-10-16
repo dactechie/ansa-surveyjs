@@ -225,13 +225,7 @@ export default {
         this.clientData = [];
         sessionStorage.removeItem("ClientData");
         this.surveyListForClient.push(
-          ...[
-            ...this.filterButtonType("ATOM Initial"),
-            ...this.filterButtonType("ATOM Psych"),
-            //...this.filterButtonType("Arcadia House"), Can't start arcadia for new clients ?
-            ...this.filterButtonType("ATOM Butt-It-Out"),
-            ...this.filterButtonType("ATOM T25 Initial")
-          ]
+          ...this.filterButtonType("ATOM T25 Initial")
         );
         return;
       }
@@ -263,13 +257,8 @@ export default {
       return { data: prefillSurveyData, func: this.setContinueLaunchButtons };
     },
     setNewSurveyLaunchButtons() {
-      this.surveyListForClient = this.filterButtonType("ATOM ITSP", false);
       this.surveyListForClient.push(
         ...[
-          ...this.filterButtonType("ATOM Initial", false),
-          ...this.filterButtonType("Arcadia House", false),
-          ...this.filterButtonType("ATOM Psych", false),
-          ...this.filterButtonType("ATOM Butt-It-Out", false),
           ...this.filterButtonType("ATOM T25 Initial", false),
           ...this.filterButtonType("ATOM T25 Review", false)
         ]
@@ -288,9 +277,6 @@ export default {
       // if (lastSurveyName === "ATOM ITSP Review Assessment") {
       this.surveyListForClient.push(
         ...[
-          ...this.filterButtonType("ATOM Initial", false),
-          ...this.filterButtonType("Arcadia House", false),
-          ...this.filterButtonType("ATOM Psych", false),
           ...this.filterButtonType("ATOM Butt-It-Out", false),
           ...this.filterButtonType("ATOM T25 Initial", false)
         ]
