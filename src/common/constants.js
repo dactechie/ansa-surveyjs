@@ -1,14 +1,14 @@
 export const APPLICATION_MODE_NORMAL = 1;
 export const APPLICATION_MODE_ADMIN = 0;
 
-export const APP_ENVIRONMENT = process.env.VUE_APP_ENVIRONMENT || "staging";
+export const APP_ENVIRONMENT = process.env.VUE_APP_ENVIRONMENT || "production";
 
-export const APP_AZSLOT = process.env.VUE_APP_AZSLOT || "staging";
+export const APP_AZSLOT = process.env.VUE_APP_AZSLOT || "production";
 
-export const CLIENT_HISTORY_URL = process.env.VUE_APP_CLIENT_HISTORY_URL;
+export const CLIENT_HISTORY_URL = "https://atom-reporting.azurewebsites.net/";
 
 export const SURVEY_IDS =
-  "aff3512e-057c-4792-b10a-872a584d2224_28b00db7-bb8a-4096-b326-04406806ba89";
+  "10fd1840-0f0e-42ae-9720-e3f0c4e960b0_dae1a7f6-d021-43bc-8453-969dcd973df2";
 
 export const PARTITION_KEY = "PartitionKey";
 export const ROW_KEY = "RowKey";

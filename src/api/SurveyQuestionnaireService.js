@@ -1,7 +1,8 @@
 import { doGetAction } from "./RESTClient";
 // import { APP_AZSLOT as PROD_STAGING } from "../common/constants";
 
-const QUESTION_URL = process.env.VUE_APP_LOAD_QUESTIONNAIRES_URL;
+const QUESTION_URL =
+  "https://surveyjs.io/api/MySurveys/getActive?accessKey=d02a998d146f47d980be07e34a6abc82";
 const INAS_ITSP = process.env.VUE_APP_SURVEYIDS_INAS_ITSP;
 const SurveyIds_INAS_ITSP = INAS_ITSP.split("_");
 

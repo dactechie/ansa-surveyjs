@@ -10,10 +10,10 @@ import { fromAZDataArray } from "@/common/AZDataAdapter";
 
 const GET_URL =
   process.env.VUE_APP_GET_TABLESTORE_LOGAPP ||
-  "https://prod-05.australiaeast.logic.azure.com:443/workflows/bd761dc501c242ff8b9660bbe376f2f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EWT2HvlbvI393jINSYDkzTS3orRmsUpOe6B4Y4DD8fI";
+  "https://prod-17.australiaeast.logic.azure.com:443/workflows/be0a8dea3ab745a4a5d97eccd1b83031/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=MCITViHJkPk8oYnoGZBsZ9Tt6Y5i2U4UJlQydDYt4xs";
 const UPSERT_URL =
   process.env.VUE_APP_UPSERT_TABLESTORE_LOGAPP ||
-  "https://prod-24.australiaeast.logic.azure.com:443/workflows/19d45fab43ae44b9bc34b2a9d77a09aa/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=uKMLzsdtlM9zstml81N1sXtnQjaIfeQ1z63FjopUSJ4";
+  "https://prod-04.australiaeast.logic.azure.com:443/workflows/8f28bb73d4ef444087fba44ef000d926/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=fLjV1to0RFjB1TSpuNuMkojtcsDr5VmHXx9rvGJXmqg";
 
 /**
  * In active mode

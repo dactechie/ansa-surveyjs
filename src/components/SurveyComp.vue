@@ -132,6 +132,12 @@ export default {
       this.dirtyData = false;
     }
   },
+  // setClientAge(survey, slk, caclAgeQuestion) {
+  //   if (caclAgeQuestion ?? null !== null) {
+  //     const age = calculateAgeFromSLK(slk);
+  //     survey.setValue("ClientAge", age);
+  //   }
+  // },
   created() {
     window.onbeforeunload = function a() {
       if (me.dirtyData) {
@@ -154,10 +160,6 @@ export default {
       console.log("sender ", sender);
       console.log("options", options);
       const caclAgeQuestion = sender.getQuestionByName("ClientAge");
-      if (caclAgeQuestion ?? null !== null) {
-        const age = calculateAgeFromSLK(me.getCurrentClientSLK());
-        me.survey.setValue("ClientAge", age);
-      }
 
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
@@ -224,7 +226,6 @@ export default {
             commentQuestion.comment =
               prefillSurveyData[`${commentQuestion.name}-Comment`];
           });
-
           me.survey.setValue("Program", prefillSurvey["Program"]);
           me.survey.setValue("Staff", prefillSurvey["Staff"]);
         }
@@ -241,6 +242,12 @@ export default {
         }
         me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
       }
+      // me.setClientAge(me.survey, me.getCurrentClientSLK(), caclAgeQuestion);
+      if (caclAgeQuestion ?? null !== null) {
+        const age = calculateAgeFromSLK(me.getCurrentClientSLK());
+        me.survey.setValue("ClientAge", age);
+      }
+      console.log("Set client age to  ", me.getCurrentClientSLK());
 
       // .getAllQuestions(false) //even hidden questions (they maybe hidd)
       // .filter(q =>Q_calculateAgeFromSLK == q.name);
