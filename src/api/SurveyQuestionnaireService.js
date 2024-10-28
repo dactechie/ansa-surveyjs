@@ -1,9 +1,13 @@
 import { doGetAction } from "./RESTClient";
+import {
+  // APP_ENVIRONMENT,
+  SURVEY_IDS
+} from "@/common/constants";
+
 // import { APP_AZSLOT as PROD_STAGING } from "../common/constants";
 
 const QUESTION_URL = process.env.VUE_APP_LOAD_QUESTIONNAIRES_URL;
-const INAS_ITSP = process.env.VUE_APP_SURVEYIDS_INAS_ITSP;
-const SurveyIds_INAS_ITSP = INAS_ITSP.split("_");
+const SurveyIds_INAS_ITSP = SURVEY_IDS.split("_");
 
 export default {
   async getSurveysNameID() {
