@@ -225,7 +225,7 @@ export default {
         this.clientData = [];
         sessionStorage.removeItem("ClientData");
         this.surveyListForClient.push(
-          ...this.filterButtonType("ATOM T25 Initial")
+          ...this.filterButtonType("ATOM Youth Clinical")
         );
         return;
       }
@@ -259,8 +259,8 @@ export default {
     setNewSurveyLaunchButtons() {
       this.surveyListForClient.push(
         ...[
-          ...this.filterButtonType("ATOM T25 Initial", false),
-          ...this.filterButtonType("ATOM T25 Review", false)
+          ...this.filterButtonType("ATOM Youth Clinical", false),
+          ...this.filterButtonType("ATOM Youth Outcomes", false)
         ]
       );
     },
@@ -278,7 +278,7 @@ export default {
       this.surveyListForClient.push(
         ...[
           ...this.filterButtonType("ATOM Butt-It-Out", false),
-          ...this.filterButtonType("ATOM T25 Initial", false)
+          ...this.filterButtonType("ATOM Youth Clinical", false)
         ]
       );
       // }
