@@ -50,16 +50,34 @@
                 v-for="survey in surveyListForClient"
                 :key="survey.id"
               >
-                <router-link
+                <button
                   class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-2 md:px-6 inline-flex items-center"
-                  @click.native="handleStartSurvey(survey)"
+                  @click="handleClick(survey)"
+                >
+                  {{ survey.prefix }} {{ survey.displayName }}
+                </button>
+                <!-- @click.native.prevent="handleStartSurvey(survey)" -->
+                <!-- <router-link
+                  custom
+                  v-slot="{ navigate }"
                   :to="{
                     name: 'SurveyView',
                     params: { type: 'new', surveyid: survey.surveyid }
                   }"
                 >
-                  {{ survey.prefix }} {{ survey.displayName }}</router-link
-                >
+                  <button
+                    class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-2 md:px-6 inline-flex items-center"
+                    @click="
+                      e => {
+                        e.preventDefault();
+                        handleStartSurvey(survey);
+                        navigate();
+                      }
+                    "
+                  >
+                    {{ survey.prefix }} {{ survey.displayName }}
+                  </button>
+                </router-link> -->
                 <!-- <span class="flex absolute h-3 w-3 top-2 right-2">
                   <span
                     class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"
@@ -207,7 +225,17 @@ export default {
     //     });
     //   }
     // },
+    handleClick(survey) {
+      console.log("clicked: " + survey.displayName);
+      this.handleStartSurvey(survey);
+      // Navigate programmatically after handling the click
+      this.$router.push({
+        name: "SurveyView",
+        params: { type: "new", surveyid: survey.surveyid }
+      });
+    },
     handleStartSurvey(surveyObj) {
+      console.log("handleStartSurvey called", surveyObj);
       if (!!surveyObj.prefix && surveyObj.prefix === "Continue incomplete ") {
         this.setContinuingSurveyStatus(true);
       }
@@ -225,7 +253,8 @@ export default {
         this.clientData = [];
         sessionStorage.removeItem("ClientData");
         this.surveyListForClient.push(
-          ...this.filterButtonType("ATOM Youth Clinical")
+          ...this.filterButtonType("ATOM Youth Clinical"),
+          ...this.filterButtonType("ATOM Youth Outcomes", false)
         );
         return;
       }
@@ -278,7 +307,8 @@ export default {
       this.surveyListForClient.push(
         ...[
           ...this.filterButtonType("ATOM Butt-It-Out", false),
-          ...this.filterButtonType("ATOM Youth Clinical", false)
+          ...this.filterButtonType("ATOM Youth Clinical", false),
+          ...this.filterButtonType("ATOM Youth Outcomes", false)
         ]
       );
       // }

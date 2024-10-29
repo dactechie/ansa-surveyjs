@@ -1,34 +1,13 @@
 <template>
   <div>
-    <!-- <button id="show-modal" @click="showModal = true">Show Modal</button>
-    <modal v-if="showModal" @close="showModal = false">
-      <template v-slot:body>
-        {{ modalContent }}
-      </template>
-<h3 slot="header">Question</h3>
-</modal> -->
-    <ResponseHistoryModal
-      :show="showMoreInfo"
-      @close="showMoreInfo = false"
-      :questionName="questionName"
-    />
     <survey :survey="survey"></survey>
-    <!-- && (!survey || survey.state !== 'completed') -->
-    <!-- <button
-      v-if="dirtyData && isProgramSet && !survey.isCompleted"
-      class="bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
-      @click.prevent="savePartialSurvey"
-    >
-      Save Incomplete Survey
-    </button> -->
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-// import { FunctionFactory } from "survey-vue";
-import ResponseHistoryModal from "@/components/Modals/ResponseHistoryModal";
+import { getDaysDifference } from "@/helper-functions/survey-helpers";
 import "survey-vue/defaultV2.css";
 
 // import QuestionnaireService from "@/api/SurveyQuestionnaireService";
@@ -39,28 +18,26 @@ import {
 } from "@/common/utils"; //gapInDays
 import {
   PREFILL_EXCLUSIONS_ALLCASES,
-  PREFILL_EXCLUSIONS,
   MANDATORY_FIELDS
   // PREFILL_EXCLUSION_PREFIXES,
   // PREFILL_EXCLUSION_SUFFIXES
 } from "@/common/constants";
 
-import SurveyService from "../api/SurveyService";
+// import SurveyService from "../api/SurveyService";
 
 SurveyVue.StylesManager.applyTheme("defaultV2");
 
 export default {
   name: "SurveyComp",
-  components: { ResponseHistoryModal },
   props: ["currentPage"],
   emits: ["survey-is-ready"], //search-index-built"],F
   data() {
     return {
       survey: {},
       dirtyData: false,
-      showMoreInfo: false,
+
       questionName: "",
-      modalContent: "",
+
       mandatoryFieldList: MANDATORY_FIELDS.split(","),
       scores: {}
     };
@@ -191,28 +168,44 @@ export default {
           // we're not continuing an incomplete survey, but starting a new one (with prefill)
 
           //exclude Issues, Goals
-          const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
-          prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
-            "-"
-          );
-          const canPrefillQuestionNames = prefillQuestionNamesList
-            .filter(qname => !prefillExclusionList.includes(qname))
-            .filter(qname =>
-              SurveyService.canPrefill(
-                me.survey,
-                qname,
-                prefillSurveyData[qname]
-              )
-            );
-          canPrefillQuestionNames.forEach(qname => {
-            me.survey.setValue(qname, prefillSurveyData[qname]);
-          });
-          prefillCommentQuestionsList
-            .filter(q => canPrefillQuestionNames.includes(q.name))
-            .forEach(commentQuestion => {
-              commentQuestion.comment =
-                prefillSurveyData[`${commentQuestion.name}-Comment`];
-            });
+          // const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
+          // prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
+          //   "-"
+          // );
+          // const canPrefillQuestionNames = prefillQuestionNamesList
+          //   .filter(qname => !prefillExclusionList.includes(qname))
+          //   .filter(qname =>
+          //     SurveyService.canPrefill(
+          //       me.survey,
+          //       qname,
+          //       prefillSurveyData[qname]
+          //     )
+          //   );
+          // canPrefillQuestionNames.forEach(qname => {
+          //   me.survey.setValue(qname, prefillSurveyData[qname]);
+          // });
+          // prefillCommentQuestionsList
+          //   .filter(q => canPrefillQuestionNames.includes(q.name))
+          //   .forEach(commentQuestion => {
+          //     commentQuestion.comment =
+          //       prefillSurveyData[`${commentQuestion.name}-Comment`];
+          //   });
+
+          const qAssessType = me.survey.getQuestionByName("AssessmentType");
+
+          if (
+            getDaysDifference(new Date(), prefillSurveyData["AssessmentDate"]) <
+            90 // 3 months ->  3 * 30
+          ) {
+            if (qAssessType.visibleChoices.length > 1) {
+              // Question hasn't been answered, can't be Clinical because it defaults
+              // so this is a completed outcomes survey, which means now it cant be
+              // an initial outcomes assessment
+              me.survey.setValue("AssessmentType", "ReviewOutcome");
+            }
+          } else if (qAssessType.visibleChoices.length > 1) {
+            me.survey.setValue("AssessmentType", "InitialOutcome");
+          }
         } else {
           //
           // if continuing a survey, we want to prefill everything.
@@ -361,18 +354,18 @@ export default {
       // remove the button to save incomplete survey
     });
     //https://surveyjs.io/form-library/examples/survey-titleactions/vuejs#content-js
-    this.survey.onGetQuestionTitleActions.add((_, opt) => {
-      opt.titleActions = [
-        {
-          title: "Response History",
-          innerCss: "btn-more-info",
-          action: () => {
-            me.questionName = opt.question.name;
-            me.showMoreInfo = true;
-          }
-        }
-      ];
-    });
+    // this.survey.onGetQuestionTitleActions.add((_, opt) => {
+    //   opt.titleActions = [
+    //     {
+    //       title: "Response History",
+    //       innerCss: "btn-more-info",
+    //       action: () => {
+    //         me.questionName = opt.question.name;
+    //         me.showMoreInfo = true;
+    //       }
+    //     }
+    //   ];
+    // });
   },
   mounted() {
     console.log(" mounted -> survey data", this.survey.data);

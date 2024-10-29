@@ -14,14 +14,35 @@ import { generateRowKey } from "@/helper-functions/survey-helpers";
 export default {
   sortByAssessmentDate(surveyDataObject) {
     const result = surveyDataObject.sort((a, b) => {
+      // First compare AssessmentDate
       let aDate = new Date(Date.parse(a["SurveyData"]["AssessmentDate"]));
       let bDate = new Date(Date.parse(b["SurveyData"]["AssessmentDate"]));
-      if (aDate > bDate) return -1;
-      if (aDate < bDate) return 1;
-      return 0;
+
+      if (aDate.getTime() !== bDate.getTime()) {
+        // If dates are different, sort by date (newest first)
+        return bDate - aDate;
+      }
+
+      // If dates are the same, compare timestamps
+      let aTimestamp = new Date(a["Timestamp"]);
+      let bTimestamp = new Date(b["Timestamp"]);
+
+      // Sort by timestamp (newest first)
+      return bTimestamp - aTimestamp;
     });
+
     return result;
   },
+  // sortByAssessmentDate(surveyDataObject) {
+  //   const result = surveyDataObject.sort((a, b) => {
+  //     let aDate = new Date(Date.parse(a["SurveyData"]["AssessmentDate"]));
+  //     let bDate = new Date(Date.parse(b["SurveyData"]["AssessmentDate"]));
+  //     if (aDate > bDate) return -1;
+  //     if (aDate < bDate) return 1;
+  //     return 0;
+  //   });
+  //   return result;
+  // },
   canPrefill(survey, questionName, prefillData) {
     const question = survey.getQuestionByName(questionName);
     // if (!question) {
