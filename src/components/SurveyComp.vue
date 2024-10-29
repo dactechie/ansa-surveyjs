@@ -97,7 +97,7 @@ export default {
       // console.log(
       //   `Going to Add To Server ${this.survey.data["AssessmentType"]}`
       // );
-      let dataObj = { ...this.scores, ...this.survey.data };
+      let dataObj = { ...this.survey.data, ...this.scores };
       const response = this.ADD_SURVEY_DATASERVER({
         SLK: this.$store.state.currentClientSLK,
         surveyData: dataObj,
@@ -337,7 +337,7 @@ export default {
         .getAllQuestions(false)
         .filter(qq => qq.name.endsWith("_Score"))
         .forEach(q => {
-          me.scores[q.name] = survey.getValue(q.name);
+          me.scores[q.name] = Math.round(survey.getValue(q.name));
         });
       // survey.surveyShowDataSaving = true;
       // survey.showBrandInfo = true;
