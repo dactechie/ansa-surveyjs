@@ -157,39 +157,12 @@ export default {
           .filter(qname => !allCasesPrefillExclusions.includes(qname)); // exclude scores
         // some questions have a comment field which is not returned in the by getAllQuestions
         //so include those as well
-        const prefillCommentQuestionsList = sender
-          .getAllQuestions(false)
-          .filter(q => q.hasComment);
 
         if (
           !me.isContinuingSurvey() //&&
           //prefillSurvey["Status"] !== "Incomplete"
         ) {
-          // we're not continuing an incomplete survey, but starting a new one (with prefill)
-
-          //exclude Issues, Goals
-          // const prefillExclusionList = PREFILL_EXCLUSIONS.split(",");
-          // prefillSurveyData["AssessmentDate"] = getCurrentYearMonthDayString(
-          //   "-"
-          // );
-          // const canPrefillQuestionNames = prefillQuestionNamesList
-          //   .filter(qname => !prefillExclusionList.includes(qname))
-          //   .filter(qname =>
-          //     SurveyService.canPrefill(
-          //       me.survey,
-          //       qname,
-          //       prefillSurveyData[qname]
-          //     )
-          //   );
-          // canPrefillQuestionNames.forEach(qname => {
-          //   me.survey.setValue(qname, prefillSurveyData[qname]);
-          // });
-          // prefillCommentQuestionsList
-          //   .filter(q => canPrefillQuestionNames.includes(q.name))
-          //   .forEach(commentQuestion => {
-          //     commentQuestion.comment =
-          //       prefillSurveyData[`${commentQuestion.name}-Comment`];
-          //   });
+          // we're not continuing an incomplete survey, but starting a new one
 
           const qAssessType = me.survey.getQuestionByName("AssessmentType");
 
@@ -213,6 +186,9 @@ export default {
           prefillQuestionNamesList.forEach(qname => {
             me.survey.setValue(qname, prefillSurveyData[qname]);
           });
+          const prefillCommentQuestionsList = sender
+            .getAllQuestions(false)
+            .filter(q => q.hasComment);
           prefillCommentQuestionsList.forEach(commentQuestion => {
             commentQuestion.comment =
               prefillSurveyData[`${commentQuestion.name}-Comment`];
@@ -234,18 +210,6 @@ export default {
         }
         me.survey.setValue("AssessmentDate", getCurrentYearMonthDayString("-"));
       }
-
-      // .getAllQuestions(false) //even hidden questions (they maybe hidd)
-      // .filter(q =>Q_calculateAgeFromSLK == q.name);
-
-      // const preComputedQuestions = {"Q_calculateAgeFromSLK": calculateAgeFromSLK};
-      // const precomputed_questions = sender
-      //   .getAllQuestions(false) //even hidden questions (they maybe hidd)
-      //   .filter(q => preComputedQuestions.includes(q.name));
-
-      // precomputed_questions.array.forEach(element => {
-      //   me.survey.setValue(element
-      // });
 
       me.dirtyData = false; // so we don't save to backend after the prefil/initial assessment date set
       me.setCurrentSurvey(me.survey); // for the nav to work

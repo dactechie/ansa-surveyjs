@@ -1,5 +1,7 @@
 # atom-questionnaire
 
+* use github desktop to push to gitbhub
+
 ## Project setup
 
 ```
