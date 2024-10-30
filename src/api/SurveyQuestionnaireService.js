@@ -11,7 +11,7 @@ const QUESTION_URL =
   "https://api.surveyjs.io/private/Surveys/getActive?accessKey=d02a998d146f47d980be07e34a6abc82";
 
 const SurveyIds_INAS_ITSP = SURVEY_IDS.split("_");
-console.log("QQQQ", QUESTION_URL);
+
 export default {
   async getSurveysNameID() {
     // return [

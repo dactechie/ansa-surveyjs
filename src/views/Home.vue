@@ -173,6 +173,8 @@ export default {
       let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s =>
         s.name.startsWith(buttonTypeName)
       );
+      console.log("sore list: ", this.$store.state["surveyNameIDList"]);
+      console.log(`nameSurveyIDList`, nameSurveyIDList);
       console.log("buttonTypeName", buttonTypeName);
       if (shouldContinue) {
         return nameSurveyIDList.map(e => {
@@ -306,7 +308,6 @@ export default {
       // if (lastSurveyName === "ATOM ITSP Review Assessment") {
       this.surveyListForClient.push(
         ...[
-          ...this.filterButtonType("ATOM Butt-It-Out", false),
           ...this.filterButtonType("ATOM Youth Clinical", false),
           ...this.filterButtonType("ATOM Youth Outcomes", false)
         ]

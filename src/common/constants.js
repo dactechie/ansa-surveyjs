@@ -5,7 +5,7 @@ export const APP_ENVIRONMENT = process.env.VUE_APP_ENVIRONMENT || "production";
 
 export const APP_AZSLOT = process.env.VUE_APP_AZSLOT || "production";
 
-export const CLIENT_HISTORY_URL = process.env.VUE_APP_CLIENT_HISTORY_URL;
+export const CLIENT_HISTORY_URL = "https://atom-reporting.azurewebsites.net/";
 
 export const SURVEY_IDS =
   process.env.VUE_APP_SURVEY_IDS ||
