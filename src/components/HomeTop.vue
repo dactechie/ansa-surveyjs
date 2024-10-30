@@ -25,7 +25,9 @@
         target="_blank"
         >Open Issues</a
       >
-      <span class="ml-6 text-xs text-gray-500">v: (Youth) 31-October-2024</span>
+      <span class="ml-6 text-xs text-gray-500"
+        >v: (Youth-Prod) 31-October-2024</span
+      >
     </div>
     <!-- </ul> -->
     <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />

@@ -6,9 +6,12 @@ import {
 
 // import { APP_AZSLOT as PROD_STAGING } from "../common/constants";
 
-const QUESTION_URL = process.env.VUE_APP_LOAD_QUESTIONNAIRES_URL;
-const SurveyIds_INAS_ITSP = SURVEY_IDS.split("_");
+const QUESTION_URL =
+  process.env.VUE_APP_LOAD_QUESTIONNAIRES_URL ||
+  "https://api.surveyjs.io/private/Surveys/getActive?accessKey=d02a998d146f47d980be07e34a6abc82";
 
+const SurveyIds_INAS_ITSP = SURVEY_IDS.split("_");
+console.log("QQQQ", QUESTION_URL);
 export default {
   async getSurveysNameID() {
     // return [
@@ -26,6 +29,7 @@ export default {
     // ["8a434de3-a367-42ea-a5a2-21a95cb1d65c", "15ca1eb1-3ffa-4af4-81dc-d3a89c76002b"]
 
     const response = await doGetAction(QUESTION_URL);
+    console.log(">>>", response);
     const finalList = await response
       .filter(
         s => s["IsPublished"] !== false && SurveyIds_INAS_ITSP.includes(s["Id"])
