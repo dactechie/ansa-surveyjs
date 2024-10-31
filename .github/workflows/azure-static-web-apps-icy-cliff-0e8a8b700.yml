@@ -21,6 +21,7 @@ jobs:
           git config --global --unset http.https://github.com/.extraheader || true
 
       - uses: actions/checkout@v4
+        with:
           clean: true
           fetch-depth: 0      
       
