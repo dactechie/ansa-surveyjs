@@ -106,7 +106,6 @@ import { AtomSpinner } from "epic-spinners";
 import { getCurrentYearMonthDayString } from "../common/utils";
 // import { gapInDays } from "@/common/utils";
 import {
-  // APP_ENVIRONMENT,
   MODE_EMPTY_CLIENT_DATA,
   SURVEY_DISPLAY_NAMES
 } from "@/common/constants";
@@ -161,14 +160,6 @@ export default {
     ]),
 
     filterButtonType(buttonTypeName, shouldContinue) {
-      // if (APP_ENVIRONMENT === "test") {
-      //   let surveys = this.$store.state["surveyNameIDList"].forEach((s) => {
-      //     if (!s.name.startsWith(buttonTypeName)) {
-      //       s.name = s.name + "(hidden in production)";
-      //     }
-      //   });
-      //   return this.$store.state["surveyNameIDList"];
-      // }
       console.log("Full list ", this.$store.state["surveyNameIDList"]);
       let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s =>
         s.name.startsWith(buttonTypeName)
@@ -195,38 +186,6 @@ export default {
         });
       }
     },
-
-    // filterButtonType(buttonTypeName, shouldContinue) {
-    //   // if (APP_ENVIRONMENT === "test") {
-    //   //   let surveys = this.$store.state["surveyNameIDList"].forEach((s) => {
-    //   //     if (!s.name.startsWith(buttonTypeName)) {
-    //   //       s.name = s.name + "(hidden in production)";
-    //   //     }
-    //   //   });
-    //   //   return this.$store.state["surveyNameIDList"];
-    //   // }
-    //   let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s =>
-    //     s.name.startsWith(buttonTypeName)
-    //   );
-    //   if (shouldContinue) {
-    //     return nameSurveyIDList.map(e => {
-    //       return {
-    //         prefix: "Continue incomplete ",
-    //         name: `${e.name}`,
-    //         surveyid: e.surveyid,
-    //         displayName: SURVEY_DISPLAY_NAMES[e.name]
-    //       };
-    //     });
-    //   } else {
-    //     return nameSurveyIDList.map(e => {
-    //       return {
-    //         ...e,
-    //         prefix: "",
-    //         displayName: SURVEY_DISPLAY_NAMES[e.name]
-    //       };
-    //     });
-    //   }
-    // },
     handleClick(survey) {
       console.log("clicked: " + survey.displayName);
       this.handleStartSurvey(survey);

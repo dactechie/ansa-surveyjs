@@ -1,7 +1,6 @@
 <template>
   <div class="w-full h-20 border-b flex px-10 items-center justify-between">
     <img src="@/assets/images/ATOMLogo.png" alt="ATOM Logo" />
-    <!-- <ul class="flex flex-row font-semibold text-indigo-700"> -->
 
     <div class="invisible md:visible">
       <a
@@ -26,14 +25,22 @@
         >Open Issues</a
       >
       <span class="ml-6 text-xs text-gray-500"
-        >v: (Youth-Prod) 31-October-2024</span
+        >v: (Youth {{ APP_AZSLOT }}) 1-Nov-2024</span
       >
     </div>
-    <!-- </ul> -->
+
     <img src="@/assets/images/DirectionsLogoFull.png" alt="ATOM Logo" />
-    <!-- <p class="font-semibold text-1xl text-blue-400 pl-4">
-        Directions Health Services
-      </p>
-       -->
   </div>
 </template>
+<script>
+import { APP_AZSLOT } from "@/common/constants";
+
+export default {
+  name: "HomeTop",
+  data() {
+    return {
+      APP_AZSLOT
+    };
+  }
+};
+</script>

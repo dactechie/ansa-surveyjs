@@ -1,1 +1,2 @@
 .github/workflows/* merge=ours
+.env merge=ours
