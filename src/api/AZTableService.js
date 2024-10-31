@@ -8,12 +8,8 @@ import {
 } from "@/common/constants";
 import { fromAZDataArray } from "@/common/AZDataAdapter";
 
-const GET_URL =
-  process.env.VUE_APP_GET_TABLESTORE_LOGAPP ||
-  "https://prod-17.australiaeast.logic.azure.com:443/workflows/be0a8dea3ab745a4a5d97eccd1b83031/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=MCITViHJkPk8oYnoGZBsZ9Tt6Y5i2U4UJlQydDYt4xs";
-const UPSERT_URL =
-  process.env.VUE_APP_UPSERT_TABLESTORE_LOGAPP ||
-  "https://prod-04.australiaeast.logic.azure.com:443/workflows/8f28bb73d4ef444087fba44ef000d926/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=fLjV1to0RFjB1TSpuNuMkojtcsDr5VmHXx9rvGJXmqg";
+const GET_URL = process.env.VUE_APP_GET_TABLESTORE_LOGAPP;
+const UPSERT_URL = process.env.VUE_APP_UPSERT_TABLESTORE_LOGAPP;
 
 /**
  * In active mode

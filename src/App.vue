@@ -17,11 +17,7 @@
 </template>
 
 <script>
-import {
-  // APP_ENVIRONMENT,
-  SURVEY_IDS,
-  APP_AZSLOT
-} from "@/common/constants";
+import { SURVEY_IDS, APP_AZSLOT } from "@/common/constants";
 
 export default {
   data() {
