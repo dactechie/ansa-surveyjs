@@ -46,7 +46,6 @@ export const DB_META_KEYS = [
   PARTITION_KEY,
   ROW_KEY,
   "ClientID",
-  "SourceDatabase",
   "Program",
   "Staff",
   "SurveyName",
