@@ -140,7 +140,6 @@ export default {
 
       //if there is data to prefill for this type of survey, do that.
       let prefillSurvey = me.getCurrentSurveyData(); //me.getDataForSurvey(me);
-      const allCasesPrefillExclusions = PREFILL_EXCLUSIONS_ALLCASES.split(",");
 
       //load question ssettings from survey question and then remove it so it is not saved in the client's survey submisison
       //QuestionSettings
@@ -153,38 +152,53 @@ export default {
         console.log("Last survey that was found in history ", prefillSurvey);
         let prefillSurveyData = prefillSurvey["SurveyData"];
 
-        const prefillQuestionNamesList = sender
-          .getAllQuestions(false) //even hidden questions (they maybe hidd)
-          .map(q => q.name)
-          .filter(qname => !allCasesPrefillExclusions.includes(qname)); // exclude scores
-        // some questions have a comment field which is not returned in the by getAllQuestions
-        //so include those as well
-
         if (
           !me.isContinuingSurvey() //&&
           //prefillSurvey["Status"] !== "Incomplete"
         ) {
           // we're not continuing an incomplete survey, but starting a new one
+          if (prefillSurveyData["BPClientID"] !== undefined) {
+            me.survey.setValue("BPClientID", prefillSurveyData["BPClientID"]);
+          }
+          if (prefillSurveyData["IndigenousStatus"] !== undefined) {
+            me.survey.setValue(
+              "IndigenousStatus",
+              prefillSurveyData["IndigenousStatus"]
+            );
+          }
 
-          const qAssessType = me.survey.getQuestionByName("AssessmentType");
+          // const qAssessType = me.survey.getQuestionByName("AssessmentType");
 
-          if (
+          if (prefillSurveyData["AssessmentType"] === "ClinicalAssessment") {
+            me.survey.setValue("AssessmentType", "InitialOutcome");
+          } else if (
+            //  initial or review
             getDaysDifference(new Date(), prefillSurveyData["AssessmentDate"]) <
             90 // 3 months ->  3 * 30
           ) {
-            if (qAssessType.visibleChoices.length > 1) {
-              // Question hasn't been answered, can't be Clinical because it defaults
-              // so this is a completed outcomes survey, which means now it cant be
-              // an initial outcomes assessment
-              me.survey.setValue("AssessmentType", "ReviewOutcome");
-            }
-          } else if (qAssessType.visibleChoices.length > 1) {
-            me.survey.setValue("AssessmentType", "InitialOutcome");
+            // if (qAssessType.visibleChoices.length > 1) {
+            // Question hasn't been answered, can't be Clinical because it defaults
+            // so this is a completed outcomes survey, which means now it cant be
+            // an initial outcomes assessment
+            me.survey.setValue("AssessmentType", "ReviewOutcome");
+            // }
           }
+          // else if (qAssessType.visibleChoices.length > 1) { // >= 90 days
+          else me.survey.setValue("AssessmentType", "InitialOutcome");
+          // }
         } else {
           //
           // if continuing a survey, we want to prefill everything.
           //
+          const allCasesPrefillExclusions = PREFILL_EXCLUSIONS_ALLCASES.split(
+            ","
+          );
+          const prefillQuestionNamesList = sender
+            .getAllQuestions(false) //even hidden questions (they maybe hidd)
+            .map(q => q.name)
+            .filter(qname => !allCasesPrefillExclusions.includes(qname)); // exclude scores
+          // some questions have a comment field which is not returned in the by getAllQuestions
+          //so include those as well
           prefillQuestionNamesList.forEach(qname => {
             me.survey.setValue(qname, prefillSurveyData[qname]);
           });
