@@ -54,6 +54,18 @@ export default {
   computed: {
     isProgramSet() {
       return !!this.survey.data["Program"];
+    },
+    hasMissingMandatoryFields() {
+      if (!this.survey) return true;
+      let answeredKeys = Object.keys(this.survey.getAllValues());
+      return this.survey
+        .getAllQuestions(true)
+        .some(
+          e =>
+            (this.mandatoryFieldList.includes(e.name) || e.isRequired) &&
+            !answeredKeys.includes(e.name) &&
+            !this.survey.getValue(e.name)
+        );
     }
   },
   methods: {
@@ -67,7 +79,6 @@ export default {
       "setStaff",
       "setQuestionsStatus",
       "setSurveyName",
-      "hideSideBar",
       "setSidebarState",
       "setMissingMandatoryFields"
       // "setCurrentPageQuestions"
@@ -235,7 +246,6 @@ export default {
       me.dirtyData = false; // so we don't save to backend after the prefil/initial assessment date set
       me.setCurrentSurvey(me.survey); // for the nav to work
       me.$emit("survey-is-ready");
-
       me.survey.onValueChanged.add(() => {
         me.dirtyData = true;
       });
@@ -245,76 +255,55 @@ export default {
       //}, options) {
       window.scrollTo(0, 0);
       me.setCurrentPageTitle(surveyModel.currentPage?.title || "Complete");
-      // if (
-      //   !!options.oldCurrentPage &&
-      //   !!options.newCurrentPage &&
-      //   options.newCurrentPage.visibleIndex ===
-      //     options.oldCurrentPage.visibleIndex + 1
-      // ) {
-      //   // handle the progress bar when the user clicks on next page
-      //   me.isAutoNavigatingFromPreview = false;
-      // }
-      // let q = me.survey.getAllQuestions(true); //true=> visible
-      // let answered = Object(q).filter(e => e.isAnswered);
+      console.log(
+        "Curre surveyModel.currentPageNo ",
+        surveyModel.currentPageNo
+      );
+      console.log(
+        "Curren  surveyModel.visiblePageCount ",
+        surveyModel.visiblePageCount
+      );
+      // Add this to update preview button visibility when page changes
+      const lastPageIndex = surveyModel.visiblePageCount - 1;
+      if (surveyModel.currentPageNo === lastPageIndex) {
+        me.$nextTick(() => {
+          let missingMandatoryFields = [];
+          let missingFieldPageQuestionNames = [];
+          let answeredKeys = Object.keys(me.survey.getAllValues());
 
-      // let required = Object(q).filter(e => e.isRequired);
-      // let reqAnswered = Object(required).filter(e => e.isAnswered);
-
-      // me.setQuestionsStatus({
-      //   answered: answered.length,
-      //   // totalTillNow: me.totalTillNow() +  me.survey.getCurrentPageQuestions().length,
-      //   total: q.length,
-      //   required: required.length,
-      //   reqAnswered: reqAnswered.length
-      // });
-      // this.setCurrentPageQuestions(me.survey.getCurrenPageQuestions(false));
-
-      let missingMandatoryFields = [];
-      let missingFieldPageQuestionNames = [];
-      let answeredKeys = Object.keys(me.survey.getAllValues());
-      me.survey
-        .getAllQuestions(true) //true=> visible
-        .filter(
-          e =>
-            (me.mandatoryFieldList.includes(e.name) || e.isRequired) &&
-            !answeredKeys.includes(e.name)
-        )
-        // get all mandatory & visible but not answered questions
-
-        .forEach(e => {
-          if (!me.survey.getValue(e.name)) {
-            missingMandatoryFields.push(e.name);
-            missingFieldPageQuestionNames.push(`Question: ${e.title} \n`); // Page:${e.page.title} :
+          me.survey
+            .getAllQuestions(true)
+            .filter(
+              e =>
+                (me.mandatoryFieldList.includes(e.name) || e.isRequired) &&
+                !answeredKeys.includes(e.name) &&
+                e.page.visibleIndex < lastPageIndex // Exclude questions from the last page
+            )
+            .forEach(e => {
+              if (!me.survey.getValue(e.name)) {
+                missingMandatoryFields.push(e.name);
+                missingFieldPageQuestionNames.push(`Question: ${e.title} \n`);
+              }
+            });
+          if (missingMandatoryFields.length > 0) {
+            alert(
+              "Missing mandatory fields " +
+                missingFieldPageQuestionNames.join(",")
+            );
+            const firstMissingQuestion = me.survey.getQuestionByName(
+              missingMandatoryFields[0]
+            );
+            me.survey.currentPageNo = firstMissingQuestion.page.visibleIndex;
           }
         });
-      if (missingMandatoryFields.length > 0) {
-        me.setMissingMandatoryFields(missingMandatoryFields);
       }
-      if (me.survey.isShowingPreview) {
-        // mandatory list -> superset to all questionnaires  (Initial assess: own, other, ITSP review etc.)
-        const oldSidebarState = me.sideBarOpen();
-        me.hideSideBar();
 
-        if (missingMandatoryFields.length > 0) {
-          alert(
-            "Missing mandatory fields " +
-              missingFieldPageQuestionNames.join(",")
-          );
-          // me.isAutoNavigatingFromPreview = true;
-          me.survey.cancelPreview(); // 	Cancels preview and switches back to the "running" state.
-          const firstMissingQuestion = me.survey.getQuestionByName(
-            missingMandatoryFields[0]
-          );
-          // add this class to all missing mandatory questions :   sv-question__title--error
-          me.setSidebarState(oldSidebarState);
-          me.survey.currentPageNo = firstMissingQuestion.page.visibleIndex;
-
-          return;
-        }
-      } else if (me.dirtyData && me.isProgramSet && !me.survey.isCompleted) {
+      if (me.dirtyData && me.isProgramSet && !me.survey.isCompleted) {
         me.savePartialSurvey();
+        // me.showSideBar();
       }
     });
+
     this.survey.onCompleting.add(function(survey) {
       console.log("On Completing survey");
       console.log(survey.data);
