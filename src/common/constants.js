@@ -45,7 +45,7 @@ export const ARCA = "Arcadia";
 export const DB_META_KEYS = [
   PARTITION_KEY,
   ROW_KEY,
-  "ClientID",
+  "BPClientID",
   "Program",
   "Staff",
   "SurveyName",

@@ -25,7 +25,8 @@
         >Open Issues</a
       >
       <span class="ml-6 text-xs text-gray-500"
-        >v: (Youth {{ APP_AZSLOT }}) 20-Nov-2024</span
+        >v: (Youth {{ APP_AZSLOT === "production" ? "" : APP_AZSLOT }})
+        06-Dec-2024</span
       >
     </div>
 

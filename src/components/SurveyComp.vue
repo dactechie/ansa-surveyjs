@@ -168,8 +168,8 @@ export default {
           //prefillSurvey["Status"] !== "Incomplete"
         ) {
           // we're not continuing an incomplete survey, but starting a new one
-          if (prefillSurveyData["BPClientID"] !== undefined) {
-            me.survey.setValue("BPClientID", prefillSurveyData["BPClientID"]);
+          if (prefillSurvey["BPClientID"] !== undefined) {
+            me.survey.setValue("BPClientID", prefillSurvey["BPClientID"]);
           }
           if (prefillSurveyData["IndigenousStatus"] !== undefined) {
             me.survey.setValue(
@@ -222,6 +222,9 @@ export default {
           });
           me.survey.setValue("Program", prefillSurvey["Program"]);
           me.survey.setValue("Staff", prefillSurvey["Staff"]);
+          if (prefillSurvey["BPClientID"] !== undefined) {
+            me.survey.setValue("BPClientID", prefillSurvey["BPClientID"]);
+          }
         }
         // using sender.getAllQuestions() instead of  me.survey.data = prefilleSurveyData
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
