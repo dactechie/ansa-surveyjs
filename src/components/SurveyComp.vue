@@ -54,18 +54,6 @@ export default {
   computed: {
     isProgramSet() {
       return !!this.survey.data["Program"];
-    },
-    hasMissingMandatoryFields() {
-      if (!this.survey) return true;
-      let answeredKeys = Object.keys(this.survey.getAllValues());
-      return this.survey
-        .getAllQuestions(true)
-        .some(
-          e =>
-            (this.mandatoryFieldList.includes(e.name) || e.isRequired) &&
-            !answeredKeys.includes(e.name) &&
-            !this.survey.getValue(e.name)
-        );
     }
   },
   methods: {
@@ -79,8 +67,7 @@ export default {
       "setStaff",
       "setQuestionsStatus",
       "setSurveyName",
-      "setSidebarState",
-      "setMissingMandatoryFields"
+      "setSidebarState"
       // "setCurrentPageQuestions"
     ]),
     ...mapGetters([
