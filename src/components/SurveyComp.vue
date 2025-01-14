@@ -222,6 +222,9 @@ export default {
           });
           me.survey.setValue("Program", prefillSurvey["Program"]);
           me.survey.setValue("Staff", prefillSurvey["Staff"]);
+          if (prefillSurvey["BPClientID"] !== undefined) {
+            me.survey.setValue("BPClientID", prefillSurvey["BPClientID"]);
+          }
         }
         // using sender.getAllQuestions() instead of  me.survey.data = prefilleSurveyData
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
@@ -269,22 +272,51 @@ export default {
         me.$nextTick(() => {
           let missingMandatoryFields = [];
           let missingFieldPageQuestionNames = [];
-          let answeredKeys = Object.keys(me.survey.getAllValues());
 
-          me.survey
+          // Get all required questions including matrix cells
+          const requiredQuestions = me.survey
             .getAllQuestions(true)
             .filter(
-              e =>
-                (me.mandatoryFieldList.includes(e.name) || e.isRequired) &&
-                !answeredKeys.includes(e.name) &&
-                e.page.visibleIndex < lastPageIndex // Exclude questions from the last page
-            )
-            .forEach(e => {
-              if (!me.survey.getValue(e.name)) {
-                missingMandatoryFields.push(e.name);
-                missingFieldPageQuestionNames.push(`Question: ${e.title} \n`);
+              q =>
+                (q.isRequired || me.survey.runCondition(q.requiredIf)) &&
+                q.page.visibleIndex < lastPageIndex
+            );
+
+          requiredQuestions.forEach(question => {
+            // let isIncomplete = false;
+
+            if (question.getType() === "matrixdynamic") {
+              const matrix = question;
+              const requiredColumns = matrix.columns.filter(
+                col => col.isRequired
+              );
+
+              // Check each row and column
+              matrix.visibleRows.forEach((row, rowIndex) => {
+                requiredColumns.forEach(col => {
+                  const cellValue = row.getValue(col.name);
+                  if (!cellValue && cellValue !== 0) {
+                    // isIncomplete = true;
+                    missingMandatoryFields.push(`${question.name}`);
+                    missingFieldPageQuestionNames.push(
+                      `Question: ${question.title} - Row ${rowIndex +
+                        1}, Column: ${col.title}\n`
+                    );
+                  }
+                });
+              });
+            } else {
+              // Handle regular questions
+              const value = question.value;
+              if (!value && value !== 0) {
+                // isIncomplete = true;
+                missingMandatoryFields.push(question.name);
+                missingFieldPageQuestionNames.push(
+                  `Question: ${question.title}\n`
+                );
               }
-            });
+            }
+          });
           if (missingMandatoryFields.length > 0) {
             alert(
               "Missing mandatory fields " +
