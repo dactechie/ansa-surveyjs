@@ -65,7 +65,7 @@ export default {
     dbObj = {
       ...dbObj,
       AssessmentDate: parseInt(assessmentDateYYYYmmDD),
-      AssessmentType: data["AssessmentType"],
+      AssessmentType: data["AssessmentType"] || data["Stage"], // Use Stage if AssessmentType is not present (FCAF surveys)
       SurveyID: surveyId,
       Status: status,
       SurveyData: JSON.stringify(data),

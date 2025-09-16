@@ -295,7 +295,9 @@ export default {
             } else {
               // Handle regular questions
               const value = question.value;
-              if (!value && value !== 0) {
+              // Check if value is truly missing (undefined/null/empty string)
+              // but allow valid values like false (for boolean questions) and 0 (for numeric)
+              if (value === undefined || value === null || value === "") {
                 // isIncomplete = true;
                 missingMandatoryFields.push(question.name);
                 missingFieldPageQuestionNames.push(

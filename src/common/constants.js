@@ -30,7 +30,10 @@ export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
   ClinicalAssessment: "CLINICAL",
   InitialOutcome: "INTOUTC",
-  ReviewOutcome: "REVOUTC"
+  ReviewOutcome: "REVOUTC",
+  Start: "START",
+  Final: "FINAL",
+  "3MonthFollowUp": "3MTHFUP"
 };
 
 //mapping of SurveyJS.io survey title to Launch-Button display name
