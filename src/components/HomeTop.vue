@@ -26,7 +26,7 @@
       >
       <span class="ml-6 text-xs text-gray-500"
         >v: (FCAF {{ APP_AZSLOT === "production" ? "" : APP_AZSLOT }})
-        16-Sep-2025</span
+        17-Sep-2025</span
       >
     </div>
 
