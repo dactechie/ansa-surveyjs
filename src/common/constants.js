@@ -35,9 +35,7 @@ export const SURVEY_TYPE_MAP = {
 
 //mapping of SurveyJS.io survey title to Launch-Button display name
 export const SURVEY_DISPLAY_NAMES = {
-  "ATOM Youth Clinical Assessment": "New Episode Clinical Assessment",
-
-  "ATOM Youth Outcomes Assessment": "Outcomes (Initial/Review) Assessment"
+  "ATOM Family Member Questionnaire": "Family Member Questionnaire"
 };
 
 export const ARCA = "Arcadia";

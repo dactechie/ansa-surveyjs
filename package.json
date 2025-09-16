@@ -1,6 +1,6 @@
 {
-  "name": "atom-questionnaire-youth",
-  "version": "1.6.0",
+  "name": "atom-questionnaire-fcaf",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

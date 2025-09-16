@@ -25,8 +25,8 @@
         >Open Issues</a
       >
       <span class="ml-6 text-xs text-gray-500"
-        >v: (Youth {{ APP_AZSLOT === "production" ? "" : APP_AZSLOT }})
-        15-Jan-2025</span
+        >v: (FCAF {{ APP_AZSLOT === "production" ? "" : APP_AZSLOT }})
+        16-Sep-2025</span
       >
     </div>
 

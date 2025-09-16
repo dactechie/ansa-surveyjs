@@ -161,11 +161,27 @@ export default {
 
     filterButtonType(buttonTypeName, shouldContinue) {
       console.log("Full list ", this.$store.state["surveyNameIDList"]);
-      let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s =>
-        s.name.startsWith(buttonTypeName)
+      console.log("Looking for buttonTypeName:", buttonTypeName);
+      console.log(
+        "Available survey names:",
+        this.$store.state["surveyNameIDList"].map(s => s.name)
       );
+      let nameSurveyIDList = this.$store.state["surveyNameIDList"].filter(s => {
+        console.log(
+          `Comparing "${s.name}" === "${buttonTypeName}":`,
+          s.name === buttonTypeName
+        );
+        return s.name === buttonTypeName;
+      });
       console.log("sore list: ", this.$store.state["surveyNameIDList"]);
       console.log(`nameSurveyIDList`, nameSurveyIDList);
+      console.log("First survey object:", nameSurveyIDList[0]);
+      console.log(
+        "Survey object keys:",
+        Object.keys(nameSurveyIDList[0] || {})
+      );
+      console.log("Survey name:", nameSurveyIDList[0]?.name);
+      console.log("Survey surveyid:", nameSurveyIDList[0]?.surveyid);
       console.log("buttonTypeName", buttonTypeName);
       if (shouldContinue) {
         return nameSurveyIDList.map(e => {
@@ -187,12 +203,14 @@ export default {
       }
     },
     handleClick(survey) {
-      console.log("clicked: " + survey.displayName);
+      console.log("clicked survey object:", survey);
+      console.log("clicked survey.displayName:", survey.displayName);
+      console.log("clicked survey.surveyid:", survey.surveyid);
       this.handleStartSurvey(survey);
       // Navigate programmatically after handling the click
       this.$router.push({
         name: "SurveyView",
-        params: { type: "new", surveyid: survey.surveyid }
+        params: { surveyid: survey.surveyid }
       });
     },
     handleStartSurvey(surveyObj) {
@@ -214,8 +232,7 @@ export default {
         this.clientData = [];
         sessionStorage.removeItem("ClientData");
         this.surveyListForClient.push(
-          ...this.filterButtonType("ATOM Youth Clinical"),
-          ...this.filterButtonType("ATOM Youth Outcomes", false)
+          ...this.filterButtonType("ATOM Family Member Questionnaire")
         );
         return;
       }
@@ -248,10 +265,7 @@ export default {
     },
     setNewSurveyLaunchButtons() {
       this.surveyListForClient.push(
-        ...[
-          ...this.filterButtonType("ATOM Youth Clinical", false),
-          ...this.filterButtonType("ATOM Youth Outcomes", false)
-        ]
+        ...this.filterButtonType("ATOM Family Member Questionnaire", false)
       );
     },
     setContinueLaunchButtons() {
@@ -266,10 +280,7 @@ export default {
       // can't rememebr why this is important - may be for migrated ATOMs
       // if (lastSurveyName === "ATOM ITSP Review Assessment") {
       this.surveyListForClient.push(
-        ...[
-          ...this.filterButtonType("ATOM Youth Clinical", false),
-          ...this.filterButtonType("ATOM Youth Outcomes", false)
-        ]
+        ...this.filterButtonType("ATOM Family Member Questionnaire", false)
       );
       // }
     }
