@@ -4,6 +4,7 @@ import { SURVEY_IDS } from "@/common/constants";
 // import { APP_AZSLOT as PROD_STAGING } from "../common/constants";
 
 const QUESTION_URL = process.env.VUE_APP_LOAD_QUESTIONNAIRES_URL;
+console.log("Using QUESTION_URL:", QUESTION_URL);
 
 const SurveyIds_INAS_ITSP = SURVEY_IDS.split("_");
 
@@ -25,6 +26,8 @@ export default {
 
     const response = await doGetAction(QUESTION_URL);
     console.log(">>>", response);
+    console.log("Available survey details:", response.map(s => `${s.Name}: ${s.Id}`));
+    console.log("Configured survey IDs:", SurveyIds_INAS_ITSP);
     const finalList = await response
       .filter(
         s => s["IsPublished"] !== false && SurveyIds_INAS_ITSP.includes(s["Id"])
