@@ -28,9 +28,9 @@ export const DB_IDTYPE_CCARE = "CCARE";
 
 export const SURVEY_TYPE_MAP = {
   // Survey title : RowKey code
-  ClinicalAssessment: "CLINICAL",
-  InitialOutcome: "INTOUTC",
-  ReviewOutcome: "REVOUTC",
+  // ClinicalAssessment: "CLINICAL",
+  // InitialOutcome: "INTOUTC",
+  // ReviewOutcome: "REVOUTC",
   Start: "START",
   Final: "FINAL",
   "3MonthFollowUp": "3MTHFUP"

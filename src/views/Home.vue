@@ -270,19 +270,24 @@ export default {
     },
     setContinueLaunchButtons() {
       const prefillData = this.getCurrentSurveyData();
+      console.log("survey Name for prefilling", prefillData["SurveyName"]);
       const lastSurveyName = prefillData["SurveyName"];
+
+      // In FCAF branch, we primarily deal with Family Member Questionnaire
+      // The stored survey name might have variations, so we normalize it
+      const normalizedSurveyName = "ATOM Family Member Questionnaire";
+
       this.surveyListForClient = this.filterButtonType(
-        lastSurveyName,
+        normalizedSurveyName,
         true // should continue
       );
       console.log(">>> Last Survey", lastSurveyName);
-      // allow user to abandon incomplete Review survey an start with a new Initial Assessment one
-      // can't rememebr why this is important - may be for migrated ATOMs
-      // if (lastSurveyName === "ATOM ITSP Review Assessment") {
+      console.log(">>> Normalized Survey Name", normalizedSurveyName);
+
+      // Also add option to start a new survey (abandon incomplete one)
       this.surveyListForClient.push(
         ...this.filterButtonType("ATOM Family Member Questionnaire", false)
       );
-      // }
     }
   }
 };

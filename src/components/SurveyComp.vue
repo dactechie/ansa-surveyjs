@@ -7,7 +7,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex"; //mapGetters, mapState
 import * as SurveyVue from "survey-vue";
-import { getDaysDifference } from "@/helper-functions/survey-helpers";
+// import { getDaysDifference } from "@/helper-functions/survey-helpers";
 import "survey-vue/defaultV2.css";
 
 // import QuestionnaireService from "@/api/SurveyQuestionnaireService";
@@ -167,22 +167,22 @@ export default {
 
           // const qAssessType = me.survey.getQuestionByName("AssessmentType");
 
-          if (prefillSurveyData["AssessmentType"] === "ClinicalAssessment") {
-            me.survey.setValue("AssessmentType", "InitialOutcome");
-          } else if (
-            //  initial or review
-            getDaysDifference(new Date(), prefillSurveyData["AssessmentDate"]) <
-            90 // 3 months ->  3 * 30
-          ) {
-            // if (qAssessType.visibleChoices.length > 1) {
-            // Question hasn't been answered, can't be Clinical because it defaults
-            // so this is a completed outcomes survey, which means now it cant be
-            // an initial outcomes assessment
-            me.survey.setValue("AssessmentType", "ReviewOutcome");
-            // }
-          }
-          // else if (qAssessType.visibleChoices.length > 1) { // >= 90 days
-          else me.survey.setValue("AssessmentType", "InitialOutcome");
+          // if (prefillSurveyData["AssessmentType"] === "ClinicalAssessment") {
+          //   me.survey.setValue("AssessmentType", "InitialOutcome");
+          // } else if (
+          //   //  initial or review
+          //   getDaysDifference(new Date(), prefillSurveyData["AssessmentDate"]) <
+          //   90 // 3 months ->  3 * 30
+          // ) {
+          //   // if (qAssessType.visibleChoices.length > 1) {
+          //   // Question hasn't been answered, can't be Clinical because it defaults
+          //   // so this is a completed outcomes survey, which means now it cant be
+          //   // an initial outcomes assessment
+          //   me.survey.setValue("AssessmentType", "ReviewOutcome");
+          //   // }
+          // }
+          // // else if (qAssessType.visibleChoices.length > 1) { // >= 90 days
+          // else me.survey.setValue("AssessmentType", "InitialOutcome");
           // }
         } else {
           //
@@ -209,9 +209,9 @@ export default {
           });
           me.survey.setValue("Program", prefillSurvey["Program"]);
           me.survey.setValue("Staff", prefillSurvey["Staff"]);
-          if (prefillSurvey["BPClientID"] !== undefined) {
-            me.survey.setValue("BPClientID", prefillSurvey["BPClientID"]);
-          }
+          // if (prefillSurvey["BPClientID"] !== undefined) {
+          //   me.survey.setValue("BPClientID", prefillSurvey["BPClientID"]);
+          // }
         }
         // using sender.getAllQuestions() instead of  me.survey.data = prefilleSurveyData
         // why? SurveyQuestionnaires evolve over time..we don't want to 'prefil' keys and values
@@ -230,8 +230,8 @@ export default {
       if (caclAgeQuestion ?? null !== null) {
         const age = calculateAgeFromSLK(me.getCurrentClientSLK());
         me.survey.setValue("ClientAge", age);
+        console.log("Set client age to  ", age);
       }
-      console.log("Set client age to  ", me.getCurrentClientSLK());
 
       me.dirtyData = false; // so we don't save to backend after the prefil/initial assessment date set
       me.setCurrentSurvey(me.survey); // for the nav to work
