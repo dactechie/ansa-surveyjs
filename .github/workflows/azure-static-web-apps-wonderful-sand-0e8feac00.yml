@@ -32,6 +32,13 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+        env:
+          VUE_APP_AZSLOT: "production"
+          VUE_APP_LOAD_QUESTIONNAIRES_URL: "https://api.surveyjs.io/private/Surveys/getActive?accessKey=d02a998d146f47d980be07e34a6abc82"
+          VUE_APP_SURVEY_IDS: "a5cfdb9e-0643-44d6-bd21-e1526b8c2309"
+          VUE_APP_CLIENT_HISTORY_URL: "https://orange-smoke-027b6c100-dev.eastasia.1.azurestaticapps.net/"
+          VUE_APP_GET_TABLESTORE_LOGAPP: "https://prod-17.australiaeast.logic.azure.com:443/workflows/be0a8dea3ab745a4a5d97eccd1b83031/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=MCITViHJkPk8oYnoGZBsZ9Tt6Y5i2U4UJlQydDYt4xs"
+          VUE_APP_UPSERT_TABLESTORE_LOGAPP: "https://prod-04.australiaeast.logic.azure.com:443/workflows/8f28bb73d4ef444087fba44ef000d926/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=fLjV1to0RFjB1TSpuNuMkojtcsDr5VmHXx9rvGJXmqg"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
