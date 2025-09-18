@@ -22,6 +22,7 @@ import {
   // PREFILL_EXCLUSION_PREFIXES,
   // PREFILL_EXCLUSION_SUFFIXES
 } from "@/common/constants";
+import SurveyHandler from "@/helpers/SurveyHandler";
 
 // import SurveyService from "../api/SurveyService";
 
@@ -257,55 +258,11 @@ export default {
       const lastPageIndex = surveyModel.visiblePageCount - 1;
       if (surveyModel.currentPageNo === lastPageIndex) {
         me.$nextTick(() => {
-          let missingMandatoryFields = [];
-          let missingFieldPageQuestionNames = [];
+          const {
+            missingMandatoryFields,
+            missingFieldPageQuestionNames
+          } = SurveyHandler.getMissingMandatoryFields(me);
 
-          // Get all required questions including matrix cells
-          const requiredQuestions = me.survey
-            .getAllQuestions(true)
-            .filter(
-              q =>
-                (q.isRequired || me.survey.runCondition(q.requiredIf)) &&
-                q.page.visibleIndex < lastPageIndex
-            );
-
-          requiredQuestions.forEach(question => {
-            // let isIncomplete = false;
-
-            if (question.getType() === "matrixdynamic") {
-              const matrix = question;
-              const requiredColumns = matrix.columns.filter(
-                col => col.isRequired
-              );
-
-              // Check each row and column
-              matrix.visibleRows.forEach((row, rowIndex) => {
-                requiredColumns.forEach(col => {
-                  const cellValue = row.getValue(col.name);
-                  if (!cellValue && cellValue !== 0) {
-                    // isIncomplete = true;
-                    missingMandatoryFields.push(`${question.name}`);
-                    missingFieldPageQuestionNames.push(
-                      `Question: ${question.title} - Row ${rowIndex +
-                        1}, Column: ${col.title}\n`
-                    );
-                  }
-                });
-              });
-            } else {
-              // Handle regular questions
-              const value = question.value;
-              // Check if value is truly missing (undefined/null/empty string)
-              // but allow valid values like false (for boolean questions) and 0 (for numeric)
-              if (value === undefined || value === null || value === "") {
-                // isIncomplete = true;
-                missingMandatoryFields.push(question.name);
-                missingFieldPageQuestionNames.push(
-                  `Question: ${question.title}\n`
-                );
-              }
-            }
-          });
           if (missingMandatoryFields.length > 0) {
             alert(
               "Missing mandatory fields " +
@@ -325,9 +282,35 @@ export default {
       }
     });
 
-    this.survey.onCompleting.add(function(survey) {
+    this.survey.onCompleting.add(function(survey, options) {
       console.log("On Completing survey");
       console.log(survey.data);
+
+      // Check for missing mandatory fields including FMQ pattern
+      const {
+        missingMandatoryFields,
+        missingFieldPageQuestionNames
+      } = SurveyHandler.getMissingMandatoryFields(me);
+
+      if (missingMandatoryFields.length > 0) {
+        // Prevent completion and show error
+        options.allowComplete = false;
+        alert(
+          "Please complete all mandatory fields before proceeding:\n" +
+            missingFieldPageQuestionNames.join("")
+        );
+
+        // Navigate to first missing field
+        const firstMissingQuestion = survey.getQuestionByName(
+          missingMandatoryFields[0]
+        );
+        if (firstMissingQuestion) {
+          survey.currentPageNo = firstMissingQuestion.page.visibleIndex;
+        }
+        return;
+      }
+
+      // Calculate scores if validation passes
       survey
         .getAllQuestions(false)
         .filter(qq => qq.name.endsWith("_Score"))

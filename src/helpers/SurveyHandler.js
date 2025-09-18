@@ -2,6 +2,12 @@ import { MANDATORY_FIELDS } from "@/common/constants";
 
 const mandatoryFieldList = MANDATORY_FIELDS.split(",");
 
+// Helper function to check if field name matches FMQ pattern (FMQ1-FMQ30)
+function isMandatoryByPattern(fieldName) {
+  const fmqPattern = /^FMQ([1-9]|[12][0-9]|30)$/;
+  return fmqPattern.test(fieldName);
+}
+
 // SurveyHandler.js
 export default class SurveyHandler {
   // static validateBeforeSave(surveyComp) {
@@ -36,7 +42,9 @@ export default class SurveyHandler {
       .getAllQuestions(true) //true=> visible
       .filter(
         e =>
-          (mandatoryFieldList.includes(e.name) || e.isRequired) &&
+          (mandatoryFieldList.includes(e.name) ||
+            isMandatoryByPattern(e.name) ||
+            e.isRequired) &&
           !answeredKeys.includes(e.name)
       )
       // get all mandatory & visible but not answered questions
