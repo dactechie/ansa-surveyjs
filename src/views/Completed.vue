@@ -6,7 +6,7 @@
       Please ensure the summary is uploaded to the client file (SLK:
       {{ slk }})
     </p>
-    <p class="text-md-bold mx-5 my-5">
+    <!-- <p class="text-md-bold mx-5 my-5">
       <a
         :href="getClientHistoryUrl()"
         target="_blank"
@@ -14,7 +14,7 @@
       >
         Graphical Client History
       </a>
-    </p>
+    </p> -->
     <router-link
       to="/"
       tag="button"
@@ -30,7 +30,7 @@
 <script>
 // import ClientSurveyHistory from "@/components/ClientSurveyHistory";
 import { mapGetters } from "vuex";
-import { CLIENT_HISTORY_URL } from "@/common/constants";
+// import { CLIENT_HISTORY_URL } from "@/common/constants";
 export default {
   name: "CompletedPage",
   // components: { ClientSurveyHistory },
@@ -41,10 +41,10 @@ export default {
     };
   },
   methods: {
-    ...mapGetters(["getCompletedDetails"]),
-    getClientHistoryUrl() {
-      return `${CLIENT_HISTORY_URL}${sessionStorage.ClientData.substr(18, 14)}`;
-    }
+    ...mapGetters(["getCompletedDetails"])
+    // getClientHistoryUrl() {
+    //   return `${CLIENT_HISTORY_URL}${sessionStorage.ClientData.substr(18, 14)}`;
+    // }
   },
   // computed: {
   //   staff() {

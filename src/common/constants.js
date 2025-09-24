@@ -2,8 +2,6 @@ export const APPLICATION_MODE_NORMAL = 1;
 
 export const APP_AZSLOT = process.env.VUE_APP_AZSLOT;
 
-export const CLIENT_HISTORY_URL = process.env.VUE_APP_CLIENT_HISTORY_URL;
-
 export const SURVEY_IDS = process.env.VUE_APP_SURVEY_IDS;
 
 export const PARTITION_KEY = "PartitionKey";
