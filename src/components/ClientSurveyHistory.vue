@@ -5,7 +5,7 @@
       :selectedIndex="selectedIndex"
       @close="showModal = false"
     ></ITSPCompareModal> -->
-    <p class="text-md-bold mx-5 my-5">
+    <!-- <p class="text-md-bold mx-5 my-5">
       <a
         :href="getClientHistoryUrl()"
         target="_blank"
@@ -13,7 +13,7 @@
       >
         Graphical Client History
       </a>
-    </p>
+    </p> -->
     <!-- https://tailwindcomponents.com/component/responsive-table -->
     <table class="mt-0 mx-5">
       <thead>
@@ -65,7 +65,6 @@
 import { mapMutations, mapGetters } from "vuex";
 import SurveyResponsesModal from "@/components/Modals/SurveyResponsesModal";
 import { getFriendlyTimestampString } from "@/common/utils";
-import { ARCA, CLIENT_HISTORY_URL } from "@/common/constants";
 
 export default {
   name: "ClientSurveyHistory",
@@ -102,8 +101,6 @@ export default {
 
       data.forEach(function(c) {
         c["Timestamp"] = getFriendlyTimestampString(c["Timestamp"]);
-        if (c["SurveyName"].startsWith(ARCA))
-          c["SurveyName"] = `${ARCA} ${c["AssessmentType"]}`;
         let td = colHeaders.map(h => c[h]);
 
         const assdate = getFriendlyTimestampString(
@@ -130,10 +127,10 @@ export default {
     showModalWithIndex(index) {
       this.selectedIndex = index;
       this.showModal = true;
-    },
-    getClientHistoryUrl() {
-      return `${CLIENT_HISTORY_URL}${this.getCurrentClientSLK()}`;
     }
+    // getClientHistoryUrl() {
+    //   return `${CLIENT_HISTORY_URL}${this.getCurrentClientSLK()}`;
+    // }
   }
 };
 </script>

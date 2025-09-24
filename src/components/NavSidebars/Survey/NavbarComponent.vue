@@ -152,7 +152,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { CLIENT_HISTORY_URL } from "@/common/constants";
+// import { CLIENT_HISTORY_URL } from "@/common/constants";
 export default {
   name: "NavbarComponent",
   computed: {
@@ -177,10 +177,10 @@ export default {
   methods: {
     toggleSidebar() {
       this.$store.dispatch("toggleSidebar");
-    },
-    getClientHistoryUrl() {
-      return `${CLIENT_HISTORY_URL}${this.currentClientSLK}`;
     }
+    // getClientHistoryUrl() {
+    //   return `${CLIENT_HISTORY_URL}${this.currentClientSLK}`;
+    // }
   }
 };
 </script>
